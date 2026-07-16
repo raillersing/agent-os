@@ -1,0 +1,19 @@
+# Local video evidence and derived analysis
+references/videos/
+.local-analysis/
+*.mp4
+*.mov
+*.mkv
+*.wav
+_work/
+
+# Python caches
+__pycache__/
+.pytest_cache/
+
+# Environment and credentials
+.env
+.env.*
+!.env.example
+secrets/
+credentials/
