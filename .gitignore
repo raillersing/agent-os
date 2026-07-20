@@ -10,6 +10,14 @@ _work/
 # Python caches
 __pycache__/
 .pytest_cache/
+*.py[cod]
+*$py.class
+
+# Node.js
+node_modules/
+frontend/node_modules/
+.next/
+frontend/.next/
 
 # Environment and credentials
 .env
@@ -17,3 +25,24 @@ __pycache__/
 !.env.example
 secrets/
 credentials/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# ChromaDB
+chroma_db/
