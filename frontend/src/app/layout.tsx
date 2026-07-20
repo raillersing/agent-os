@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-slate-900 text-white`}>
+      <body className={`${inter.className}`} style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
         <div className="flex h-screen overflow-hidden">
           <Sidebar />
           <div className="flex-1 flex flex-col overflow-hidden">
