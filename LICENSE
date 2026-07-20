@@ -1,21 +1,74 @@
-MIT License
+LICENCE PRIVÉE ET PROPRIÉTAIRE - Agent OS
+==========================================
 
-Copyright (c) 2026 Agent OS Contributors
+Copyright (c) 2026 Raillersing - Tous droits réservés
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+ARTICLE 1 - DÉFINITIONS
+------------------------
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+"Logiciel" désigne l'ensemble des fichiers source, documentation, et éléments constitutifs du système Agent OS.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+"Titulaire des droits" désigne Raillersing, propriétaire exclusif du Logiciel.
+
+"Licencié" désigne toute personne ou entité autorisée à utiliser le Logiciel conformément aux termes de la présente licence.
+
+ARTICLE 2 - OBJET
+------------------
+
+La présente licence confère au Licencié le droit d'utiliser le Logiciel dans les conditions définies ci-après. Elle ne constitue pas une cession de droits de propriété intellectuelle.
+
+ARTICLE 3 - UTILISATION AUTORISÉE
+---------------------------------
+
+Le Licencié est autorisé à :
+
+1. Utiliser le Logiciel pour son usage personnel ou interne
+2. Exécuter le Logiciel sur des serveurs appartenant au Licencié
+3. Modifier le Logiciel pour son usage interne uniquement
+
+ARTICLE 4 - UTILISATIONS INTERDITES
+------------------------------------
+
+Sont strictement interdites sans autorisation écrite préalable du Titulaire des droits :
+
+1. La redistribution, la vente, la location, ou le prêt du Logiciel
+2. La mise à disposition du Logiciel à des tiers (gratuitement ou à titre onéreux)
+3. La création de produits dérivés destinés à la distribution
+4. L'ingénierie inverse, la décompilation, ou la désassemblage
+5. La suppression ou modification des mentions de copyright
+6. L'utilisation dans un cadre commercial sans licence spécifique
+
+ARTICLE 5 - PROPRIÉTÉ INTELLECTUELLE
+-------------------------------------
+
+Le Logiciel et tous les droits de propriété intellectuelle qui s'y rapportent restent la propriété exclusive du Titulaire des droits. La présente licence ne confère aucun droit de propriété intellectuelle au-delà de ceux expressément accordés.
+
+ARTICLE 6 - GARANTIE ET RESPONSABILITÉ
+---------------------------------------
+
+Le Logiciel est fourni "en l'état", sans garantie d'aucune sorte, expresse ou implicite, y compris mais sans s'y limiter, les garanties de qualité marchande, d'adéquation à un usage particulier, ou de non-contrefaçon.
+
+En aucun cas le Titulaire des droits ne saurait être tenu responsable de tout dommage direct, indirect, accessoire, spécial, exemplaire ou consécutif résultant de l'utilisation du Logiciel.
+
+ARTICLE 7 - RÉSILIATION
+------------------------
+
+La présente licence est résiliée de plein droit en cas de non-respect de l'une quelconque de ses dispositions. En cas de résiliation, le Licencié doit cesser toute utilisation du Logiciel et détruire toutes les copies en sa possession.
+
+ARTICLE 8 - DROIT APPLICABLE
+-----------------------------
+
+La présente licence est régie par le droit français. Tout litige relatif à son interprétation ou à son exécution sera soumis aux juridictions compétentes de Paris.
+
+ARTICLE 9 - CONTACT
+------------------------
+
+Pour toute demande de licence commerciale ou d'autorisation supplémentaire :
+
+Raillersing
+Email: contact@raillersing.com
+Web: https://raillersing.com
+
+---
+
+FIN DE LA LICENCE
