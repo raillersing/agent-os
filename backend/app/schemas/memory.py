@@ -4,6 +4,7 @@ Memory Schemas
 
 from datetime import datetime
 from typing import Any, Dict, List, Optional
+from uuid import UUID
 
 from pydantic import BaseModel
 
@@ -13,7 +14,10 @@ class MemoryCreate(BaseModel):
 
     key: str
     content: str
-    metadata: Optional[Dict[str, Any]] = None
+    type: Optional[str] = "knowledge"
+    source: Optional[str] = None
+    agent_id: Optional[UUID] = None
+    metadata_: Optional[Dict[str, Any]] = None
     ttl: Optional[int] = None
 
 
@@ -22,8 +26,14 @@ class Memory(BaseModel):
 
     key: str
     content: str
-    metadata: Dict[str, Any] = {}
+    type: str
+    source: Optional[str] = None
+    agent_id: Optional[UUID] = None
+    metadata_: Dict[str, Any] = {}
+    access_count: int = 0
+    last_accessed_at: Optional[datetime] = None
     created_at: datetime
+    updated_at: datetime
     expires_at: Optional[datetime] = None
 
     class Config:

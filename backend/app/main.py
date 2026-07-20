@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
 from .api import agents, runs, memory, auth, tools
+from .core.database import init_db
 
 
 @asynccontextmanager
@@ -16,6 +17,9 @@ async def lifespan(app: FastAPI):
     """Application lifespan manager."""
     # Startup
     print(f"Starting Agent OS Control Plane v{settings.VERSION}")
+    print("Initializing database...")
+    init_db()
+    print("Database initialized.")
     yield
     # Shutdown
     print("Shutting down Agent OS Control Plane")

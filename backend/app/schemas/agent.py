@@ -4,6 +4,7 @@ Agent Schemas
 
 from datetime import datetime
 from typing import Any, Dict, List, Optional
+from uuid import UUID
 
 from pydantic import BaseModel
 
@@ -13,6 +14,7 @@ class AgentBase(BaseModel):
 
     name: str
     model: str
+    description: Optional[str] = None
     capabilities: Optional[List[str]] = None
     config: Optional[Dict[str, Any]] = None
     policies: Optional[Dict[str, Any]] = None
@@ -29,6 +31,8 @@ class AgentUpdate(BaseModel):
     name: Optional[str] = None
     model: Optional[str] = None
     status: Optional[str] = None
+    description: Optional[str] = None
+    capabilities: Optional[List[str]] = None
     config: Optional[Dict[str, Any]] = None
     policies: Optional[Dict[str, Any]] = None
 
@@ -36,10 +40,16 @@ class AgentUpdate(BaseModel):
 class Agent(AgentBase):
     """Full agent schema."""
 
-    id: str
+    id: UUID
     status: str
+    total_runs: int = 0
+    successful_runs: int = 0
+    failed_runs: int = 0
+    total_tokens: int = 0
+    total_cost: float = 0.0
     created_at: datetime
     updated_at: datetime
+    last_run_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True
