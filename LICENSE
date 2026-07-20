@@ -20,11 +20,14 @@ La présente licence confère au Licencié le droit d'utiliser le Logiciel dans 
 ARTICLE 3 - UTILISATION AUTORISÉE
 ---------------------------------
 
-Le Licencié est autorisé à :
+L'utilisation du Logiciel est soumise à l'acquisition préalable d'une licence commerciale ou d'un abonnement actif. Toute utilisation sans licence valide constitue une contrefaçon.
 
-1. Utiliser le Logiciel pour son usage personnel ou interne
-2. Exécuter le Logiciel sur des serveurs appartenant au Licencié
+Le Licencié dûment autorisé est autorisé à :
+
+1. Utiliser le Logiciel conformément à la licence acquise
+2. Exécuter le Logiciel sur le nombre d'instances autorisées par sa licence
 3. Modifier le Logiciel pour son usage interne uniquement
+4. Recevoir les mises à jour incluses dans son offre d'abonnement
 
 ARTICLE 4 - UTILISATIONS INTERDITES
 ------------------------------------
@@ -60,10 +63,22 @@ ARTICLE 8 - DROIT APPLICABLE
 
 La présente licence est régie par le droit français. Tout litige relatif à son interprétation ou à son exécution sera soumis aux juridictions compétentes de Paris.
 
-ARTICLE 9 - CONTACT
+ARTICLE 9 - TYPES DE LICENCES
+------------------------------
+
+Le Logiciel est disponible sous les licences suivantes :
+
+1. **Licence Essentielle** - Usage limité, fonctionnalités de base
+2. **Licence Professionnelle** - Usage étendu, toutes fonctionnalités
+3. **Licence Entreprise** - Usage illimité, support prioritaire
+4. **Abonnement Mensuel/Annuel** - Accès selon le plan souscrit
+
+Les tarifs et conditions détaillés sont disponibles sur le site commercial.
+
+ARTICLE 10 - CONTACT
 ------------------------
 
-Pour toute demande de licence commerciale ou d'autorisation supplémentaire :
+Pour toute demande de licence commerciale, devis ou partenariat :
 
 Raillersing
 Email: contact@raillersing.com
