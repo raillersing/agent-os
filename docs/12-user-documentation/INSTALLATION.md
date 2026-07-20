@@ -1,6 +1,26 @@
+---
+document_id: UG-INSTALLATION
+title: Guide d'Installation Détaillé - Agent OS
+version: 0.1.0
+status: draft
+owner: documentation-owner
+approvers:
+  - product-owner
+  - operations-owner
+created: 2026-07-20
+last_reviewed: 2026-07-20
+classification: public
+source_of_truth: false
+related_documents:
+  - DEP-001
+  - OPS-001
+  - SEC-001
+related_adrs: []
+---
+
 # Guide d'Installation Détaillé - Agent OS
 
-**Version:** 0.1.0  
+**Version:** 0.1.0
 **Dernière mise à jour:** 2026-07-20
 
 ## Table des Matières

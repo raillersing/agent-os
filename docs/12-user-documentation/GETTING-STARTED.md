@@ -1,6 +1,25 @@
+---
+document_id: UG-GETTING-STARTED
+title: Guide de Démarrage Rapide - Agent OS
+version: 0.1.0
+status: draft
+owner: documentation-owner
+approvers:
+  - product-owner
+created: 2026-07-20
+last_reviewed: 2026-07-20
+classification: public
+source_of_truth: false
+related_documents:
+  - VSN-001
+  - SCP-001
+  - PRD-001
+related_adrs: []
+---
+
 # Guide de Démarrage Rapide - Agent OS
 
-**Version:** 0.1.0  
+**Version:** 0.1.0
 **Dernière mise à jour:** 2026-07-20
 
 ## Introduction

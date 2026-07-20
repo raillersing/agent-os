@@ -1,5 +1,5 @@
-register_version: 0.1.0
-last_updated: 2026-07-16
+register_version: 0.2.0
+last_updated: 2026-07-20
 status_values:
   - draft
   - in-review
@@ -10,6 +10,9 @@ status_values:
   - archived
 
 documents:
+  # ═══════════════════════════════════════════════════════════════════════════
+  # 00-GOVERNANCE
+  # ═══════════════════════════════════════════════════════════════════════════
   - id: DOC-000
     title: Documentation Governance and Source-of-Truth Policy
     path: docs/00-governance/DOC-000-documentation-governance.md
@@ -26,6 +29,10 @@ documents:
     status: draft
     owner: product-owner
     dependencies: [DOC-000]
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # 01-PRODUCT
+  # ═══════════════════════════════════════════════════════════════════════════
   - id: VSN-001
     title: Product Vision and Project Charter
     path: docs/01-product/VSN-001-product-vision-and-charter.md
@@ -41,280 +48,436 @@ documents:
     downstream_documents: [SCP-001, PRD-001, PER-001, UCD-001, NFR-001, AUT-001, SAD-001, SEC-001, TST-001]
   - id: SCP-001
     title: Scope and System Boundaries
-    path: docs/01-product/SCP-001-scope-and-boundaries.md
+    path: docs/01-product/SCP-001-scope-and-boundaries-v0.1.0.md
     wave: 1
     priority: P0
-    status: planned
+    status: draft
     owner: product-owner
     dependencies: [VSN-001]
   - id: PRD-001
     title: Product Requirements Document
-    path: docs/01-product/PRD-001-product-requirements-document.md
+    path: docs/01-product/PRD-001-product-requirements-document-v0.1.0.md
     wave: 1
     priority: P0
-    status: planned
+    status: draft
     owner: product-owner
     dependencies: [VSN-001, SCP-001]
   - id: PER-001
     title: Personas and Jobs to Be Done
-    path: docs/01-product/PER-001-personas-and-jobs-to-be-done.md
+    path: docs/01-product/PER-001-personas-and-jobs-to-be-done-v0.1.0.md
     wave: 1
     priority: P0
-    status: planned
+    status: draft
     owner: product-owner
     dependencies: [VSN-001]
   - id: UCD-001
     title: User Journeys and Use Cases
-    path: docs/02-requirements/UCD-001-user-journeys-and-use-cases.md
+    path: docs/01-product/UCD-001-user-journeys-and-use-cases-v0.1.0.md
     wave: 1
     priority: P0
-    status: planned
+    status: draft
     owner: product-owner
     dependencies: [PER-001, SCP-001]
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # 02-REQUIREMENTS
+  # ═══════════════════════════════════════════════════════════════════════════
   - id: SRS-001
     title: Functional Requirements Specification
-    path: docs/02-requirements/SRS-001-functional-requirements.md
+    path: docs/02-requirements/SRS-001-functional-requirements-v0.1.0.md
     wave: 1
     priority: P0
-    status: planned
+    status: draft
     owner: product-owner
     dependencies: [PRD-001, UCD-001]
   - id: NFR-001
     title: Non-Functional Requirements
-    path: docs/02-requirements/NFR-001-non-functional-requirements.md
+    path: docs/02-requirements/NFR-001-non-functional-requirements-v0.1.0.md
     wave: 1
     priority: P0
-    status: planned
+    status: draft
     owner: architecture-owner
     dependencies: [PRD-001]
-  - id: AUT-001
-    title: Autonomy and Approval Matrix
-    path: docs/05-ai-governance/AUT-001-autonomy-and-approval-matrix.md
-    wave: 1
-    priority: P0
-    status: planned
-    owner: product-owner
-    dependencies: [SCP-001, UCD-001]
   - id: RTM-001
     title: Requirements Traceability Matrix
-    path: docs/02-requirements/RTM-001-requirements-traceability-matrix.md
+    path: docs/02-requirements/RTM-001-requirements-traceability-matrix-v0.1.0.md
     wave: 1
     priority: P0
-    status: planned
+    status: draft
     owner: quality-owner
     dependencies: [SRS-001, NFR-001]
 
+  # ═══════════════════════════════════════════════════════════════════════════
+  # 03-ARCHITECTURE
+  # ═══════════════════════════════════════════════════════════════════════════
   - id: SAD-001
     title: System Architecture Description
-    path: docs/03-architecture/SAD-001-system-architecture-description.md
+    path: docs/03-architecture/SAD-001-system-architecture-description-v0.1.0.md
     wave: 2
     priority: P0
-    status: planned
+    status: draft
     owner: architecture-owner
     dependencies: [SRS-001, NFR-001, AUT-001]
   - id: C4-001
     title: System Context Diagram
-    path: docs/03-architecture/c4/C4-001-system-context.md
+    path: docs/03-architecture/C4-001-system-context-diagram-v0.1.0.md
     wave: 2
     priority: P0
-    status: planned
+    status: draft
     owner: architecture-owner
     dependencies: [SAD-001]
   - id: C4-002
     title: Container Diagram
-    path: docs/03-architecture/c4/C4-002-container-view.md
+    path: docs/03-architecture/C4-002-container-diagram-v0.1.0.md
     wave: 2
     priority: P0
-    status: planned
+    status: draft
     owner: architecture-owner
     dependencies: [SAD-001]
   - id: DDD-001
     title: Domain Model
-    path: docs/03-architecture/DDD-001-domain-model.md
+    path: docs/03-architecture/DDD-001-domain-model-v0.1.0.md
     wave: 2
     priority: P0
-    status: planned
+    status: draft
     owner: architecture-owner
     dependencies: [SRS-001]
   - id: DAT-001
     title: Data Architecture
-    path: docs/03-architecture/DAT-001-data-architecture.md
+    path: docs/03-architecture/DAT-001-data-architecture-v0.1.0.md
     wave: 2
     priority: P0
-    status: planned
+    status: draft
     owner: architecture-owner
     dependencies: [DDD-001, NFR-001]
-  - id: DCT-001
-    title: Data Dictionary
-    path: docs/03-architecture/DCT-001-data-dictionary.md
+  - id: DAT-002
+    title: Data Classification, Retention and Deletion Standard
+    path: docs/03-architecture/DAT-002-data-classification-retention-and-deletion-standard-v0.1.0.md
     wave: 2
     priority: P1
-    status: planned
+    status: draft
+    owner: data-owner
+    dependencies: [DAT-001]
+  - id: DCT-001
+    title: Data Dictionary
+    path: docs/03-architecture/DCT-001-data-dictionary-v0.1.0.md
+    wave: 2
+    priority: P1
+    status: draft
     owner: data-owner
     dependencies: [DAT-001]
   - id: MEM-001
     title: Memory and Knowledge Architecture
-    path: docs/03-architecture/MEM-001-memory-and-knowledge-architecture.md
+    path: docs/03-architecture/MEM-001-memory-and-knowledge-architecture-v0.1.0.md
     wave: 2
     priority: P0
-    status: planned
+    status: draft
     owner: architecture-owner
     dependencies: [DAT-001, AUT-001]
-  - id: ORC-001
-    title: Workflow and Orchestration Architecture
-    path: docs/03-architecture/ORC-001-workflow-and-orchestration-architecture.md
-    wave: 2
-    priority: P0
-    status: planned
-    owner: architecture-owner
-    dependencies: [SRS-001, AUT-001]
   - id: INT-001
     title: Integration Architecture
-    path: docs/03-architecture/INT-001-integration-architecture.md
+    path: docs/03-architecture/INT-001-integration-architecture-v0.1.0.md
     wave: 2
     priority: P0
-    status: planned
+    status: draft
     owner: architecture-owner
     dependencies: [SAD-001]
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # 04-CONTRACTS
+  # ═══════════════════════════════════════════════════════════════════════════
+  - id: AGC-001
+    title: Agent Adapter Contract
+    path: docs/04-contracts/AGC-001-agent-adapter-contract-v0.1.0.md
+    wave: 3
+    priority: P0
+    status: draft
+    owner: architecture-owner
+    dependencies: [SAD-001, INT-001]
+  - id: API-001
+    title: Control-Plane API Specification
+    path: docs/04-contracts/API-001-api-specification-v0.1.0.md
+    wave: 3
+    priority: P0
+    status: draft
+    owner: api-owner
+    dependencies: [SAD-001, AGC-001, RUN-001, APR-001]
+  - id: APR-001
+    title: Approval Contract
+    path: docs/04-contracts/APR-001-approval-contract-v0.1.0.md
+    wave: 3
+    priority: P0
+    status: draft
+    owner: architecture-owner
+    dependencies: [AUT-001, ORC-001]
+  - id: ART-001
+    title: Artifact Contract
+    path: docs/04-contracts/ART-001-artifact-contract-v0.1.0.md
+    wave: 3
+    priority: P0
+    status: draft
+    owner: architecture-owner
+    dependencies: [DAT-001]
+  - id: EVT-001
+    title: Event Catalog and Async Contract
+    path: docs/04-contracts/EVT-001-event-catalog-and-async-contract-v0.1.0.md
+    wave: 3
+    priority: P0
+    status: draft
+    owner: architecture-owner
+    dependencies: [ORC-001, RUN-001]
+  - id: MOD-001
+    title: Model Profile Contract
+    path: docs/04-contracts/MOD-001-model-profile-contract-v0.1.0.md
+    wave: 3
+    priority: P0
+    status: draft
+    owner: architecture-owner
+    dependencies: [INT-001]
+  - id: RUN-001
+    title: Run and Execution Contract
+    path: docs/04-contracts/RUN-001-run-and-execution-contract-v0.1.0.md
+    wave: 3
+    priority: P0
+    status: draft
+    owner: architecture-owner
+    dependencies: [ORC-001]
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # 05-AI-GOVERNANCE
+  # ═══════════════════════════════════════════════════════════════════════════
+  - id: AUT-001
+    title: Autonomy and Approval Matrix
+    path: docs/05-ai-governance/AUT-001-autonomy-and-approval-matrix-v0.1.0.md
+    wave: 1
+    priority: P0
+    status: draft
+    owner: product-owner
+    dependencies: [SCP-001, UCD-001]
+  - id: CST-001
+    title: Usage Cost and Budget Architecture
+    path: docs/05-ai-governance/CST-001-usage-cost-and-budget-architecture-v0.1.0.md
+    wave: 2
+    priority: P1
+    status: draft
+    owner: architecture-owner
+    dependencies: [SAD-001]
+  - id: POL-001
+    title: Policy and Permission Architecture
+    path: docs/05-ai-governance/POL-001-policy-and-permission-architecture-v0.1.0.md
+    wave: 2
+    priority: P0
+    status: draft
+    owner: security-owner
+    dependencies: [AUT-001, IAM-001]
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # 06-SECURITY
+  # ═══════════════════════════════════════════════════════════════════════════
+  - id: IAM-001
+    title: Identity and Access Management Architecture
+    path: docs/06-security/IAM-001-identity-and-access-management-architecture-v0.1.0.md
+    wave: 2
+    priority: P0
+    status: draft
+    owner: security-owner
+    dependencies: [SAD-001]
+  - id: SAN-001
+    title: Sandbox and Secure Execution Architecture
+    path: docs/06-security/SAN-001-sandbox-and-secure-execution-architecture-v0.1.0.md
+    wave: 2
+    priority: P0
+    status: draft
+    owner: security-owner
+    dependencies: [SAD-001, SEC-001]
   - id: SEC-001
     title: Security Architecture
-    path: docs/06-security/SEC-001-security-architecture.md
+    path: docs/06-security/SEC-001-security-architecture-v0.1.0.md
     wave: 2
     priority: P0
-    status: planned
+    status: draft
     owner: security-owner
     dependencies: [SAD-001, DAT-001, AUT-001]
-  - id: THR-001
-    title: Threat Model
-    path: docs/06-security/THR-001-threat-model.md
+  - id: SEC-002
+    title: Security Control Catalogue
+    path: docs/06-security/SEC-002-security-control-catalogue-v0.1.0.md
     wave: 2
     priority: P0
-    status: planned
+    status: draft
+    owner: security-owner
+    dependencies: [SEC-001]
+  - id: THR-001
+    title: Threat Model
+    path: docs/06-security/THR-001-threat-model-v0.1.0.md
+    wave: 2
+    priority: P0
+    status: draft
     owner: security-owner
     dependencies: [SEC-001, C4-001, C4-002]
 
-  - id: AGC-001
-    title: Agent Adapter Contract
-    path: docs/04-contracts/AGC-001-agent-adapter-contract.md
-    wave: 3
-    priority: P0
-    status: planned
-    owner: architecture-owner
-    dependencies: [SAD-001, INT-001]
-  - id: CAP-001
-    title: Agent Capability Schema
-    path: docs/04-contracts/CAP-001-agent-capability-schema.md
-    wave: 3
-    priority: P0
-    status: planned
-    owner: architecture-owner
-    dependencies: [AGC-001]
-  - id: MOD-001
-    title: Model Profile Contract
-    path: docs/04-contracts/MOD-001-model-profile-contract.md
-    wave: 3
-    priority: P0
-    status: planned
-    owner: architecture-owner
-    dependencies: [INT-001]
-  - id: PLG-001
-    title: Plugin Manifest Contract
-    path: docs/04-contracts/PLG-001-plugin-manifest-contract.md
+  # ═══════════════════════════════════════════════════════════════════════════
+  # 07-UX-DESIGN
+  # ═══════════════════════════════════════════════════════════════════════════
+  - id: A11Y-001
+    title: Accessibility Requirements and Conformance Plan
+    path: docs/07-ux-design/A11Y-001-accessibility-requirements-and-conformance-plan-v0.1.0.md
     wave: 3
     priority: P1
-    status: planned
-    owner: architecture-owner
-    dependencies: [SAD-001]
-  - id: ART-001
-    title: Artifact Contract
-    path: docs/04-contracts/ART-001-artifact-contract.md
+    status: draft
+    owner: ux-owner
+    dependencies: [UXA-001, DSN-001]
+  - id: DSN-001
+    title: Agent OS Design System Specification
+    path: docs/07-ux-design/DSN-001-agent-os-design-system-specification-v0.1.0.md
     wave: 3
     priority: P0
-    status: planned
-    owner: architecture-owner
-    dependencies: [DAT-001]
-  - id: RUN-001
-    title: Run and Run-Step Contract
-    path: docs/04-contracts/RUN-001-run-and-run-step-contract.md
+    status: draft
+    owner: ux-owner
+    dependencies: [UXA-001]
+  - id: UXA-001
+    title: UX Architecture and User Journey Specification
+    path: docs/07-ux-design/UXA-001-ux-architecture-and-user-journey-specification-v0.1.0.md
     wave: 3
     priority: P0
-    status: planned
-    owner: architecture-owner
-    dependencies: [ORC-001]
-  - id: APR-001
-    title: Approval Contract
-    path: docs/04-contracts/APR-001-approval-contract.md
-    wave: 3
-    priority: P0
-    status: planned
-    owner: architecture-owner
-    dependencies: [AUT-001, ORC-001]
-  - id: API-001
-    title: Control-Plane OpenAPI Contract
-    path: docs/04-contracts/api/openapi.yaml
-    wave: 3
-    priority: P0
-    status: planned
-    owner: api-owner
-    dependencies: [SAD-001, AGC-001, RUN-001, APR-001]
-  - id: EVT-001
-    title: Asynchronous Event Contract
-    path: docs/04-contracts/events/asyncapi.yaml
-    wave: 3
-    priority: P0
-    status: planned
-    owner: architecture-owner
-    dependencies: [ORC-001, RUN-001]
+    status: draft
+    owner: ux-owner
+    dependencies: [UCD-001, SAD-001]
 
+  # ═══════════════════════════════════════════════════════════════════════════
+  # 08-DELIVERY
+  # ═══════════════════════════════════════════════════════════════════════════
   - id: DEV-001
-    title: Development Guide
-    path: docs/08-delivery/DEV-001-development-guide.md
+    title: Development and Implementation Guide
+    path: docs/08-delivery/DEV-001-development-and-implementation-guide-v0.1.0.md
     wave: 4
     priority: P0
-    status: planned
+    status: draft
     owner: engineering-owner
     dependencies: [SAD-001]
   - id: TST-001
-    title: Test Strategy
-    path: docs/08-delivery/TST-001-test-strategy.md
+    title: Test Strategy and Verification Plan
+    path: docs/08-delivery/TST-001-test-strategy-and-verification-plan-v0.1.0.md
     wave: 4
     priority: P0
-    status: planned
+    status: draft
     owner: quality-owner
     dependencies: [SRS-001, NFR-001, THR-001]
-  - id: QAG-001
-    title: Quality Gates
-    path: docs/08-delivery/QAG-001-quality-gates.md
-    wave: 4
-    priority: P0
-    status: planned
-    owner: quality-owner
-    dependencies: [TST-001, DOC-000]
-  - id: OPS-001
-    title: Production and DevOps Plan
-    path: docs/09-operations/OPS-001-production-and-devops-plan.md
-    wave: 5
-    priority: P0
-    status: planned
-    owner: operations-owner
-    dependencies: [DEP-001, SEC-001]
-  - id: OBS-001
-    title: Observability Plan
-    path: docs/09-operations/OBS-001-observability-plan.md
-    wave: 5
-    priority: P0
-    status: planned
-    owner: operations-owner
-    dependencies: [SAD-001, ORC-001]
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # 09-OPERATIONS
+  # ═══════════════════════════════════════════════════════════════════════════
   - id: BCP-001
-    title: Backup and Disaster Recovery
-    path: docs/09-operations/BCP-001-backup-and-disaster-recovery.md
+    title: Business Continuity and Disaster Recovery Plan
+    path: docs/09-operations/BCP-001-business-continuity-and-disaster-recovery-plan-v0.1.0.md
     wave: 5
     priority: P0
-    status: planned
+    status: draft
     owner: operations-owner
     dependencies: [DAT-001, OPS-001]
+  - id: DEP-001
+    title: Deployment Architecture and Environment Strategy
+    path: docs/09-operations/DEP-001-deployment-architecture-and-environment-strategy-v0.1.0.md
+    wave: 5
+    priority: P0
+    status: draft
+    owner: operations-owner
+    dependencies: [SAD-001, SEC-001]
+  - id: OBS-001
+    title: Observability Architecture
+    path: docs/09-operations/OBS-001-observability-architecture-v0.1.0.md
+    wave: 5
+    priority: P0
+    status: draft
+    owner: operations-owner
+    dependencies: [SAD-001, ORC-001]
+  - id: OPS-001
+    title: Operations and Production Runbook
+    path: docs/09-operations/OPS-001-operations-and-production-runbook-v0.1.0.md
+    wave: 5
+    priority: P0
+    status: draft
+    owner: operations-owner
+    dependencies: [DEP-001, SEC-001]
 
+  # ═══════════════════════════════════════════════════════════════════════════
+  # 10-MODULES
+  # ═══════════════════════════════════════════════════════════════════════════
+  - id: CAP-001
+    title: Agent Capability Schema
+    path: docs/10-modules/CAP-001-agent-capability-schema-v0.1.0.md
+    wave: 3
+    priority: P0
+    status: draft
+    owner: architecture-owner
+    dependencies: [AGC-001]
+  - id: ORC-001
+    title: Workflow and Orchestration Architecture
+    path: docs/10-modules/ORC-001-workflow-and-orchestration-architecture-v0.1.0.md
+    wave: 2
+    priority: P0
+    status: draft
+    owner: architecture-owner
+    dependencies: [SRS-001, AUT-001]
+  - id: PLG-001
+    title: Plugin and Extension Architecture
+    path: docs/10-modules/PLG-001-plugin-and-extension-architecture-v0.1.0.md
+    wave: 3
+    priority: P1
+    status: draft
+    owner: architecture-owner
+    dependencies: [SAD-001]
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # 11-INTEGRATIONS
+  # ═══════════════════════════════════════════════════════════════════════════
+  - id: ADP-CDX-001
+    title: Codex Adapter Detailed Specification
+    path: docs/11-integrations/ADP-CDX-001-codex-adapter-detailed-specification-v0.1.0.md
+    wave: 3
+    priority: P1
+    status: draft
+    owner: integration-owner
+    dependencies: [AGC-001, INT-001]
+  - id: ADP-HER-001
+    title: Hermes Adapter Detailed Specification
+    path: docs/11-integrations/ADP-HER-001-hermes-adapter-detailed-specification-v0.1.0.md
+    wave: 3
+    priority: P1
+    status: draft
+    owner: integration-owner
+    dependencies: [AGC-001, INT-001]
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # 13-ASSURANCE
+  # ═══════════════════════════════════════════════════════════════════════════
+  - id: AUD-001
+    title: Audit and Evidence Architecture
+    path: docs/13-assurance/AUD-001-audit-and-evidence-architecture-v0.1.0.md
+    wave: 4
+    priority: P0
+    status: draft
+    owner: security-owner
+    dependencies: [SEC-001, OBS-001]
+  - id: QAG-001
+    title: Quality Assurance and Release Gates
+    path: docs/13-assurance/QAG-001-quality-assurance-and-release-gates-v0.1.0.md
+    wave: 4
+    priority: P0
+    status: draft
+    owner: quality-owner
+    dependencies: [TST-001, DOC-000]
+  - id: VVR-001
+    title: Visual Validation and Regression Plan
+    path: docs/13-assurance/VVR-001-visual-validation-and-regression-plan-v0.1.0.md
+    wave: 4
+    priority: P1
+    status: draft
+    owner: quality-owner
+    dependencies: [TST-001, DSN-001]
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # RESEARCH
+  # ═══════════════════════════════════════════════════════════════════════════
   - id: VIDEO-001
     title: Video Inventory and Methodology
     path: docs/research/agent-os-video-audit/VIDEO-001-video-inventory-and-methodology.md

@@ -1,6 +1,27 @@
+---
+document_id: UG-API-REFERENCE
+title: Référence API - Agent OS
+version: 0.1.0
+status: draft
+owner: documentation-owner
+approvers:
+  - api-owner
+  - architecture-owner
+created: 2026-07-20
+last_reviewed: 2026-07-20
+classification: public
+source_of_truth: false
+related_documents:
+  - API-001
+  - AGC-001
+  - RUN-001
+  - APR-001
+related_adrs: []
+---
+
 # Référence API - Agent OS
 
-**Version:** 0.1.0  
+**Version:** 0.1.0
 **Base URL:** `http://localhost:8080/api/v1`
 
 ## Table des Matières
