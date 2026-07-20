@@ -1,0 +1,650 @@
+openapi: 3.1.0
+info:
+  title: Agent OS Control Plane API
+  description: |
+    API for the Agent OS Control Plane — vendor-neutral orchestration,
+    governance, and observability for AI agents.
+  version: 0.1.0
+  contact:
+    name: Agent OS Team
+    email: api@agent-os.dev
+  license:
+    name: Proprietary
+    url: https://agent-os.dev/license
+
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Local development
+  - url: https://api.agent-os.dev/v1
+    description: Production
+
+security:
+  - bearerAuth: []
+
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      summary: Health check
+      tags: [System]
+      security: []
+      responses:
+        '200':
+          description: Service healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /auth/token:
+    post:
+      operationId: createToken
+      summary: Create authentication token
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRequest'
+      responses:
+        '200':
+          description: Token created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /agents:
+    get:
+      operationId: listAgents
+      summary: List all agents
+      tags: [Agents]
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, inactive, error]
+      responses:
+        '200':
+          description: Agents listed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentList'
+    post:
+      operationId: createAgent
+      summary: Create a new agent
+      tags: [Agents]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentCreate'
+      responses:
+        '201':
+          description: Agent created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /agents/{agent_id}:
+    get:
+      operationId: getAgent
+      summary: Get agent by ID
+      tags: [Agents]
+      parameters:
+        - $ref: '#/components/parameters/AgentIdParam'
+      responses:
+        '200':
+          description: Agent found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      operationId: updateAgent
+      summary: Update agent
+      tags: [Agents]
+      parameters:
+        - $ref: '#/components/parameters/AgentIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentUpdate'
+      responses:
+        '200':
+          description: Agent updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: deleteAgent
+      summary: Delete agent
+      tags: [Agents]
+      parameters:
+        - $ref: '#/components/parameters/AgentIdParam'
+      responses:
+        '204':
+          description: Agent deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /agents/{agent_id}/run:
+    post:
+      operationId: createRun
+      summary: Create and start a run
+      tags: [Runs]
+      parameters:
+        - $ref: '#/components/parameters/AgentIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunCreate'
+      responses:
+        '202':
+          description: Run accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Run'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /runs:
+    get:
+      operationId: listRuns
+      summary: List all runs
+      tags: [Runs]
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+        - name: agent_id
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, running, completed, failed, cancelled]
+      responses:
+        '200':
+          description: Runs listed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunList'
+
+  /runs/{run_id}:
+    get:
+      operationId: getRun
+      summary: Get run by ID
+      tags: [Runs]
+      parameters:
+        - name: run_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Run found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Run'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /runs/{run_id}/cancel:
+    post:
+      operationId: cancelRun
+      summary: Cancel a running run
+      tags: [Runs]
+      parameters:
+        - name: run_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Run cancelled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Run'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /memory:
+    post:
+      operationId: createMemory
+      summary: Add to memory
+      tags: [Memory]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemoryCreate'
+      responses:
+        '201':
+          description: Memory created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Memory'
+    get:
+      operationId: searchMemory
+      summary: Search memory
+      tags: [Memory]
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: Memory results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemorySearchResults'
+
+  /memory/{key}:
+    get:
+      operationId: getMemory
+      summary: Get memory by key
+      tags: [Memory]
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Memory found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Memory'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      operationId: deleteMemory
+      summary: Delete memory
+      tags: [Memory]
+      parameters:
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Memory deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /tools:
+    get:
+      operationId: listTools
+      summary: List available tools
+      tags: [Tools]
+      responses:
+        '200':
+          description: Tools listed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToolList'
+
+  /tools/{tool_id}/execute:
+    post:
+      operationId: executeTool
+      summary: Execute a tool
+      tags: [Tools]
+      parameters:
+        - name: tool_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToolExecution'
+      responses:
+        '200':
+          description: Tool executed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToolResult'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    LimitParam:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        default: 20
+        minimum: 1
+        maximum: 100
+    OffsetParam:
+      name: offset
+      in: query
+      schema:
+        type: integer
+        default: 0
+        minimum: 0
+    AgentIdParam:
+      name: agent_id
+      in: path
+      required: true
+      schema:
+        type: string
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: healthy
+        version:
+          type: string
+          example: 0.1.0
+
+    TokenRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+          example: bearer
+        expires_in:
+          type: integer
+          example: 3600
+
+    Agent:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        model:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive, error]
+        capabilities:
+          type: array
+          items:
+            type: string
+        config:
+          type: object
+        policies:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    AgentCreate:
+      type: object
+      required: [name, model]
+      properties:
+        name:
+          type: string
+        model:
+          type: string
+        capabilities:
+          type: array
+          items:
+            type: string
+        config:
+          type: object
+        policies:
+          type: object
+
+    AgentUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        model:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive]
+        config:
+          type: object
+        policies:
+          type: object
+
+    AgentList:
+      type: object
+      properties:
+        agents:
+          type: array
+          items:
+            $ref: '#/components/schemas/Agent'
+        total:
+          type: integer
+        limit:
+          type: integer
+        offset:
+          type: integer
+
+    Run:
+      type: object
+      properties:
+        id:
+          type: string
+        agent_id:
+          type: string
+        status:
+          type: string
+          enum: [pending, running, completed, failed, cancelled]
+        prompt:
+          type: string
+        context:
+          type: object
+        result:
+          type: object
+        started_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+
+    RunCreate:
+      type: object
+      required: [prompt]
+      properties:
+        prompt:
+          type: string
+        context:
+          type: object
+        options:
+          type: object
+          properties:
+            stream:
+              type: boolean
+              default: false
+            timeout:
+              type: integer
+              default: 30
+
+    RunList:
+      type: object
+      properties:
+        runs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Run'
+        total:
+          type: integer
+        limit:
+          type: integer
+        offset:
+          type: integer
+
+    Memory:
+      type: object
+      properties:
+        key:
+          type: string
+        content:
+          type: string
+        metadata:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+        expires_at:
+          type: string
+          format: date-time
+
+    MemoryCreate:
+      type: object
+      required: [key, content]
+      properties:
+        key:
+          type: string
+        content:
+          type: string
+        metadata:
+          type: object
+        ttl:
+          type: integer
+          description: Time to live in seconds
+
+    MemorySearchResults:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Memory'
+        total:
+          type: integer
+
+    Tool:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        requires_approval:
+          type: boolean
+
+    ToolList:
+      type: object
+      properties:
+        tools:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tool'
+
+    ToolExecution:
+      type: object
+      properties:
+        parameters:
+          type: object
+        agent_id:
+          type: string
+
+    ToolResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        output:
+          type: object
+        error:
+          type: string
+
+    Error:
+      type: object
+      properties:
+        detail:
+          type: string
+        code:
+          type: string

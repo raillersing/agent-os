@@ -1,4 +1,4 @@
-register_version: 0.2.0
+register_version: 0.3.0
 last_updated: 2026-07-20
 status_values:
   - draft
@@ -21,6 +21,17 @@ documents:
     status: draft
     owner: product-owner
     dependencies: []
+  - id: ADR-001
+    title: Technology Stack Selection
+    path: docs/00-governance/adr/ADR-001-technology-stack.md
+    version: 1.0.0
+    wave: 1
+    priority: P0
+    status: approved
+    owner: architecture-owner
+    approval_date: 2026-07-20
+    source_of_truth: true
+    dependencies: [SAD-001, DEP-001, DEV-001]
   - id: GLO-001
     title: Glossary and Controlled Terminology
     path: docs/00-governance/GLO-001-glossary.md

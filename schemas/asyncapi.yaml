@@ -1,0 +1,610 @@
+asyncapi: 3.0.0
+info:
+  title: Agent OS Event Bus
+  description: |
+    Asynchronous event contracts for Agent OS.
+    Events are published via Redis Pub/Sub and consumed by interested services.
+  version: 0.1.0
+  contact:
+    name: Agent OS Team
+    email: events@agent-os.dev
+  license:
+    name: Proprietary
+    url: https://agent-os.dev/license
+
+servers:
+  local:
+    url: redis://localhost:6379
+    description: Local development
+  production:
+    url: redis://redis-agent-os:6379
+    description: Production
+
+channels:
+  agents:
+    description: Agent lifecycle events
+    messages:
+      agentCreated:
+        $ref: '#/components/messages/AgentCreated'
+      agentUpdated:
+        $ref: '#/components/messages/AgentUpdated'
+      agentDeleted:
+        $ref: '#/components/messages/AgentDeleted'
+      agentError:
+        $ref: '#/components/messages/AgentError'
+
+  runs:
+    description: Run lifecycle events
+    messages:
+      runStarted:
+        $ref: '#/components/messages/RunStarted'
+      runStepCompleted:
+        $ref: '#/components/messages/RunStepCompleted'
+      runCompleted:
+        $ref: '#/components/messages/RunCompleted'
+      runFailed:
+        $ref: '#/components/messages/RunFailed'
+      runCancelled:
+        $ref: '#/components/messages/RunCancelled'
+
+  memory:
+    description: Memory events
+    messages:
+      memoryCreated:
+        $ref: '#/components/messages/MemoryCreated'
+      memoryUpdated:
+        $ref: '#/components/messages/MemoryUpdated'
+      memoryDeleted:
+        $ref: '#/components/messages/MemoryDeleted'
+
+  approvals:
+    description: Approval workflow events
+    messages:
+      approvalRequested:
+        $ref: '#/components/messages/ApprovalRequested'
+      approvalGranted:
+        $ref: '#/components/messages/ApprovalGranted'
+      approvalRejected:
+        $ref: '#/components/messages/ApprovalRejected'
+
+  tools:
+    description: Tool execution events
+    messages:
+      toolExecutionStarted:
+        $ref: '#/components/messages/ToolExecutionStarted'
+      toolExecutionCompleted:
+        $ref: '#/components/messages/ToolExecutionCompleted'
+      toolExecutionFailed:
+        $ref: '#/components/messages/ToolExecutionFailed'
+
+  audit:
+    description: Audit trail events
+    messages:
+      auditEvent:
+        $ref: '#/components/messages/AuditEvent'
+
+operations:
+  onAgentCreated:
+    action: receive
+    channel:
+      $ref: '#/channels/agents'
+    messages:
+      - $ref: '#/components/messages/AgentCreated'
+
+  onRunStarted:
+    action: receive
+    channel:
+      $ref: '#/channels/runs'
+    messages:
+      - $ref: '#/components/messages/RunStarted'
+
+  onRunCompleted:
+    action: receive
+    channel:
+      $ref: '#/channels/runs'
+    messages:
+      - $ref: '#/components/messages/RunCompleted'
+
+  publishAgentCreated:
+    action: send
+    channel:
+      $ref: '#/channels/agents'
+    messages:
+      - $ref: '#/components/messages/AgentCreated'
+
+  publishRunStarted:
+    action: send
+    channel:
+      $ref: '#/channels/runs'
+    messages:
+      - $ref: '#/components/messages/RunStarted'
+
+components:
+  messages:
+    AgentCreated:
+      name: AgentCreated
+      title: Agent Created
+      summary: Emitted when a new agent is created
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/AgentCreatedPayload'
+
+    AgentUpdated:
+      name: AgentUpdated
+      title: Agent Updated
+      summary: Emitted when an agent is updated
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/AgentUpdatedPayload'
+
+    AgentDeleted:
+      name: AgentDeleted
+      title: Agent Deleted
+      summary: Emitted when an agent is deleted
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/AgentDeletedPayload'
+
+    AgentError:
+      name: AgentError
+      title: Agent Error
+      summary: Emitted when an agent encounters an error
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/AgentErrorPayload'
+
+    RunStarted:
+      name: RunStarted
+      title: Run Started
+      summary: Emitted when a run begins execution
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/RunStartedPayload'
+
+    RunStepCompleted:
+      name: RunStepCompleted
+      title: Run Step Completed
+      summary: Emitted when a run step completes
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/RunStepCompletedPayload'
+
+    RunCompleted:
+      name: RunCompleted
+      title: Run Completed
+      summary: Emitted when a run completes successfully
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/RunCompletedPayload'
+
+    RunFailed:
+      name: RunFailed
+      title: Run Failed
+      summary: Emitted when a run fails
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/RunFailedPayload'
+
+    RunCancelled:
+      name: RunCancelled
+      title: Run Cancelled
+      summary: Emitted when a run is cancelled
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/RunCancelledPayload'
+
+    MemoryCreated:
+      name: MemoryCreated
+      title: Memory Created
+      summary: Emitted when memory is added
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/MemoryCreatedPayload'
+
+    MemoryUpdated:
+      name: MemoryUpdated
+      title: Memory Updated
+      summary: Emitted when memory is updated
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/MemoryUpdatedPayload'
+
+    MemoryDeleted:
+      name: MemoryDeleted
+      title: Memory Deleted
+      summary: Emitted when memory is deleted
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/MemoryDeletedPayload'
+
+    ApprovalRequested:
+      name: ApprovalRequested
+      title: Approval Requested
+      summary: Emitted when an approval is requested
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/ApprovalRequestedPayload'
+
+    ApprovalGranted:
+      name: ApprovalGranted
+      title: Approval Granted
+      summary: Emitted when an approval is granted
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/ApprovalGrantedPayload'
+
+    ApprovalRejected:
+      name: ApprovalRejected
+      title: Approval Rejected
+      summary: Emitted when an approval is rejected
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/ApprovalRejectedPayload'
+
+    ToolExecutionStarted:
+      name: ToolExecutionStarted
+      title: Tool Execution Started
+      summary: Emitted when a tool starts executing
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/ToolExecutionStartedPayload'
+
+    ToolExecutionCompleted:
+      name: ToolExecutionCompleted
+      title: Tool Execution Completed
+      summary: Emitted when a tool completes execution
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/ToolExecutionCompletedPayload'
+
+    ToolExecutionFailed:
+      name: ToolExecutionFailed
+      title: Tool Execution Failed
+      summary: Emitted when a tool execution fails
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/ToolExecutionFailedPayload'
+
+    AuditEvent:
+      name: AuditEvent
+      title: Audit Event
+      summary: Generic audit trail event
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/AuditEventPayload'
+
+  schemas:
+    AgentCreatedPayload:
+      type: object
+      required: [event_id, timestamp, agent]
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        agent:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            model:
+              type: string
+
+    AgentUpdatedPayload:
+      type: object
+      required: [event_id, timestamp, agent_id, changes]
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        agent_id:
+          type: string
+        changes:
+          type: object
+
+    AgentDeletedPayload:
+      type: object
+      required: [event_id, timestamp, agent_id]
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        agent_id:
+          type: string
+
+    AgentErrorPayload:
+      type: object
+      required: [event_id, timestamp, agent_id, error]
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        agent_id:
+          type: string
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+
+    RunStartedPayload:
+      type: object
+      required: [event_id, timestamp, run]
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        run:
+          type: object
+          properties:
+            id:
+              type: string
+            agent_id:
+              type: string
+            prompt:
+              type: string
+
+    RunStepCompletedPayload:
+      type: object
+      required: [event_id, timestamp, run_id, step]
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        run_id:
+          type: string
+        step:
+          type: object
+          properties:
+            index:
+              type: integer
+            type:
+              type: string
+            duration_ms:
+              type: integer
+
+    RunCompletedPayload:
+      type: object
+      required: [event_id, timestamp, run_id, result]
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        run_id:
+          type: string
+        result:
+          type: object
+          properties:
+            tokens_used:
+              type: integer
+            cost:
+              type: number
+
+    RunFailedPayload:
+      type: object
+      required: [event_id, timestamp, run_id, error]
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        run_id:
+          type: string
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+
+    RunCancelledPayload:
+      type: object
+      required: [event_id, timestamp, run_id]
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        run_id:
+          type: string
+
+    MemoryCreatedPayload:
+      type: object
+      required: [event_id, timestamp, memory]
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        memory:
+          type: object
+          properties:
+            key:
+              type: string
+            content:
+              type: string
+
+    MemoryUpdatedPayload:
+      type: object
+      required: [event_id, timestamp, key]
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        key:
+          type: string
+
+    MemoryDeletedPayload:
+      type: object
+      required: [event_id, timestamp, key]
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        key:
+          type: string
+
+    ApprovalRequestedPayload:
+      type: object
+      required: [event_id, timestamp, request_id, action]
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        request_id:
+          type: string
+        action:
+          type: object
+          properties:
+            type:
+              type: string
+            resource:
+              type: string
+
+    ApprovalGrantedPayload:
+      type: object
+      required: [event_id, timestamp, request_id]
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        request_id:
+          type: string
+
+    ApprovalRejectedPayload:
+      type: object
+      required: [event_id, timestamp, request_id, reason]
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        request_id:
+          type: string
+        reason:
+          type: string
+
+    ToolExecutionStartedPayload:
+      type: object
+      required: [event_id, timestamp, execution_id, tool_id]
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        execution_id:
+          type: string
+        tool_id:
+          type: string
+
+    ToolExecutionCompletedPayload:
+      type: object
+      required: [event_id, timestamp, execution_id]
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        execution_id:
+          type: string
+        result:
+          type: object
+
+    ToolExecutionFailedPayload:
+      type: object
+      required: [event_id, timestamp, execution_id, error]
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        execution_id:
+          type: string
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+
+    AuditEventPayload:
+      type: object
+      required: [event_id, timestamp, action, actor]
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        action:
+          type: string
+        actor:
+          type: object
+          properties:
+            id:
+              type: string
+            type:
+              type: string
+              enum: [user, agent, system]
+        resource:
+          type: object
+          properties:
+            type:
+              type: string
+            id:
+              type: string
+        details:
+          type: object
