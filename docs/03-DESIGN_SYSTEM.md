@@ -1,8 +1,8 @@
 ---
 document_id: DSN-002
-title: Agent OS v2 Goldie Edition Design System
+title: Agent OS v2 Design System
 version: 2.0.0
-status: draft
+status: archived
 owner: product-owner
 approvers:
   - product-owner
@@ -10,16 +10,16 @@ approvers:
 created: 2026-08-11
 last_reviewed: 2026-08-12
 classification: internal
-source_of_truth: true
+source_of_truth: false
 related_documents: [DSN-001, UXA-001, A11Y-001, VVR-001]
 related_adrs: []
 ---
 
-# Agent OS v2 — Goldie Edition Design System
+# Agent OS v2 Design System
 
 > **Status:** Source of truth for UI/UX implementation.
 > **Scope:** All Next.js 15 + React 19 + Tailwind CSS v4 frontend surfaces.
-> **Theme:** Dark-first, inspired by Julian Goldie "Agentic OS" screenshots.
+> **Theme:** Dark-first, inspired by external reference "Agentic OS" screenshots.
 > **Version:** 2.0.0
 
 ---

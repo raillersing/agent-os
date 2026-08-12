@@ -111,7 +111,7 @@ The default is `private`. Sharing is explicit and auditable. Access checks apply
 
 ### 4. Initial agent adapters
 
-The initial supported adapter baseline contains Codex, Hermes, and Claude Code. Each adapter remains replaceable and must implement the versioned Agent Adapter Contract. The approved vision's first proof slice remains two adapters; the third adapter is part of the initial supported set and requires its own conformance profile. Agent OS records only conversations and execution evidence that pass through its controlled adapter or interface boundary.
+The initial supported adapter baseline contains Hermes, Codex, and Claude Code. Each adapter remains replaceable and must implement the versioned Agent Adapter Contract and its conformance profile. Agent OS records only conversations and execution evidence that pass through its controlled adapter or interface boundary.
 
 ### 5. Approval and risk policy
 

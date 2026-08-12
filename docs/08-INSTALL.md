@@ -1,8 +1,8 @@
 ---
 document_id: DEP-002
-title: Agent OS v2 Goldie Edition Installation and Deployment Guide
+title: Agent OS v2 Installation and Deployment Guide
 version: 2.0.0
-status: draft
+status: archived
 owner: operations-owner
 approvers:
   - operations-owner
@@ -10,14 +10,14 @@ approvers:
 created: 2026-08-11
 last_reviewed: 2026-08-12
 classification: internal
-source_of_truth: true
+source_of_truth: false
 related_documents: [DEP-001, OPS-001, SEC-001]
 related_adrs: []
 ---
 
 # Agent OS v2 — Installation & Deployment Guide
 
-## Goldie Edition
+## Agent OS
 
 **Version:** 2.0.0-MVP
 **Date:** 2026-08-11

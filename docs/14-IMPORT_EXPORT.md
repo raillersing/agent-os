@@ -1,8 +1,8 @@
 ---
 document_id: ART-002
-title: Agent OS v2 Goldie Edition Import and Export Module
+title: Agent OS v2 Import and Export Module
 version: 2.0.0
-status: draft
+status: archived
 owner: data-owner
 approvers:
   - data-owner
@@ -10,12 +10,12 @@ approvers:
 created: 2026-08-11
 last_reviewed: 2026-08-12
 classification: internal
-source_of_truth: true
+source_of_truth: false
 related_documents: [ART-001, DAT-003, SEC-001]
 related_adrs: []
 ---
 
-# Agent OS v2 — Goldie Edition / Import & Export Module
+# Agent OS v2 / Import & Export Module
 
 > **Document:** `14-IMPORT_EXPORT.md`
 > **Version:** 2.0.0

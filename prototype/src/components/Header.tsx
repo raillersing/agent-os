@@ -51,7 +51,7 @@ export function Header() {
 
             <div className="flex items-center gap-2 ml-1 pl-2 border-l border-border">
               <div className="text-right hidden sm:block">
-                <p className="text-xs font-medium text-text-primary">Julian Goldie</p>
+                <p className="text-xs font-medium text-text-primary">external reference</p>
                 <p className="text-[10px] text-text-muted">Admin</p>
               </div>
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-purple to-brand-pink flex items-center justify-center text-xs font-bold text-white">

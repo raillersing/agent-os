@@ -1,14 +1,24 @@
 ---
 document_id: VSN-001
 title: Agent OS Product Vision and Project Charter
-version: 1.0.0
-status: approved
+version: 1.1.0
+status: in-review
 owner: product-owner
 approvers:
   - product-owner
 created: 2026-07-16
 last_reviewed: 2026-07-16
 approval_date: 2026-07-16
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-12
+    evidence: explicit user decision selecting Hermes, Codex, and Claude Code as the initial adapter baseline
+pending_approvals:
+  - architecture-owner
+  - security-owner
+  - operations-owner
+  - quality-owner
 classification: internal
 source_of_truth: true
 related_documents:
@@ -35,7 +45,7 @@ This document establishes the proposed product direction, value, boundaries, pri
 
 **PROPOSED:** Agent OS is a provider-neutral control, orchestration, and governance platform for operating multiple AI agents, models, tools, workflows, knowledge sources, and artifacts through durable workspaces, explicit permissions, human approvals, and complete observability.
 
-The platform opportunity is to replace fragmented, opaque AI work with governed and resumable execution. A user should be able to understand what is running, why it is permitted, which model or tool is involved, what it costs, what it produced, and what evidence supports its status. The first product increment is proposed as a local, single-node, accessible web Mission Control with two agent adapters, durable task/run state, approvals, governed tools, artifacts, permission-aware memory, audit events, and cost attribution.
+The platform opportunity is to replace fragmented, opaque AI work with governed and resumable execution. A user should be able to understand what is running, why it is permitted, which model or tool is involved, what it costs, what it produced, and what evidence supports its status. The first product increment is proposed as a local, single-node, accessible web Mission Control with three agent adapters (Hermes, Codex, and Claude Code), durable task/run state, approvals, governed tools, artifacts, permission-aware memory, audit events, and cost attribution.
 
 This approved vision baseline retains the tracked open questions in Section 27 for later controlled documents. No functionality is claimed to exist.
 
@@ -205,6 +215,7 @@ The first MVP boundary is approved as the initial vision baseline. Detailed scop
 - model profiles and routing foundation;
 - Hermes adapter;
 - Codex adapter;
+- Claude Code adapter;
 - task and run persistence;
 - approval inbox;
 - tool permission foundation;
@@ -216,7 +227,7 @@ The first MVP boundary is approved as the initial vision baseline. Detailed scop
 - local single-node deployment;
 - accessible responsive web Mission Control.
 
-The MVP should prove durable, governed execution across two agent adapters. It should not attempt broad feature parity with every screen or claim in the video research.
+The MVP should prove durable, governed execution across three agent adapters. It should not attempt broad feature parity with every screen or claim in the research material.
 
 ## 14. Post-MVP scope
 
@@ -319,7 +330,7 @@ The following values are approved as **initial baseline targets**, not implement
 | Artifact retrieval | ≥99% successful retrieval of retained, authorized pilot artifacts | Storage/API tests plus pilot telemetry, excluding deliberate deletion |
 | Trace completeness | 100% of accepted runs emit the required event/receipt fields | Schema validation against a defined minimum trace contract |
 | Cost attribution | ≥95% of billable model/tool events attributed to workspace, task, and run | Reconciliation of provider/tool usage against Agent OS cost events |
-| Adapter conformance | 100% pass rate for required Hermes and Codex contract tests | Versioned adapter conformance suite |
+| Adapter conformance | 100% pass rate for required Hermes, Codex, and Claude Code contract tests | Versioned adapter conformance suite |
 | User task completion | Establish baseline, then target ≥80% for defined MVP journeys | Moderated and instrumented usability tests with representative users |
 | Accessibility | WCAG 2.2 AA for defined MVP workflows; zero unresolved critical blockers | Automated checks plus keyboard and assistive-technology review |
 | Recovery time | Restore the local pilot service and retained data within 4 hours | Documented recovery exercise from an approved backup scenario |
@@ -353,14 +364,14 @@ These criteria are approved as vision-level success criteria; later controlled d
 - Open and versioned standards are preferred at integration boundaries, subject to fitness and security review.
 - Architecture, security, product scope, business metrics, and visible UX require human validation.
 - The project starts documentation-first; application implementation status is currently **NOT CONFIRMED**.
-- Scope must remain bounded enough to prove two adapters and governed durable execution before expanding.
+- Scope must remain bounded enough to prove three adapters and governed durable execution before expanding.
 
 ## 24. Assumptions
 
 The following assumptions are retained explicitly and require validation:
 
 - the first pilot can run on a local single-node Linux/WSL environment;
-- initial users need both Hermes and Codex adapters;
+- initial users need Hermes, Codex, and Claude Code adapters;
 - a workspace is the appropriate primary isolation and organization boundary;
 - users value continuity, governed delegation, artifact retrieval, and cost visibility more than broad media features in the first MVP;
 - provider/model diversity is valuable enough to justify adapter contracts in the MVP;
@@ -385,7 +396,7 @@ No assumption is an approved business decision.
 
 ### External and project dependencies — pending confirmation
 
-- availability and permitted use of Hermes and Codex integration surfaces;
+- availability and permitted use of Hermes, Codex, and Claude Code integration surfaces;
 - model-provider accounts and commercial/privacy terms;
 - supported identity, storage, execution, and secret-management mechanisms;
 - representative pilot users, workspaces, tasks, and datasets;
@@ -412,7 +423,7 @@ No assumption is an approved business decision.
 1. Who are the named product, architecture, security, data/finance, UX, quality, and operations owners?
 2. Is the first deployment single-user, trusted-team, or multi-organization?
 3. Which users and priority jobs form the first pilot, and which workspaces/tasks represent them?
-4. Are Hermes and Codex the approved first adapters, and what integration modes are permitted?
+4. Are Hermes, Codex, and Claude Code the approved first adapters, and what integration modes are permitted?
 5. Is Agent OS initially an internal platform, a personal product, or a future commercial offering?
 6. Is remote access required in the first pilot, or is local-only access sufficient?
 7. Which actions are consequential enough to require approval in the first MVP?

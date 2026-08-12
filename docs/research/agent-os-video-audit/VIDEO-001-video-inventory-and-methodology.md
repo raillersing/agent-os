@@ -47,7 +47,7 @@ Creation time is container metadata and is **low trust**. Language `und` means t
 | A | `Claude + Hermes Agent_ NEW Agent OS is INSANE!.mp4` | 144,341,594 B | 00:35:21.700 | H.264, 1280×720, 30 fps | AAC, language `und` | None | 2026-05-16T03:42:47Z | `c5092c6d944fcb0836192f224be89490174a35c4387479d4882ee06c9a8e9eaa` |
 | B | `Hermes Agent Desktop vs Agent OS- Which Wins..mp4` | 36,464,211 B | 00:10:28.169 | H.264, 1280×720, 30 fps | AAC, language `und` | None | 2026-06-03T00:13:03Z | `38de2d43ef1308ecae1d018daa5e734f167da79bc54368445b8806079109b3ad` |
 | C | `How to Build Your Own Agent Operating System.mp4` | 67,955,791 B | 00:32:40.972 | H.264, 1280×720, 30 fps | AAC, language `und` | None | 2026-05-25T14:11:14Z | `7f13d13a5d4ee844b970b1b3f4ee60b5db3b21ff0be65e99d347e242f2116026` |
-| D | `How to Build Your Own Agent OS (FREE) - Julian Goldie.mp4` | 26,362,830 B | 00:07:59.678 | H.264, 1138×640, 30 fps | AAC, language `und` | None | Not present | `b1c5d1cc10ff8b5e786f0e053a1165cb60dbe7860e4e7c2e99d3267505904629` |
+| D | `How to Build Your Own Agent OS (FREE) - external reference.mp4` | 26,362,830 B | 00:07:59.678 | H.264, 1138×640, 30 fps | AAC, language `und` | None | Not present | `b1c5d1cc10ff8b5e786f0e053a1165cb60dbe7860e4e7c2e99d3267505904629` |
 
 ## Repository discovery
 

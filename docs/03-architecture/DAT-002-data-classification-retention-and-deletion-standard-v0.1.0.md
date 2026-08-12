@@ -2,8 +2,7 @@
 document_id: DAT-002
 title: Agent OS Data Classification, Retention and Deletion Standard
 version: 0.2.0
-status: draft
-register_status: proposed_unregistered
+status: in-review
 owner: data-owner
 approvers:
   - product-owner
@@ -15,8 +14,15 @@ approvers:
 created: 2026-07-20
 last_reviewed: 2026-07-20
 classification: internal
-source_of_truth: false
-related_documents: []
+source_of_truth: true
+related_documents:
+  - ADR-003
+  - ADR-005
+  - DAT-001
+  - DCT-001
+  - IAM-001
+  - POL-001
+  - ART-001
 dependencies:
   - DAT-001
   - SEC-001
@@ -881,21 +887,21 @@ Deletion suspended until an authorized hold is released.
 
 Exceptional records retained indefinitely only with approved purpose, owner, review, and storage controls.
 
-## 101. Candidate retention ranges
+## 101. Proposed baseline retention schedule
 
 The following are discussion ranges, not approved periods:
 
 | Profile | Candidate direction |
 |---|---|
-| `R0` | session end to 30 days |
-| `R1` | 7 to 90 days |
-| `R2` | 3 to 24 months |
-| `R3` | 1 to 7 years depending on purpose |
-| `R4` | 1 to 7+ years depending on security, contractual, and audit needs |
-| `R5` | until explicit hold release |
-| `R6` | indefinite with periodic review |
+| `R0` | 24 hours after session or attempt completion |
+| `R1` | 30 days after last operational need |
+| `R2` | 180 days after last operational need |
+| `R3` | 2 years after closure or supersession |
+| `R4` | 7 years only for security, approval, audit, incident, or legally justified evidence; otherwise use the shorter applicable period |
+| `R5` | until the explicit legal, contractual, security, or incident hold is released, followed by normal category retention |
+| `R6` | prohibited by default; only an explicit owner-approved policy with annual review may authorize it |
 
-Final periods must be recorded in an approved retention schedule.
+These are the Agent OS defaults, not universal statutory periods. A stricter applicable law, contract, legal hold, or provider obligation takes precedence. Every workspace may shorten a default period, but may not extend it without an approved purpose, owner, review date, and documented justification.
 
 ## 102. Retention schedule
 

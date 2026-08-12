@@ -25,7 +25,7 @@ related_documents:
   - NFR-001
   - IAM-001
   - POL-001
-  - HUM-001
+  - APR-001
   - SEC-001
   - THR-001
   - SAN-001
@@ -65,7 +65,7 @@ It is the primary governance input to:
 
 - `IAM-001`;
 - `POL-001`;
-- `HUM-001`;
+- `APR-001`;
 - `SEC-001`;
 - `THR-001`;
 - `SAN-001`;
@@ -1680,7 +1680,7 @@ AUT-001 may advance to version `1.0.0` when:
 |---|---|
 | Identity and approver authority | `IAM-001` |
 | Policy decisions and precedence | `POL-001` |
-| Human-in-the-loop UX and procedures | `HUM-001`, `UXA-001`, `A11Y-001` |
+| Human-in-the-loop UX and procedures | `APR-001`, `UXA-001`, `A11Y-001` |
 | Approval states and exact-action binding | `APR-001` |
 | Run pause/resume/cancel | `RUN-001`, `ORC-001` |
 | Tool and network enforcement | `SEC-001`, `SAN-001`, `INT-001` |

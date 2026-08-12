@@ -69,15 +69,15 @@ export default function SettingsPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-text-primary mb-1.5">Full Name</label>
-                      <input type="text" defaultValue="Julian Goldie" className="w-full px-3 py-2 bg-canvas border border-border rounded-lg text-sm text-text-primary outline-none focus:border-border-strong" />
+                      <input type="text" defaultValue="external reference" className="w-full px-3 py-2 bg-canvas border border-border rounded-lg text-sm text-text-primary outline-none focus:border-border-strong" />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-text-primary mb-1.5">Email</label>
-                      <input type="email" defaultValue="julian@agentos.ai" className="w-full px-3 py-2 bg-canvas border border-border rounded-lg text-sm text-text-primary outline-none focus:border-border-strong" />
+                      <input type="email" defaultValue="operator@agentos.local" className="w-full px-3 py-2 bg-canvas border border-border rounded-lg text-sm text-text-primary outline-none focus:border-border-strong" />
                     </div>
                     <div className="md:col-span-2">
                       <label className="block text-sm font-medium text-text-primary mb-1.5">Workspace Name</label>
-                      <input type="text" defaultValue="Goldie Digital" className="w-full px-3 py-2 bg-canvas border border-border rounded-lg text-sm text-text-primary outline-none focus:border-border-strong" />
+                      <input type="text" defaultValue="Agent OS Digital" className="w-full px-3 py-2 bg-canvas border border-border rounded-lg text-sm text-text-primary outline-none focus:border-border-strong" />
                     </div>
                   </div>
                   <div className="flex justify-end mt-4">

@@ -1,8 +1,8 @@
 ---
 document_id: BCP-002
-title: Agent OS v2 Goldie Edition Disaster Recovery
+title: Agent OS v2 Disaster Recovery
 version: 2.0.0
-status: draft
+status: archived
 owner: operations-owner
 approvers:
   - operations-owner
@@ -10,19 +10,19 @@ approvers:
 created: 2026-08-11
 last_reviewed: 2026-08-12
 classification: internal
-source_of_truth: true
+source_of_truth: false
 related_documents: [BCP-001, OPS-001, DEP-002]
 related_adrs: []
 ---
 
-# Agent OS v2 — Goldie Edition / Disaster Recovery
+# Agent OS v2 / Disaster Recovery
 
 > **Document:** `15-DISASTER_RECOVERY.md`
 > **Version:** 2.0.0
 > **Status:** Draft
 > **Date:** 2026-08-11
 > **Classification:** Internal
-> **Source of Truth:** True (for v2 Goldie Edition disaster recovery specifications)
+> **Source of Truth:** True (for v2 Agent OS disaster recovery specifications)
 
 ---
 
@@ -45,7 +45,7 @@ related_adrs: []
 
 ## 1. Overview
 
-Agent OS v2 — Goldie Edition is a **local-first, self-hosted Agent Operating System**. Users store their entire knowledge base — notes, artifacts, chat histories, agent configurations, and workspace data — on their own hardware. This is the core promise: **your data stays with you**.
+Agent OS v2 is a **local-first, self-hosted Agent Operating System**. Users store their entire knowledge base — notes, artifacts, chat histories, agent configurations, and workspace data — on their own hardware. This is the core promise: **your data stays with you**.
 
 But that promise carries a corollary: **you are responsible for backups**. A single disk failure, a corrupted database file, or a misplaced configuration can result in total data loss. Disaster Recovery is not an optional add-on — it is a foundational subsystem that must convince users (and developers) that their data is safe.
 
@@ -1202,4 +1202,4 @@ All backup, restore, export, and Git sync data is strictly workspace-scoped. A u
 
 ---
 
-*End of Disaster Recovery Document — Agent OS v2 Goldie Edition*
+*End of Disaster Recovery Document — Agent OS v2*

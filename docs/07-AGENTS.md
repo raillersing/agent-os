@@ -1,22 +1,22 @@
 ---
 document_id: DEV-002
-title: Agent OS v2 Goldie Edition Agents and Conventions
+title: Agent OS v2 Agents and Conventions
 version: 2.0.0
-status: draft
+status: archived
 owner: architecture-owner
 approvers:
   - architecture-owner
 created: 2026-08-11
 last_reviewed: 2026-08-12
 classification: internal
-source_of_truth: true
+source_of_truth: false
 related_documents: [DEV-001, AGC-001, SAD-002]
 related_adrs: []
 ---
 
 # Agent OS v2 — Agents & Conventions
 
-## Goldie Edition
+## Agent OS
 
 **Version:** 2.0.0-MVP
 **Date:** 2026-08-11

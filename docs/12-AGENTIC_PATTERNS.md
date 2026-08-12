@@ -1,8 +1,8 @@
 ---
 document_id: AIG-002
-title: Agent OS v2 Goldie Edition Agentic Patterns
+title: Agent OS v2 Agentic Patterns
 version: 2.0.0
-status: draft
+status: archived
 owner: architecture-owner
 approvers:
   - architecture-owner
@@ -10,12 +10,12 @@ approvers:
 created: 2026-08-11
 last_reviewed: 2026-08-12
 classification: internal
-source_of_truth: true
-related_documents: [AIG-001, AUT-001, AGC-001]
+source_of_truth: false
+related_documents: [AUT-001, AGC-001]
 related_adrs: []
 ---
 
-# Agent OS v2 — Goldie Edition / Agentic Patterns
+# Agent OS v2 / Agentic Patterns
 
 > **Document:** `12-AGENTIC_PATTERNS.md`
 > **Version:** 2.0.0
