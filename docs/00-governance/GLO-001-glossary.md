@@ -1,13 +1,13 @@
 ---
 document_id: GLO-001
 title: Agent OS Glossary and Controlled Terminology
-version: 0.1.0
+version: 0.2.0
 status: draft
 owner: product-owner
 approvers:
   - product-owner
 created: 2026-07-16
-last_reviewed: 2026-07-16
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: true
 related_documents:
@@ -30,7 +30,9 @@ This glossary defines the initial vocabulary used by the project. Terms remain d
 | Agent instance | A deployable or active realization of an agent definition. |
 | Artifact | Versioned output or input associated with a task or run, such as a report, patch, image, video, dataset, log, or document. |
 | Approval | Durable authorization, rejection, modification, or escalation decision associated with a proposed sensitive action. |
+| Account | The authenticated platform identity that can own or access one or more workspaces. |
 | Capability | Machine-readable statement of what an agent, model, tool, plugin, or integration can perform. |
+| Conversation | A durable interaction thread passing through Agent OS. It may be private or linked to a project, mission, task, or run. |
 | Control plane | Platform services that manage identity, workspaces, tasks, workflows, policies, routing, approvals, budgets, audit, and configuration. |
 | Data plane | Systems and connectors through which agents read or change permitted information and artifacts. |
 | Execution plane | Isolated workers, runtimes, agents, and sandboxes where tasks are executed. |
@@ -46,10 +48,14 @@ This glossary defines the initial vocabulary used by the project. Terms remain d
 | AG-UI | Event-based interface protocol or project profile connecting interactive user interfaces with agentic backends. |
 | Plugin | Versioned extension package that adds bounded capabilities to the Agent OS through declared contracts and permissions. |
 | Policy decision | Structured authorization or governance result produced by the policy subsystem for a proposed action. |
+| Mission | Outcome-oriented objective within a project. A mission may contain one or more executable tasks. |
+| Project | Durable domain or body of work within a workspace. Projects organize missions, conversations, artifacts, memory, and runs. |
+| Risk class | Standard classification of an action used to determine policy controls and approval requirements: read, generate, controlled_write, external_effect, destructive, or critical. |
 | Run | Durable execution record created when an agent or workflow processes a task. |
 | Run step | Ordered unit of execution, tool use, approval, delegation, or transformation within a run. |
 | Skill | Reusable instruction, reference, and optional script package that guides an agent through a repeatable workflow. |
 | Task | Work item with an objective, scope, status, ownership, constraints, and expected outputs. |
 | Tool | Callable capability exposed through MCP, an API, a local runtime, or another controlled integration. |
+| Visibility scope | Resource access scope: private, project, or workspace. Visibility is separate from workspace membership. |
 | Workflow | Versioned and durable process coordinating deterministic steps, agents, tools, approvals, retries, and completion rules. |
 | Workspace | Primary isolation and organization boundary containing projects, permissions, knowledge, agents, tools, tasks, runs, artifacts, budgets, and policies. |

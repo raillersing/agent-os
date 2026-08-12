@@ -1,7 +1,7 @@
 ---
 document_id: PLG-001
 title: Agent OS Plugin and Extension Architecture
-version: 0.1.0
+version: 0.2.0
 status: draft
 priority: P1
 owner: architecture-owner
@@ -13,7 +13,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-07-20
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 dependencies:
@@ -3244,6 +3244,10 @@ Define MCP transport/governance, skill/template formats, UI extension points, an
 ### `ADR-TBD-PLG-006 — Upgrade, uninstall, backup, and marketplace lifecycle`
 
 Define auto-update policy, rollback, data migration, uninstall, continuity, support, and future marketplace.
+
+## 256A. ADR-003 plugin capability refinement
+
+Plugins may expose broad modern agent capabilities, including code, filesystem, browser, network, model, MCP, and external integration operations. Every capability remains declared, scoped, policy-evaluated, sandboxed where applicable, approval-gated where required, and auditable. Installation, enablement, authorization, and approval remain separate states. A plugin cannot grant itself permissions, approve its own action, bypass the Tool Gateway, or cross workspace scope.
 
 ## 257. Open decisions
 

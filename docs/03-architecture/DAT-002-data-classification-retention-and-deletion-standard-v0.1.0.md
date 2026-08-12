@@ -1,7 +1,7 @@
 ---
 document_id: DAT-002
 title: Agent OS Data Classification, Retention and Deletion Standard
-version: 0.1.0
+version: 0.2.0
 status: draft
 register_status: proposed_unregistered
 owner: data-owner
@@ -2082,6 +2082,23 @@ Define provider inventory, allowed classifications, retention/training terms, re
 ## 196. ADR-TBD-DAT2-008 — Personal-data, analytics, and commercial governance
 
 Define personal-data minimization, analytics aggregation, data-subject workflows, residency, customer controls, and legal review.
+
+## 196A. ADR-003 retention baseline
+
+The proposed default profiles are:
+
+| Data category | Default profile |
+|---|---|
+| Conversations | Retain until user/workspace deletion; archive inactive content |
+| Artifacts | Retain until explicit deletion; preserve version lineage |
+| Memory | Retain until correction, expiry, or deletion; preserve provenance |
+| Run metadata | Long-lived; archive high-volume logs separately |
+| Consequential audit evidence | Seven years by default where no stricter policy applies |
+| Secrets | Never in ordinary content; revoke immediately when compromised |
+| Derived indexes and previews | Follow source deletion and rebuild policy |
+| Backups | Encrypted, rotated, and bounded by the deployment recovery policy |
+
+Deletion uses a 30-day recoverable period for ordinary content. Audit references may remain without the deleted content. These are product defaults and do not constitute legal retention advice.
 
 ## 197. Open decisions
 

@@ -1,7 +1,7 @@
 ---
 document_id: SAD-001
 title: Agent OS System Architecture Description
-version: 0.1.0
+version: 0.2.0
 status: draft
 owner: architecture-owner
 approvers:
@@ -1140,13 +1140,29 @@ Candidate standards:
 
 Adoption requires a real requirement, local fit, security compatibility, versioning, testability, maintainability, and an ADR/profile. No standard is adopted merely because it is popular.
 
+## 45A. ADR-003 architecture refinement
+
+The product-owner-validated baseline in `ADR-003` refines the proposed architecture as follows:
+
+- `Project → Mission → Task → Run` is the canonical work hierarchy.
+- Conversations are independent durable interaction threads and may link to any work object.
+- Personal and team workspaces are both supported; workspace membership does not imply access to every resource.
+- Conversation visibility is `private`, `project`, or `workspace`, with `private` as the default.
+- Initial adapters are Codex, Hermes, and Claude Code.
+- Action classes are `read`, `generate`, `controlled_write`, `external_effect`, `destructive`, and `critical`.
+- `external_effect`, `destructive`, and `critical` actions require approval; critical actions also require recent reauthentication.
+- Temporal is the proposed durable orchestration service. PostgreSQL remains authoritative for business state and audit; Redis is non-authoritative auxiliary infrastructure.
+- Plugins can expose broad capabilities but remain behind capability declaration, policy, Tool Gateway, sandbox, approval, workspace scope, and audit controls.
+
+This section is a draft refinement and does not change the status of this document or any approved ADR by itself.
+
 ## 46. ADR backlog
 
 | ADR | Decision |
 |---|---|
 | `ADR-TBD-001` | Primary application language/framework and frontend architecture |
 | `ADR-TBD-002` | Transactional database |
-| `ADR-TBD-003` | Durable orchestration mechanism |
+   | `ADR-TBD-003` | Durable orchestration mechanism |
 | `ADR-TBD-004` | Artifact storage |
 | `ADR-TBD-005` | Sandbox technology |
 | `ADR-TBD-006` | Identity/session mechanism |

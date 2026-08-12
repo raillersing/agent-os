@@ -1,7 +1,7 @@
 ---
 document_id: ORC-001
 title: Agent OS Workflow and Orchestration Architecture
-version: 0.1.0
+version: 0.2.0
 status: draft
 owner: architecture-owner
 approvers:
@@ -12,7 +12,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-07-19
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 related_documents:
@@ -1485,6 +1485,12 @@ Decide content storage, portability, integrity, expiry, and adapter compatibilit
 ### `ADR-TBD-ORC-005 — Real-time UI propagation`
 
 Decide polling, server-sent events, or WebSocket with reconnect and stale semantics.
+
+## 58A. ADR-003 orchestration decision
+
+`ADR-003` proposes Temporal as the durable orchestration engine for Agent OS workflows. Temporal is responsible for workflow history, timers, approval waits, retries, cancellation, worker recovery, and workflow-level state. PostgreSQL remains the source of truth for Agent OS business records, permissions, conversations, artifacts, memory metadata, and audit evidence. Redis may support non-authoritative cache or notification use.
+
+The initial workflow model remains bounded: one task snapshot per run, explicit steps and attempts, exact approval gates, append-only lineage, and no unbounded autonomous graph generation. The decision supersedes the durable task-queue portion of `ADR-001` only after `ADR-003` is approved.
 
 ## 59. Open decisions
 

@@ -1,7 +1,7 @@
 ---
 document_id: API-001
 title: Agent OS API Specification
-version: 0.1.0
+version: 0.2.0
 status: draft
 owner: architecture-owner
 approvers:
@@ -12,7 +12,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-07-19
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 dependencies:
@@ -2493,6 +2493,10 @@ Choose operation resources, polling, SSE, WebSocket, and cursor behavior.
 ### `ADR-TBD-API-005 — Machine-readable specification and SDK generation`
 
 Choose OpenAPI or equivalent, code generation, contract testing, and publication process.
+
+## 142A. ADR-003 API scope fields
+
+Resource APIs must carry or derive the following scope where applicable: `workspace_id`, `project_id`, `mission_id`, `task_id`, `conversation_id`, actor identity, visibility (`private`, `project`, `workspace`), risk class, policy decision, approval reference, retention profile, correlation ID, and run ID. Authorization is enforced server-side for every resource and derived result. Client-provided identifiers never replace authorization checks.
 
 ## 143. Open decisions
 

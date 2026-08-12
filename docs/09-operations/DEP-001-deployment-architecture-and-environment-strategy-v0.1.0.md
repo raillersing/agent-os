@@ -1,7 +1,7 @@
 ---
 document_id: DEP-001
 title: Agent OS Deployment Architecture and Environment Strategy
-version: 0.1.0
+version: 0.2.0
 status: draft
 register_status: pending_confirmation
 owner: operations-owner
@@ -13,7 +13,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-07-20
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 dependencies:
@@ -3226,6 +3226,20 @@ Select database deployment, local/object store, volume layout, backup targets, a
 ### `ADR-TBD-DEP-006 — Deployment rollout, migrations, and rollback`
 
 Select migration execution, maintenance modes, release rollout, environment locks, and recovery.
+
+## 205A. ADR-003 deployment refinement
+
+The supported deployment baseline is:
+
+- local Windows and Linux operation, with Linux/WSL2 and Docker Compose as the first operational profile;
+- VPS deployment exposed through HTTPS and a reverse proxy with strong authentication;
+- backend, database, orchestration service, workers, and sandboxes are not directly exposed to the public network;
+- Temporal is the proposed durable orchestration service;
+- PostgreSQL is authoritative for Agent OS business data and audit;
+- sensitive data and secrets use encryption and controlled secret access;
+- backup and deletion policies remain explicit per deployment owner.
+
+macOS remains a future compatibility target unless a separate platform decision expands the first support commitment.
 
 ## 206. Open decisions
 

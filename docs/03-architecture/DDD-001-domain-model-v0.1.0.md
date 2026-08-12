@@ -1,7 +1,7 @@
 ---
 document_id: DDD-001
 title: Agent OS Domain Model
-version: 0.1.0
+version: 0.2.0
 status: draft
 owner: architecture-owner
 approvers:
@@ -11,7 +11,7 @@ approvers:
   - security-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-07-19
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 related_documents:
@@ -2259,6 +2259,22 @@ A domain change requires review when it:
 - changes transaction boundaries.
 
 Such changes may require updates to SRS, NFR, AUT, SAD, C4, DAT, contracts, tests, and RTM.
+
+## 70A. ADR-003 domain refinement
+
+The controlled product vocabulary is refined by `ADR-003`:
+
+- `Project` is the durable domain container.
+- `Mission` is an outcome-oriented objective within a project.
+- `Task` is the executable work item.
+- `Run` is one execution of an immutable task snapshot.
+- `Conversation` is a separate aggregate that can link to projects, missions, tasks, and runs.
+- Conversation visibility is explicit (`private`, `project`, or `workspace`) and is evaluated independently from workspace membership.
+- Personal and team workspaces use the same domain model with different membership cardinality.
+- Action risk classes and approval requirements are domain values, not UI-only labels.
+- Derived memory, artifacts, and evidence inherit the source scope and deletion policy unless a stricter policy applies.
+
+These are proposed refinements until this draft and its downstream contracts are formally approved.
 
 ## 71. Open domain decisions
 

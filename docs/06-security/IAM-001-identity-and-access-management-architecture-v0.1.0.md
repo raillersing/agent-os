@@ -1,7 +1,7 @@
 ---
 document_id: IAM-001
 title: Agent OS Identity and Access Management Architecture
-version: 0.1.0
+version: 0.2.0
 status: draft
 register_status: proposed_unregistered
 owner: security-owner
@@ -13,7 +13,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-07-20
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 related_documents: []
@@ -2336,6 +2336,21 @@ Define revocation propagation, cache invalidation, session-store behavior, resto
 ## 189. ADR-TBD-IAM-007 — IAM evidence, retention, and access certification
 
 Define audit schema, privacy minimization, retention, access reviews, certification cadence, and evidence exports.
+
+## 189A. ADR-003 access-scope refinement
+
+`ADR-003` establishes the following proposed access baseline:
+
+- personal workspaces are private by default;
+- team workspaces require explicit membership and resource-level authorization;
+- conversation visibility is `private`, `project`, or `workspace`;
+- workspace membership does not grant access to every conversation, artifact, memory record, or run;
+- agents, adapters, workers, and plugins use distinct workload identities and cannot approve their own actions;
+- critical self-approval is prohibited;
+- authorization is denied by default and checked on every resource access, including derived artifacts and search results;
+- VPS deployments require strong authentication, secure sessions, revocation, and recent reauthentication for critical actions.
+
+The implementation must use relationship-aware authorization rather than relying only on a workspace role.
 
 ## 190. Open decisions
 

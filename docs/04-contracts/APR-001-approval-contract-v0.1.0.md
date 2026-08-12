@@ -1,7 +1,7 @@
 ---
 document_id: APR-001
 title: Agent OS Approval Contract
-version: 0.1.0
+version: 0.2.0
 status: draft
 owner: product-owner
 approvers:
@@ -12,7 +12,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-07-19
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 dependencies:
@@ -2146,6 +2146,10 @@ Define sequential, parallel, threshold, and domain-split semantics.
 ### `ADR-TBD-APR-005 — Approval rebind after pre-dispatch failure`
 
 Define when a consumed approval may or may not be rebound after provable no-effect failure.
+
+## 103A. ADR-003 approval baseline
+
+Approval requests use the risk classes `read`, `generate`, `controlled_write`, `external_effect`, `destructive`, and `critical`. `external_effect`, `destructive`, and `critical` require approval by default; `critical` additionally requires recent reauthentication. Approval is private to authorized approvers, exact to one normalized action, single-use, expiring, and invalidated by parameter or target changes. Critical self-approval is prohibited.
 
 ## 104. Open decisions
 

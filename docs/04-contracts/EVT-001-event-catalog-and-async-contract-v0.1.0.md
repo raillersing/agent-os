@@ -1,7 +1,7 @@
 ---
 document_id: EVT-001
 title: Agent OS Event Catalog and Async Contract
-version: 0.1.0
+version: 0.2.0
 status: draft
 owner: architecture-owner
 approvers:
@@ -12,7 +12,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-07-20
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 dependencies:
@@ -2720,6 +2720,10 @@ Define replay authorization, side-effect suppression, checkpoints, shadow rebuil
 ### `ADR-TBD-EVT-005 — Event retention, privacy, and deletion`
 
 Define retention classes, payload references, redaction/tombstones, holds, and backup behavior.
+
+## 149A. ADR-003 event envelope refinement
+
+Events concerning conversations, tasks, runs, artifacts, memory, approvals, and policy decisions should include the applicable workspace and resource visibility scope, actor chain, risk class, policy/approval references, retention profile, correlation ID, causation ID, and effect certainty. Event consumers must enforce scope before projection, search indexing, notification, or replay.
 
 ## 150. Open decisions
 

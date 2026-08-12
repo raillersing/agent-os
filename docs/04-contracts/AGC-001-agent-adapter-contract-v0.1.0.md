@@ -1,7 +1,7 @@
 ---
 document_id: AGC-001
 title: Agent OS Agent Adapter Contract
-version: 0.1.0
+version: 0.2.0
 status: draft
 owner: architecture-owner
 approvers:
@@ -12,7 +12,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-07-19
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 dependencies:
@@ -1896,6 +1896,10 @@ Define OS identity, container/process model, network, filesystem, and lifecycle.
 ### `ADR-TBD-AGC-004 — Conformance test harness`
 
 Define fixtures, simulators, golden contracts, and certification evidence.
+
+## 71A. ADR-003 adapter baseline
+
+The initial supported adapter set is Codex, Hermes, and Claude Code. Each adapter must preserve Agent OS identity, workspace scope, conversation linkage, task snapshot, run correlation, policy decision, approval state, capability declaration, effect certainty, and audit evidence. Adapter connectivity does not grant tool or data authorization.
 
 ## 72. Open decisions
 
