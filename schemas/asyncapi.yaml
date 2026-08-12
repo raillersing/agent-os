@@ -14,10 +14,12 @@ info:
 
 servers:
   local:
-    url: redis://localhost:6379
+    host: localhost:6379
+    protocol: redis
     description: Local development
   production:
-    url: redis://redis-agent-os:6379
+    host: redis-agent-os:6379
+    protocol: redis
     description: Production
 
 channels:
@@ -89,35 +91,35 @@ operations:
     channel:
       $ref: '#/channels/agents'
     messages:
-      - $ref: '#/components/messages/AgentCreated'
+      - $ref: '#/channels/agents/messages/agentCreated'
 
   onRunStarted:
     action: receive
     channel:
       $ref: '#/channels/runs'
     messages:
-      - $ref: '#/components/messages/RunStarted'
+      - $ref: '#/channels/runs/messages/runStarted'
 
   onRunCompleted:
     action: receive
     channel:
       $ref: '#/channels/runs'
     messages:
-      - $ref: '#/components/messages/RunCompleted'
+      - $ref: '#/channels/runs/messages/runCompleted'
 
   publishAgentCreated:
     action: send
     channel:
       $ref: '#/channels/agents'
     messages:
-      - $ref: '#/components/messages/AgentCreated'
+      - $ref: '#/channels/agents/messages/agentCreated'
 
   publishRunStarted:
     action: send
     channel:
       $ref: '#/channels/runs'
     messages:
-      - $ref: '#/components/messages/RunStarted'
+      - $ref: '#/channels/runs/messages/runStarted'
 
 components:
   messages:
