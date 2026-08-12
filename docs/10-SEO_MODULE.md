@@ -1,9 +1,25 @@
+---
+document_id: MOD-002
+title: Agent OS v2 Goldie Edition SEO Module
+version: 2.0.0
+status: draft
+owner: product-owner
+approvers:
+  - product-owner
+created: 2026-08-11
+last_reviewed: 2026-08-12
+classification: internal
+source_of_truth: true
+related_documents: [PRD-002, PLG-001, ART-001]
+related_adrs: []
+---
+
 # Agent OS v2 — Goldie Edition / SEO Module
 
-> **Document:** `10-SEO_MODULE.md`  
-> **Version:** 2.0.0  
-> **Status:** Draft  
-> **Date:** 2026-08-11  
+> **Document:** `10-SEO_MODULE.md`
+> **Version:** 2.0.0
+> **Status:** Draft
+> **Date:** 2026-08-11
 > **Classification:** Internal
 
 ---
@@ -224,7 +240,7 @@ Professional, branded reports for client delivery.
 - Cover page with client name and report period
 - Footer: "Powered by Agent OS" (optional, removable in enterprise tier)
 
-**Formats:** PDF (via headless browser or library), HTML (responsive, interactive charts)  
+**Formats:** PDF (via headless browser or library), HTML (responsive, interactive charts)
 **Delivery:** Download, email (via connected provider), scheduled generation
 
 ---

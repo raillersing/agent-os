@@ -1,8 +1,25 @@
+---
+document_id: DSN-002
+title: Agent OS v2 Goldie Edition Design System
+version: 2.0.0
+status: draft
+owner: product-owner
+approvers:
+  - product-owner
+  - quality-owner
+created: 2026-08-11
+last_reviewed: 2026-08-12
+classification: internal
+source_of_truth: true
+related_documents: [DSN-001, UXA-001, A11Y-001, VVR-001]
+related_adrs: []
+---
+
 # Agent OS v2 — Goldie Edition Design System
 
-> **Status:** Source of truth for UI/UX implementation.  
-> **Scope:** All Next.js 15 + React 19 + Tailwind CSS v4 frontend surfaces.  
-> **Theme:** Dark-first, inspired by Julian Goldie "Agentic OS" screenshots.  
+> **Status:** Source of truth for UI/UX implementation.
+> **Scope:** All Next.js 15 + React 19 + Tailwind CSS v4 frontend surfaces.
+> **Theme:** Dark-first, inspired by Julian Goldie "Agentic OS" screenshots.
 > **Version:** 2.0.0
 
 ---
@@ -602,11 +619,11 @@ hover: tooltip shows skill description and version
 overlay: rgba(0,0,0,0.7) + backdrop-blur(8px)
 container: max-w-2xl (672px), --surface, radius-xl
 header: action preview title + risk level badge
-body: 
+body:
   - Action preview card (what the agent wants to do)
   - Parameters table (key-value, monospace for IDs)
   - Context snippet (collapsed by default)
-footer: 
+footer:
   - Approve button: Primary, green glow
   - Reject button: Danger, requires comment
   - Delegate button: Ghost, opens dropdown of reviewers
@@ -1410,6 +1427,6 @@ frontend/src/
 
 ---
 
-*Document version: 2.0.0*  
-*Last updated: 2026-08-11*  
+*Document version: 2.0.0*
+*Last updated: 2026-08-11*
 *Owner: UX Lead / Frontend Lead*

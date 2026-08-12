@@ -1,9 +1,25 @@
+---
+document_id: MOD-003
+title: Agent OS v2 Goldie Edition Voice and Talk Mode Module
+version: 2.0.0
+status: draft
+owner: product-owner
+approvers:
+  - product-owner
+created: 2026-08-11
+last_reviewed: 2026-08-12
+classification: internal
+source_of_truth: true
+related_documents: [PRD-002, INT-001, ART-001]
+related_adrs: []
+---
+
 # Agent OS v2 — Goldie Edition / Voice & Talk Mode Module
 
-> **Document:** `13-VOICE_MODULE.md`  
-> **Version:** 2.0.0  
-> **Status:** Draft  
-> **Date:** 2026-08-11  
+> **Document:** `13-VOICE_MODULE.md`
+> **Version:** 2.0.0
+> **Status:** Draft
+> **Date:** 2026-08-11
 > **Classification:** Internal
 
 ---

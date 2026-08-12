@@ -1,9 +1,26 @@
+---
+document_id: API-002
+title: Agent OS v2 Goldie Edition API Specification
+version: 2.1.0
+status: draft
+owner: api-owner
+approvers:
+  - api-owner
+  - architecture-owner
+created: 2026-08-11
+last_reviewed: 2026-08-12
+classification: internal
+source_of_truth: true
+related_documents: [API-001, AGC-001, RUN-001, APR-001]
+related_adrs: []
+---
+
 # Agent OS v2 — API Specification
 
 ## Goldie Edition
 
-**Version:** 2.1.0-Goldie  
-**Base URL:** `https://agentos.local`  
+**Version:** 2.1.0-Goldie
+**Base URL:** `https://agentos.local`
 **Date:** 2026-08-11
 
 ---
@@ -49,7 +66,7 @@ Token claims:
 | `exp` | int | Expires at (epoch) |
 | `jti` | string | Token unique ID (for revocation) |
 
-Access token TTL: **15 minutes**  
+Access token TTL: **15 minutes**
 Refresh token TTL: **7 days**
 
 ### 2.2 Refresh Flow
@@ -75,7 +92,7 @@ Response:
 }
 ```
 
-Rotation: every refresh issues a **new pair** and invalidates the old refresh token.  
+Rotation: every refresh issues a **new pair** and invalidates the old refresh token.
 Grace window: **30 seconds** overlap for concurrent requests.
 
 ### 2.3 Logout
@@ -84,7 +101,7 @@ Grace window: **30 seconds** overlap for concurrent requests.
 POST /api/v1/auth/logout
 ```
 
-Invalidates the refresh token on the server (stored in Redis blocklist).  
+Invalidates the refresh token on the server (stored in Redis blocklist).
 Clients must also purge local tokens.
 
 ---
@@ -164,7 +181,7 @@ All list endpoints use **cursor-based pagination**.
 
 ### Sorting
 
-Use `sort` (e.g., `sort=-created_at,+name`).  
+Use `sort` (e.g., `sort=-created_at,+name`).
 Prefix `-` for descending, `+` or no prefix for ascending.
 
 ---
@@ -1819,7 +1836,7 @@ SwarmParticipantStatus:
 
 ### 9.2 OpenAPI
 
-Full OpenAPI 3.1 spec is available at:  
+Full OpenAPI 3.1 spec is available at:
 `GET /api/v1/openapi.json` (no auth required)
 
 Interactive docs: `https://agentos.local/docs/api`

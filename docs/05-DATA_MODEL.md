@@ -1,9 +1,26 @@
+---
+document_id: DAT-003
+title: Agent OS v2 Goldie Edition Data Model
+version: 2.0.0
+status: draft
+owner: data-owner
+approvers:
+  - data-owner
+  - architecture-owner
+created: 2026-08-11
+last_reviewed: 2026-08-12
+classification: internal
+source_of_truth: true
+related_documents: [DAT-001, DCT-001, DDD-001]
+related_adrs: []
+---
+
 # Agent OS v2 — Goldie Edition / Data Model
 
-> **Document:** `05-DATA_MODEL.md`  
-> **Version:** 2.0.0  
-> **Status:** Draft — single source of truth for the development team  
-> **Last updated:** 2026-08-11  
+> **Document:** `05-DATA_MODEL.md`
+> **Version:** 2.0.0
+> **Status:** Draft — single source of truth for the development team
+> **Last updated:** 2026-08-11
 > **Scope:** Complete SQL schema, all 55 tables, indexes, constraints, relationships, and Mermaid ER diagram.
 
 ---

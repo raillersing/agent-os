@@ -1,10 +1,27 @@
+---
+document_id: BCP-002
+title: Agent OS v2 Goldie Edition Disaster Recovery
+version: 2.0.0
+status: draft
+owner: operations-owner
+approvers:
+  - operations-owner
+  - security-owner
+created: 2026-08-11
+last_reviewed: 2026-08-12
+classification: internal
+source_of_truth: true
+related_documents: [BCP-001, OPS-001, DEP-002]
+related_adrs: []
+---
+
 # Agent OS v2 — Goldie Edition / Disaster Recovery
 
-> **Document:** `15-DISASTER_RECOVERY.md`  
-> **Version:** 2.0.0  
-> **Status:** Draft  
-> **Date:** 2026-08-11  
-> **Classification:** Internal  
+> **Document:** `15-DISASTER_RECOVERY.md`
+> **Version:** 2.0.0
+> **Status:** Draft
+> **Date:** 2026-08-11
+> **Classification:** Internal
 > **Source of Truth:** True (for v2 Goldie Edition disaster recovery specifications)
 
 ---

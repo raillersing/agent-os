@@ -1,8 +1,24 @@
+---
+document_id: REL-002
+title: Agent OS v2 Goldie Edition Roadmap and Release Plan
+version: 2.0.0
+status: draft
+owner: product-owner
+approvers:
+  - product-owner
+created: 2026-08-11
+last_reviewed: 2026-08-12
+classification: internal
+source_of_truth: true
+related_documents: [VSN-002, PRD-002, QAG-001]
+related_adrs: []
+---
+
 # Agent OS v2 — Roadmap & Release Plan
 
 ## Goldie Edition
 
-**Version:** 2.0.0-MVP  
+**Version:** 2.0.0-MVP
 **Date:** 2026-08-11
 
 ---
@@ -27,7 +43,7 @@ v2.0.0-MVP      →  v2.1.0  →  v2.2.0  →  v2.3.0  →  v2.4.0  →  v2.5.0 
 | `v2.6.0` | Agentic | Dynamic Agent Roles, swarm mode, delegation protocol, reflection loops | Day 105 |
 | `v3.0.0` | Commercial | Billing, SaaS multi-tenant, ERP connectors | Day 120+ |
 
-Pre-release tags: `-alpha`, `-beta`, `-rc` (release candidate).  
+Pre-release tags: `-alpha`, `-beta`, `-rc` (release candidate).
 Patch releases (`v2.0.1`) for hotfixes only — no new features.
 
 ---

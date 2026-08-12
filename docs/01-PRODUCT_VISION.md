@@ -1,11 +1,27 @@
+---
+document_id: VSN-002
+title: Agent OS v2 Goldie Edition Product Vision
+version: 2.0.0
+status: draft
+owner: product-owner
+approvers:
+  - product-owner
+created: 2026-08-11
+last_reviewed: 2026-08-12
+classification: internal
+source_of_truth: true
+related_documents: [VSN-001, SCP-001, PRD-001]
+related_adrs: []
+---
+
 # Agent OS v2 — Goldie Edition: Product Vision
 
-> **Document:** `01-PRODUCT_VISION.md`  
-> **Version:** 2.0.0  
-> **Status:** Draft  
-> **Date:** 2026-08-11  
-> **Classification:** Internal  
-> **Source of Truth:** True (for v2 Goldie Edition product direction)  
+> **Document:** `01-PRODUCT_VISION.md`
+> **Version:** 2.0.0
+> **Status:** Draft
+> **Date:** 2026-08-11
+> **Classification:** Internal
+> **Source of Truth:** True (for v2 Goldie Edition product direction)
 
 ---
 
