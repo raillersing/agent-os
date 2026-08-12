@@ -4,22 +4,20 @@ Agent OS Control Plane — Main Application
 
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
 from .api import agents, runs, memory, auth, tools, control_plane
-from .core.database import init_db
+from .core.security import require_authenticated_user
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan manager."""
-    # Startup
     print(f"Starting Agent OS Control Plane v{settings.VERSION}")
-    print("Initializing database...")
-    await init_db()
-    print("Database initialized.")
+    if len(settings.SECRET_KEY) < 32:
+        raise RuntimeError("SECRET_KEY must contain at least 32 characters")
     yield
     # Shutdown
     print("Shutting down Agent OS Control Plane")
@@ -45,11 +43,12 @@ app.add_middleware(
 
 # Routes
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Auth"])
-app.include_router(agents.router, prefix="/api/v1/agents", tags=["Agents"])
-app.include_router(runs.router, prefix="/api/v1/runs", tags=["Runs"])
-app.include_router(memory.router, prefix="/api/v1/memory", tags=["Memory"])
-app.include_router(tools.router, prefix="/api/v1/tools", tags=["Tools"])
-app.include_router(control_plane.router, prefix="/api/v1", tags=["Control Plane"])
+protected = [Depends(require_authenticated_user)]
+app.include_router(agents.router, prefix="/api/v1/agents", tags=["Agents"], dependencies=protected)
+app.include_router(runs.router, prefix="/api/v1/runs", tags=["Runs"], dependencies=protected)
+app.include_router(memory.router, prefix="/api/v1/memory", tags=["Memory"], dependencies=protected)
+app.include_router(tools.router, prefix="/api/v1/tools", tags=["Tools"], dependencies=protected)
+app.include_router(control_plane.router, prefix="/api/v1", tags=["Control Plane"], dependencies=protected)
 
 
 @app.get("/health", tags=["Health"])

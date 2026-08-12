@@ -16,10 +16,27 @@ class ApiClient {
 
   constructor(baseUrl: string = API_BASE_URL) {
     this.baseUrl = baseUrl;
+    if (typeof window !== 'undefined') {
+      this.token = window.localStorage.getItem('agentos-access-token');
+    }
   }
 
   setToken(token: string) {
     this.token = token;
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('agentos-access-token', token);
+    }
+  }
+
+  clearToken() {
+    this.token = null;
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem('agentos-access-token');
+    }
+  }
+
+  hasToken() {
+    return Boolean(this.token || (typeof window !== 'undefined' && window.localStorage.getItem('agentos-access-token')));
   }
 
   private async request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
@@ -39,6 +56,10 @@ class ApiClient {
       headers: requestHeaders,
       body: body ? JSON.stringify(body) : undefined,
     });
+
+    if (response.status === 401) {
+      this.clearToken();
+    }
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({ detail: 'Request failed' }));
@@ -60,6 +81,10 @@ class ApiClient {
     });
     this.setToken(response.access_token);
     return response;
+  }
+
+  logout() {
+    this.clearToken();
   }
 
   // Agents

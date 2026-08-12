@@ -27,7 +27,7 @@ interface Agent {
   last_run_at?: string;
 }
 
-interface Run {
+export interface Run {
   id: string;
   agent_id: string;
   status: string;
@@ -46,7 +46,7 @@ interface Run {
   created_at: string;
 }
 
-interface Memory {
+export interface Memory {
   key: string;
   content: string;
   type: string;
@@ -154,9 +154,7 @@ export function useMemory(query?: string) {
   }, []);
 
   useEffect(() => {
-    if (query) {
-      searchMemory(query);
-    }
+    searchMemory(query || '');
   }, [query, searchMemory]);
 
   return { memories, loading, error, search: searchMemory };

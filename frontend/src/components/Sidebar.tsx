@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import api from '@/lib/api'
 
 const navigation = [
   { name: 'Home', href: '/', icon: 'home' },
@@ -17,6 +18,7 @@ const systemNavigation = [
   { name: 'Runs', href: '/runs', icon: 'runs' },
   { name: 'Tools', href: '/tools', icon: 'tools' },
   { name: 'Memory', href: '/memory', icon: 'memory' },
+  { name: 'Settings', href: '/settings', icon: 'settings' },
 ]
 
 function NavIcon({ name }: { name: string }) {
@@ -31,6 +33,7 @@ function NavIcon({ name }: { name: string }) {
     runs: <><path d="M5 5h14v14H5z" /><path d="m9 12 2 2 4-4" /></>,
     tools: <><path d="m14.7 6.3 3-3 3 3-3 3" /><path d="m17.7 9.3-8.4 8.4a2.1 2.1 0 0 1-3-3l8.4-8.4" /><path d="m5 5 4 4" /></>,
     memory: <><path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H20v15H7.5A2.5 2.5 0 0 0 5 20.5z" /><path d="M5 5.5v15M9 7h7M9 10h7" /></>,
+    settings: <><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.8 1.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5v.2h-2.5v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1-1.8-1.8.1-.1A1.7 1.7 0 0 0 8 15a1.7 1.7 0 0 0-1.5-1H6v-2.5h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1 1.8-1.8.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5v-.2h2.5v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1 1.8 1.8-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5 1h.2V14h-.2a1.7 1.7 0 0 0-1.5 1z" /></>,
   }
   return <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">{paths[name]}</svg>
 }
@@ -75,7 +78,7 @@ export default function Sidebar() {
           <div className="health-row"><span className="live-dot"></span><strong>System operational</strong><span className="health-code">SYS/01</span></div>
           <p><span>3 agents connected</span><span>1 approval waiting</span></p>
         </div>
-        <button className="user-menu" aria-label="Open user menu">
+        <button className="user-menu" aria-label="Sign out" onClick={() => { api.logout(); window.location.href = '/login' }}>
           <span className="avatar">ER</span>
           <span><strong>Eric</strong><small>Owner</small></span>
           <span className="chevron">⌄</span>

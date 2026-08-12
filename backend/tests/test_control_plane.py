@@ -5,12 +5,14 @@ from uuid import uuid4
 from fastapi.testclient import TestClient
 
 from app.main import app
+from .conftest import auth_headers
 
 
 def test_workspace_mission_automation_and_approval_persist_across_clients():
     suffix = uuid4().hex[:8]
 
     with TestClient(app) as first_client:
+        first_client.headers.update(auth_headers(first_client))
         workspace_response = first_client.post(
             "/api/v1/workspaces",
             json={"name": f"Workspace {suffix}", "description": "Persistence proof", "budget": 100},
@@ -55,6 +57,7 @@ def test_workspace_mission_automation_and_approval_persist_across_clients():
 
     # A new application client proves state is not held in process memory.
     with TestClient(app) as restarted_client:
+        restarted_client.headers.update(auth_headers(restarted_client))
         workspaces = restarted_client.get("/api/v1/workspaces").json()
         assert any(item["id"] == workspace["id"] for item in workspaces)
 
@@ -91,6 +94,7 @@ def test_workspace_mission_automation_and_approval_persist_across_clients():
 
 def test_mission_rejects_unknown_workspace():
     with TestClient(app) as client:
+        client.headers.update(auth_headers(client))
         response = client.post(
             "/api/v1/missions",
             json={
@@ -104,6 +108,7 @@ def test_mission_rejects_unknown_workspace():
 
 def test_workspace_filters_do_not_return_another_workspace_records():
     with TestClient(app) as client:
+        client.headers.update(auth_headers(client))
         first = client.post('/api/v1/workspaces', json={'name': f'First {uuid4().hex[:8]}'}).json()
         second = client.post('/api/v1/workspaces', json={'name': f'Second {uuid4().hex[:8]}'}).json()
         mission = client.post('/api/v1/missions', json={

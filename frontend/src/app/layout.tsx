@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import Sidebar from '@/components/Sidebar'
-import Header from '@/components/Header'
+import AppShell from '@/components/AppShell'
+import { ThemeProvider } from '@/components/ThemeProvider'
 
 export const metadata: Metadata = {
   title: 'AgentOS — Turn intent into outcomes',
@@ -17,18 +17,12 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="color-scheme" content="dark light" />
-        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var m=localStorage.getItem('agentos-theme');if(m==='light'||m==='dark')document.documentElement.dataset.theme=m;}catch(e){}})()` }} />
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var f=localStorage.getItem('agentos-follow-system');var t=localStorage.getItem('agentos-theme');var system=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';var theme=f==='false'&&(t==='light'||t==='dark')?t:system;document.documentElement.dataset.theme=theme;document.querySelector('meta[name="color-scheme"]')?.setAttribute('content',theme);}catch(e){}})()` }} />
       </head>
       <body>
-        <div className="app-shell">
-          <Sidebar />
-          <div className="app-column">
-            <Header />
-            <main className="app-main">
-              {children}
-            </main>
-          </div>
-        </div>
+        <ThemeProvider>
+          <AppShell>{children}</AppShell>
+        </ThemeProvider>
       </body>
     </html>
   )
