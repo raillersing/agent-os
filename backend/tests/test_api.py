@@ -5,6 +5,7 @@ API Tests
 from fastapi.testclient import TestClient
 
 from app.main import app
+
 from .conftest import auth_headers
 
 client = TestClient(app)

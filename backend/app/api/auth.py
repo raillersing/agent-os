@@ -6,11 +6,12 @@ import secrets
 
 from fastapi import APIRouter, HTTPException, status
 
-from ..schemas.auth import TokenRequest, TokenResponse
 from ..config import settings
 from ..core.security import create_access_token
+from ..schemas.auth import TokenRequest, TokenResponse
 
 router = APIRouter()
+
 
 @router.post("/token", response_model=TokenResponse)
 async def create_token(request: TokenRequest):
@@ -25,7 +26,9 @@ async def create_token(request: TokenRequest):
     ):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    access_token = create_access_token(data={"sub": request.email, "email": request.email})
+    access_token = create_access_token(
+        data={"sub": request.email, "email": request.email}
+    )
     return TokenResponse(
         access_token=access_token,
         token_type="bearer",

@@ -5,6 +5,7 @@ from uuid import uuid4
 from fastapi.testclient import TestClient
 
 from app.main import app
+
 from .conftest import auth_headers
 
 
@@ -15,7 +16,11 @@ def test_workspace_mission_automation_and_approval_persist_across_clients():
         first_client.headers.update(auth_headers(first_client))
         workspace_response = first_client.post(
             "/api/v1/workspaces",
-            json={"name": f"Workspace {suffix}", "description": "Persistence proof", "budget": 100},
+            json={
+                "name": f"Workspace {suffix}",
+                "description": "Persistence proof",
+                "budget": 100,
+            },
         )
         assert workspace_response.status_code == 201
         workspace = workspace_response.json()
@@ -73,7 +78,10 @@ def test_workspace_mission_automation_and_approval_persist_across_clients():
 
         decision = restarted_client.post(
             f"/api/v1/approvals/{approval['id']}/decision",
-            json={"status": "approved", "decision_note": "Approved for this mission only"},
+            json={
+                "status": "approved",
+                "decision_note": "Approved for this mission only",
+            },
         )
         assert decision.status_code == 200
         assert decision.json()["status"] == "approved"
@@ -89,7 +97,13 @@ def test_workspace_mission_automation_and_approval_persist_across_clients():
         )
         assert events.status_code == 200
         event_types = {event["event_type"] for event in events.json()}
-        assert {"workspace.created", "mission.created", "automation.created", "approval.requested", "approval.approved"} <= event_types
+        assert {
+            "workspace.created",
+            "mission.created",
+            "automation.created",
+            "approval.requested",
+            "approval.approved",
+        } <= event_types
 
 
 def test_mission_rejects_unknown_workspace():
@@ -109,20 +123,48 @@ def test_mission_rejects_unknown_workspace():
 def test_workspace_filters_do_not_return_another_workspace_records():
     with TestClient(app) as client:
         client.headers.update(auth_headers(client))
-        first = client.post('/api/v1/workspaces', json={'name': f'First {uuid4().hex[:8]}'}).json()
-        second = client.post('/api/v1/workspaces', json={'name': f'Second {uuid4().hex[:8]}'}).json()
-        mission = client.post('/api/v1/missions', json={
-            'workspace_id': first['id'], 'title': 'Private mission', 'objective': 'Stay scoped',
-        }).json()
-        automation = client.post('/api/v1/automations', json={
-            'workspace_id': first['id'], 'name': 'Private automation', 'trigger_type': 'manual',
-        }).json()
+        first = client.post(
+            "/api/v1/workspaces", json={"name": f"First {uuid4().hex[:8]}"}
+        ).json()
+        second = client.post(
+            "/api/v1/workspaces", json={"name": f"Second {uuid4().hex[:8]}"}
+        ).json()
+        mission = client.post(
+            "/api/v1/missions",
+            json={
+                "workspace_id": first["id"],
+                "title": "Private mission",
+                "objective": "Stay scoped",
+            },
+        ).json()
+        automation = client.post(
+            "/api/v1/automations",
+            json={
+                "workspace_id": first["id"],
+                "name": "Private automation",
+                "trigger_type": "manual",
+            },
+        ).json()
 
-        assert [item['id'] for item in client.get('/api/v1/missions', params={'workspace_id': second['id']}).json()] == []
-        assert [item['id'] for item in client.get('/api/v1/automations', params={'workspace_id': second['id']}).json()] == []
-        assert mission['workspace_id'] == first['id']
-        assert automation['workspace_id'] == first['id']
+        assert [
+            item["id"]
+            for item in client.get(
+                "/api/v1/missions", params={"workspace_id": second["id"]}
+            ).json()
+        ] == []
+        assert [
+            item["id"]
+            for item in client.get(
+                "/api/v1/automations", params={"workspace_id": second["id"]}
+            ).json()
+        ] == []
+        assert mission["workspace_id"] == first["id"]
+        assert automation["workspace_id"] == first["id"]
 
-        audit_events = client.get('/api/v1/audit-events', params={'workspace_id': second['id']})
+        audit_events = client.get(
+            "/api/v1/audit-events", params={"workspace_id": second["id"]}
+        )
         assert audit_events.status_code == 200
-        assert all(event['workspace_id'] == second['id'] for event in audit_events.json())
+        assert all(
+            event["workspace_id"] == second["id"] for event in audit_events.json()
+        )

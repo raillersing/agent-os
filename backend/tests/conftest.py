@@ -4,6 +4,7 @@ Test Configuration
 
 import asyncio
 import os
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -11,8 +12,8 @@ os.environ.setdefault("SECRET_KEY", "test-secret-key-with-more-than-32-character
 os.environ.setdefault("ADMIN_EMAIL", "admin@test.local")
 os.environ.setdefault("ADMIN_PASSWORD", "test-password")
 
-from app.main import app
 from app.core.database import init_db
+from app.main import app
 
 
 def pytest_sessionstart(session):

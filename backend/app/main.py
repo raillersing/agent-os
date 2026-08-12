@@ -7,8 +7,8 @@ from contextlib import asynccontextmanager
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from .api import agents, auth, control_plane, memory, runs, tools
 from .config import settings
-from .api import agents, runs, memory, auth, tools, control_plane
 from .core.security import require_authenticated_user
 
 
@@ -44,11 +44,24 @@ app.add_middleware(
 # Routes
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Auth"])
 protected = [Depends(require_authenticated_user)]
-app.include_router(agents.router, prefix="/api/v1/agents", tags=["Agents"], dependencies=protected)
-app.include_router(runs.router, prefix="/api/v1/runs", tags=["Runs"], dependencies=protected)
-app.include_router(memory.router, prefix="/api/v1/memory", tags=["Memory"], dependencies=protected)
-app.include_router(tools.router, prefix="/api/v1/tools", tags=["Tools"], dependencies=protected)
-app.include_router(control_plane.router, prefix="/api/v1", tags=["Control Plane"], dependencies=protected)
+app.include_router(
+    agents.router, prefix="/api/v1/agents", tags=["Agents"], dependencies=protected
+)
+app.include_router(
+    runs.router, prefix="/api/v1/runs", tags=["Runs"], dependencies=protected
+)
+app.include_router(
+    memory.router, prefix="/api/v1/memory", tags=["Memory"], dependencies=protected
+)
+app.include_router(
+    tools.router, prefix="/api/v1/tools", tags=["Tools"], dependencies=protected
+)
+app.include_router(
+    control_plane.router,
+    prefix="/api/v1",
+    tags=["Control Plane"],
+    dependencies=protected,
+)
 
 
 @app.get("/health", tags=["Health"])

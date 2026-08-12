@@ -2,10 +2,21 @@
 Run Model
 """
 
-from datetime import datetime
-from sqlalchemy import Column, String, DateTime, JSON, Integer, Float, Text, ForeignKey, Uuid
-from sqlalchemy.orm import relationship
 import uuid
+from datetime import datetime
+
+from sqlalchemy import (
+    JSON,
+    Column,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+    Uuid,
+)
+from sqlalchemy.orm import relationship
 
 from ..core.database import Base
 
