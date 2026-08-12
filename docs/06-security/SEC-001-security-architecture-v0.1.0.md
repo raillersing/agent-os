@@ -1,7 +1,7 @@
 ---
 document_id: SEC-001
 title: Agent OS Security Architecture
-version: 0.1.0
+version: 0.2.0
 status: draft
 owner: security-owner
 approvers:
@@ -12,7 +12,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-07-19
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 related_documents:
@@ -111,7 +111,7 @@ The detailed threat analysis belongs in `THR-001`.
 - a small trusted team;
 - predefined platform and workspace roles;
 - human and workload identities;
-- Hermes and Codex adapters;
+- Codex, Hermes, and Claude Code adapters;
 - selected model providers;
 - approved files, repositories, tools, and optional MCP servers;
 - durable tasks and runs;

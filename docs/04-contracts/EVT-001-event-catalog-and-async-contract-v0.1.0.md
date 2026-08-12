@@ -1,7 +1,7 @@
 ---
 document_id: EVT-001
 title: Agent OS Event Catalog and Async Contract
-version: 0.2.0
+version: 0.3.0
 status: draft
 owner: architecture-owner
 approvers:
@@ -2724,6 +2724,21 @@ Define retention classes, payload references, redaction/tombstones, holds, and b
 ## 149A. ADR-003 event envelope refinement
 
 Events concerning conversations, tasks, runs, artifacts, memory, approvals, and policy decisions should include the applicable workspace and resource visibility scope, actor chain, risk class, policy/approval references, retention profile, correlation ID, causation ID, and effect certainty. Event consumers must enforce scope before projection, search indexing, notification, or replay.
+
+## 149B. Conversation event profile
+
+The event catalog must include versioned conversation events:
+
+| Event | Required payload |
+|---|---|
+| `conversation.created` | conversation ID, workspace, owner, visibility, capture boundary, retention profile |
+| `conversation.message_recorded` | conversation ID, message ID, actor chain, provider/adapter, role, correlation, classification |
+| `conversation.shared` | conversation ID, share ID, target scope, grantee, expiry, authorizing actor |
+| `conversation.share_revoked` | conversation ID, share ID, revocation actor, effective time |
+| `conversation.deletion_requested` | conversation ID, requester, retention/hold result, deletion deadline |
+| `conversation.deleted` | conversation ID, deletion result, derived-index result, audit reference |
+
+Consumers must authorize before projecting, indexing, notifying, exporting, or replaying conversation events. A private conversation event must never be projected into a broader visibility read model.
 
 ## 150. Open decisions
 

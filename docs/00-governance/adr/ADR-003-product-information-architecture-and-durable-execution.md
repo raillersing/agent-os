@@ -1,7 +1,7 @@
 ---
 document_id: ADR-003
 title: Product Information Architecture, Access Scope, Approval, Retention, and Durable Execution
-version: 0.1.0
+version: 0.1.1
 status: in-review
 owner: architecture-owner
 approvers:
@@ -39,6 +39,8 @@ related_documents:
 related_adrs:
   - ADR-001
   - ADR-002
+  - ADR-004
+  - ADR-005
 supersedes: []
 approval_records:
   - role: product-owner
@@ -57,7 +59,7 @@ pending_approvals:
 
 ## Status
 
-**Draft — proposed baseline.** This ADR records the product and architecture decisions explicitly validated by the product owner on 2026-08-12. It is not approved until the required architecture, security, data, operations, and quality review is recorded.
+**In-review — proposed baseline.** This ADR records the product and architecture decisions explicitly validated by the product owner on 2026-08-12. It is not approved until the required architecture, security, data, operations, and quality review is recorded.
 
 ## Context
 
@@ -109,7 +111,7 @@ The default is `private`. Sharing is explicit and auditable. Access checks apply
 
 ### 4. Initial agent adapters
 
-The initial adapter baseline contains Codex, Hermes, and Claude Code. Each adapter remains replaceable and must implement the versioned Agent Adapter Contract. Agent OS records only conversations and execution evidence that pass through its controlled adapter or interface boundary.
+The initial supported adapter baseline contains Codex, Hermes, and Claude Code. Each adapter remains replaceable and must implement the versioned Agent Adapter Contract. The approved vision's first proof slice remains two adapters; the third adapter is part of the initial supported set and requires its own conformance profile. Agent OS records only conversations and execution evidence that pass through its controlled adapter or interface boundary.
 
 ### 5. Approval and risk policy
 
@@ -129,7 +131,7 @@ Workspace policy may require stricter approval but cannot remove approval for `c
 ### 6. Retention and deletion baseline
 
 - Conversations, artifacts, memory, and run metadata are retained until user or workspace policy requests deletion; archival is preferred for inactive content.
-- Audit evidence for consequential actions has a configurable long-retention profile, with seven years as the initial product default where no stricter legal or organizational policy applies.
+- Audit evidence for consequential actions uses profile `R4` under `DAT-002`; seven years is an initial proposal for that profile, pending data, security, and legal review.
 - Deleted content enters a 30-day recoverable deletion period, except compromised secrets, which are revoked immediately.
 - Secrets are never stored in conversations, prompts, ordinary memory, artifacts, or logs.
 - Search indexes, embeddings, previews, caches, and derived records follow the source record's deletion policy and must be removed or rebuilt after deletion.
@@ -146,6 +148,11 @@ This decision supersedes the task-queue portion of ADR-001 only after this ADR i
 ### 8. Plugins and capabilities
 
 Plugins may expose broad capabilities comparable to modern AI agents, including code, file, network, model, browser, MCP, and integration operations. Capability breadth does not bypass governance. Every plugin declares capabilities, data access, network access, filesystem access, secret needs, isolation profile, and effect semantics. The Tool Gateway, policy engine, sandbox, approval service, workspace scope, and audit layer remain mandatory.
+
+## Decision boundaries delegated to child ADRs
+
+- `ADR-004` owns the durable orchestration engine decision.
+- `ADR-005` owns the Conversation aggregate and derived-data privacy boundary.
 
 ## Consequences
 
@@ -180,4 +187,4 @@ The product owner explicitly approved this decision baseline on 2026-08-12. The 
 | Version | Date | Status | Change |
 |---|---|---|---|
 | 0.1.0 | 2026-08-12 | Draft | Initial validated product and architecture decision baseline |
-| 0.1.1 | 2026-08-12 | In-review | Product-owner approval recorded; remaining approvers listed |
+| 0.1.1 | 2026-08-12 | In-review | Product-owner approval recorded; remaining approvers listed; child decisions split out |

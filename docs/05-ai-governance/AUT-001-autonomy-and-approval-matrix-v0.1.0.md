@@ -1,7 +1,7 @@
 ---
 document_id: AUT-001
 title: Agent OS Autonomy and Approval Matrix
-version: 0.1.0
+version: 0.2.0
 status: draft
 owner: product-owner
 approvers:
@@ -10,7 +10,7 @@ approvers:
   - architecture-owner
   - operations-owner
 created: 2026-07-19
-last_reviewed: 2026-07-19
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 related_documents:
@@ -1618,6 +1618,21 @@ This draft assumes:
 | Broad standing grants | Persistent excessive authority | Limit scope, expiry, and eligible risk classes |
 | Unknown side effect after timeout | Unsafe retry | Block retry or require new approval |
 | Single-user pilot overgeneralization | Commercial controls insufficient | Revisit independence before trusted-team/production expansion |
+
+## 35A. ADR-003 canonical action vocabulary
+
+`AUT-001` is the authoritative source for action risk, autonomy, and approval behavior. The product-facing action tags from `ADR-003` map to the existing controlled matrix as follows:
+
+| Product action tag | Typical risk range | Typical autonomy | Default control |
+|---|---|---|---|
+| `read` | `R0–R1` | `L1–L2` | Allow with scope and data guards |
+| `generate` | `R1` | `L2` | Allow as draft/non-authoritative output |
+| `controlled_write` | `R2–R3` | `L3–L4` | Workspace policy decides; approval for consequential writes |
+| `external_effect` | `R3` | `L4` | Exact approval required |
+| `destructive` | `R3–R4` | `L4` or `L0` | Approval only where explicitly permitted; otherwise deny |
+| `critical` | `R4` | `L4` or `L0` | Recent reauthentication and elevated approval, or deny |
+
+`critical` does not mean that an action is always approvable. Production access, financial posting, arbitrary shell, audit disablement, and other excluded actions remain denied under the existing matrix. `ADR-003`, API, approval, and event documents must reference this mapping rather than define a competing risk vocabulary.
 
 ## 36. Open decisions
 

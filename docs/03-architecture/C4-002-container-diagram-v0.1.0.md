@@ -1,7 +1,7 @@
 ---
 document_id: C4-002
 title: Agent OS C4 Container Diagram
-version: 0.1.0
+version: 0.2.0
 status: draft
 owner: architecture-owner
 approvers:
@@ -12,7 +12,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-07-19
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 related_documents:
@@ -143,7 +143,7 @@ Protected filesystem, Git, command, network, messaging, package, and future busi
 
 ### CP-005 — Treat adapters as replaceable translators
 
-Hermes and Codex adapters normalize external runtime behavior into the common Agent OS contracts.
+Codex, Hermes, and Claude Code adapters normalize external runtime behavior into the common Agent OS contracts.
 
 ### CP-006 — Keep stores logically distinct
 
@@ -1460,8 +1460,9 @@ The following may share the control-plane application process initially:
 The following should be separate processes or strongly isolated execution units:
 
 - orchestrator worker;
-- Hermes adapter;
 - Codex adapter;
+- Hermes adapter;
+- Claude Code adapter;
 - tool gateway;
 - sandbox workers;
 - database;

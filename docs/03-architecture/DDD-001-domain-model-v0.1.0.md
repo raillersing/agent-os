@@ -1,7 +1,7 @@
 ---
 document_id: DDD-001
 title: Agent OS Domain Model
-version: 0.2.0
+version: 0.3.0
 status: draft
 owner: architecture-owner
 approvers:
@@ -131,6 +131,7 @@ The core domain problem is:
 | Context ID | Bounded Context | Primary responsibility |
 |---|---|---|
 | `BC-ORG` | Organization and Workspace Governance | Organization, workspaces, projects, membership, roles |
+| `BC-CON` | Conversation and Interaction | Conversations, messages, participants, sharing, visibility, capture boundary |
 | `BC-IAM` | Identity and Access | Human/workload identity, session, effective authority |
 | `BC-REG` | Registry and Capability | Agents, adapters, models, tools, capabilities, health |
 | `BC-WRK` | Work Definition | Tasks, task snapshots, expected outcomes, limits |
@@ -148,6 +149,7 @@ The core domain problem is:
 ```mermaid
 flowchart LR
     ORG[BC-ORG Governance]
+    CON[BC-CON Conversation]
     IAM[BC-IAM Identity]
     REG[BC-REG Registry]
     WRK[BC-WRK Work Definition]
@@ -161,6 +163,10 @@ flowchart LR
     OPS[BC-OPS Operations]
 
     IAM --> ORG
+    ORG --> CON
+    IAM --> CON
+    CON --> MEM
+    CON --> AUD
     ORG --> WRK
     ORG --> REG
     WRK --> RUN
@@ -187,6 +193,7 @@ flowchart LR
 |---|---|---|
 | `BC-IAM` | All contexts | Published identity and authorization context |
 | `BC-ORG` | All workspace-scoped contexts | Published workspace/project/membership references |
+| `BC-CON` | `BC-MEM`, `BC-ART`, `BC-AUD`, `BC-RUN` | Conversation scope, message provenance, sharing, and correlation references |
 | `BC-REG` | `BC-WRK`, `BC-RUN`, `BC-POL` | Published agent/model/tool capability contracts |
 | `BC-WRK` | `BC-RUN` | Task Snapshot as published language |
 | `BC-POL` | `BC-RUN`, `BC-APR` | Policy Decision as published language |
@@ -552,6 +559,53 @@ Represent available agents, adapters, models, tools, and their validated capabil
 3. Unknown side-effect class blocks execution.
 4. Executable/plugin installation is not implied by registration.
 5. Workspace enablement is narrower than global availability.
+
+## 17A. `BC-CON — Conversation and Interaction`
+
+### Purpose
+
+Own conversations that cross an Agent OS interface or adapter boundary. External conversations that Agent OS never observes are not represented as captured Agent OS conversations.
+
+### Aggregate root
+
+- `Conversation`.
+
+### Entities
+
+- `ConversationMessage`;
+- `ConversationParticipant`;
+- `ConversationShare`;
+- `ConversationAttachment`.
+
+### Value objects
+
+- `ConversationVisibility` (`private`, `project`, `workspace`);
+- `ConversationRetentionProfile`;
+- `ConversationScope`;
+- `MessageRole`;
+- `CaptureBoundary`.
+
+### Invariants
+
+1. Every conversation has one workspace and one owner.
+2. Visibility defaults to `private`.
+3. Workspace membership does not grant private-conversation access.
+4. Sharing and revocation are explicit, scoped, and auditable.
+5. A message belongs to exactly one conversation and preserves actor/provider provenance.
+6. Derived memory, artifacts, indexes, previews, notifications, and exports cannot broaden source visibility implicitly.
+7. Deletion and retention apply to messages, attachments, derivatives, and indexes according to policy.
+8. Agent OS does not claim capture of conversations outside its interface or adapter boundary.
+
+### Domain events
+
+- `ConversationCreated`;
+- `ConversationMessageRecorded`;
+- `ConversationShared`;
+- `ConversationShareRevoked`;
+- `ConversationArchived`;
+- `ConversationDeletionRequested`;
+- `ConversationDeleted`;
+- `ConversationCaptureUnavailable`.
 
 ## 18. `BC-WRK — Work Definition`
 

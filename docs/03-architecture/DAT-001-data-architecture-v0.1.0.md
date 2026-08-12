@@ -1,7 +1,7 @@
 ---
 document_id: DAT-001
 title: Agent OS Data Architecture
-version: 0.1.0
+version: 0.2.0
 status: draft
 owner: data-owner
 approvers:
@@ -12,7 +12,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-07-19
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 related_documents:
@@ -2024,6 +2024,12 @@ Before MVP acceptance:
 - derived indexes are not authoritative;
 - accepted workflows cannot silently use mock data;
 - Git integration/versioning remains deferred until document drafting is complete.
+
+## 71A. Conversation data boundary
+
+`Conversation` is a first-class workspace-scoped data aggregate. Its messages and attachments are authoritative content for the Agent OS capture boundary. Search indexes, embeddings, previews, notifications, exports, artifacts, and memory derived from a conversation are non-authoritative projections that must retain source and visibility references.
+
+Projection consumers must enforce authorization before reading or writing derived data. Revocation, deletion, correction, retention holds, and backup restore must propagate to projections and record evidence of incomplete propagation. A conversation not observed through an Agent OS interface or adapter is outside the platform capture boundary.
 
 ## 72. Open decisions
 

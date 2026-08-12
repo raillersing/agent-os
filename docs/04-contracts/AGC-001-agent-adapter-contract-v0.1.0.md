@@ -1,7 +1,7 @@
 ---
 document_id: AGC-001
 title: Agent OS Agent Adapter Contract
-version: 0.2.0
+version: 0.3.0
 status: draft
 owner: architecture-owner
 approvers:
@@ -48,6 +48,9 @@ related_documents:
   - QAG-001
   - OBS-001
   - OPS-001
+  - ADP-CDX-001
+  - ADP-HER-001
+  - ADP-CLA-001
 related_adrs:
   - ADR-TBD-AGC-001
   - ADR-TBD-AGC-002
@@ -60,7 +63,7 @@ related_evidence:
 
 # AGC-001 — Agent OS Agent Adapter Contract
 
-> **Status: Draft.** This document defines the provider-neutral contract between Agent OS and agent runtimes such as Hermes and Codex. It does not claim that either runtime already implements every operation, state, event, or capability described here. Unsupported or unverified behavior must remain explicit.
+> **Status: Draft.** This document defines the provider-neutral contract between Agent OS and agent runtimes such as Codex, Hermes, and Claude Code. It does not claim that any runtime already implements every operation, state, event, or capability described here. Unsupported or unverified behavior must remain explicit.
 
 ## 1. Purpose
 
@@ -1906,13 +1909,13 @@ The initial supported adapter set is Codex, Hermes, and Claude Code. Each adapte
 1. Which communication protocol is the core profile?
 2. Is CLI parsing acceptable for the first adapters?
 3. Which operations are mandatory for Hermes?
-4. Which operations are mandatory for Codex?
+4. Which operations are mandatory for Codex and Claude Code?
 5. Is event streaming mandatory or may polling satisfy core conformance?
 6. Which cancellation evidence is sufficient?
 7. Is pause required?
 8. Is checkpoint/resume required for MVP?
 9. Which tool visibility guarantees can Hermes provide?
-10. Which tool visibility guarantees can Codex provide?
+10. Which tool visibility guarantees can Codex and Claude Code provide?
 11. Which native tools must be disabled?
 12. How is actual model identity verified?
 13. Which usage metrics are reliable?
