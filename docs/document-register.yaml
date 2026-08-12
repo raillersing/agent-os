@@ -48,7 +48,7 @@ documents:
     version: 0.1.0
     wave: 1
     priority: P0
-    status: draft
+    status: in-review
     owner: architecture-owner
     source_of_truth: true
     dependencies: [ADR-001, ADR-002, VSN-001, SAD-001, DDD-001, IAM-001, POL-001, ORC-001]
