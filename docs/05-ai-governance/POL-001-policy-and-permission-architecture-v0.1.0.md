@@ -1,7 +1,7 @@
 ---
 document_id: POL-001
 title: Agent OS Policy and Permission Architecture
-version: 0.1.0
+version: 0.2.0
 status: draft
 register_status: proposed_unregistered
 owner: security-owner
@@ -13,7 +13,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-07-20
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 related_documents: []
@@ -1629,6 +1629,21 @@ Define restriction types, precedence, activation, release, restore, and fail-clo
 ## ADR-TBD-POL-007 — Explanation, evidence, and administration UX
 
 Define reason codes, audience-specific explanations, decision explorer, evidence, accessibility, and access control.
+
+## ADR-003 risk and approval baseline
+
+The following risk vocabulary is the proposed product baseline:
+
+| Risk class | Default outcome |
+|---|---|
+| `read` | Allow when scope and permission are valid |
+| `generate` | Allow when scope and budget are valid |
+| `controlled_write` | Allow or require approval according to workspace policy |
+| `external_effect` | Require approval |
+| `destructive` | Require approval |
+| `critical` | Require approval and recent reauthentication |
+
+Workspace policy may add restrictions but cannot remove the mandatory controls for critical actions. A policy decision is separate from approval, and approval is separate from execution evidence. The normalized action fingerprint, target, parameters, policy version, approver, expiry, and consumption state must remain linked.
 
 ## Open decisions
 

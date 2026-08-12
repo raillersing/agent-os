@@ -1,7 +1,7 @@
 ---
 document_id: NFR-001
 title: Agent OS Non-Functional Requirements
-version: 0.1.0
+version: 0.2.0
 status: draft
 owner: architecture-owner
 approvers:
@@ -1561,6 +1561,10 @@ This draft assumes:
 | Cost data incomplete | False budget confidence | Show pending/unavailable/unattributed states |
 | Recovery target untested | Backup creates false assurance | Require restore exercises |
 | NFRs detached from implementation | Documentation drift | RTM and quality gates |
+
+## 34A. ADR-003 non-functional baseline
+
+The platform must preserve workspace and resource-level isolation under concurrent access, enforce default-deny authorization, support strong authentication for VPS access, maintain durable run recovery, and preserve deletion/retention semantics across primary data, indexes, caches, previews, events, and backups. Critical actions require recent authentication assurance and complete evidence.
 
 ## 35. Open decisions
 

@@ -1,7 +1,7 @@
 ---
 document_id: PRD-001
 title: Agent OS Product Requirements Document
-version: 0.1.0
+version: 0.2.0
 status: draft
 owner: product-owner
 approvers:
@@ -11,7 +11,7 @@ approvers:
   - ux-accessibility-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-07-19
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 related_documents:
@@ -951,6 +951,18 @@ No assumption is proof.
 | Protocol lock-in | Provider/tool portability reduced | Candidate standards decided by ADR |
 | Dashboard-first implementation | Mock UI outruns backend | Vertical slice and source traceability |
 | Incomplete audit | Incidents cannot be reconstructed | Required event/receipt contract |
+
+## 39A. ADR-003 product baseline
+
+The product must support:
+
+- personal and team workspaces;
+- `Project`, `Mission`, `Task`, `Run`, and independent `Conversation` concepts;
+- private, project, and workspace conversation visibility, with private as the default;
+- direct interaction with Codex, Hermes, and Claude Code through Agent OS;
+- configurable autonomy with mandatory approval for external, destructive, and critical actions;
+- long-lived conversation, artifact, memory, run, and audit records with explicit deletion and retention behavior;
+- local Windows/Linux operation and authenticated VPS deployment.
 
 ## 40. Open product decisions
 

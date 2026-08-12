@@ -1,7 +1,7 @@
 ---
 document_id: SCP-001
 title: Agent OS Scope and System Boundaries
-version: 0.1.0
+version: 0.2.0
 status: draft
 owner: product-owner
 approvers:
@@ -9,7 +9,7 @@ approvers:
   - architecture-owner
   - security-owner
 created: 2026-07-18
-last_reviewed: 2026-07-18
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 related_documents:
@@ -887,6 +887,10 @@ Downstream dependencies include:
 | Architecture overengineering | High availability and microservices begin before evidence | Local single-node first |
 | Protocol lock-in | MCP/A2A/AG-UI are adopted without fit analysis | Treat as candidates until ADR approval |
 | Documentation drift | Scope changes without linked updates | Require register, traceability, and version updates |
+
+## 36A. ADR-003 scope refinement
+
+The product scope includes personal and team workspaces, direct use of Codex, Hermes, and Claude Code through Agent OS, durable conversations only for interactions crossing the Agent OS boundary, and the hierarchy `Project → Mission → Task → Run`. Conversation privacy is independent from workspace membership. Local Windows/Linux and authenticated VPS deployment are in scope; broad plugin capabilities remain governed through the execution, policy, approval, and audit boundaries.
 
 ## 37. Open decisions
 

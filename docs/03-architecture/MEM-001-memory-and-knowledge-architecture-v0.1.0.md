@@ -1,7 +1,7 @@
 ---
 document_id: MEM-001
 title: Agent OS Memory and Knowledge Architecture
-version: 0.1.0
+version: 0.2.0
 status: draft
 owner: architecture-owner
 approvers:
@@ -11,7 +11,7 @@ approvers:
   - security-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-07-19
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 related_documents:
@@ -1665,6 +1665,10 @@ Decision factors:
 - expiry;
 - evidence requirements;
 - batch review limits.
+
+## 69A. ADR-003 memory scope refinement
+
+Memory and derived retrieval data follow the visibility and retention scope of their source. A private conversation cannot create workspace-visible memory without an explicit promotion decision. Project and workspace memory remain independently permissioned. Deletion or correction of a source must invalidate or rebuild embeddings, indexes, previews, and cached retrieval results. Secrets remain prohibited from ordinary memory.
 
 ## 70. Open decisions
 

@@ -1,7 +1,7 @@
 ---
 document_id: UCD-001
 title: Agent OS User Journeys and Use Cases
-version: 0.1.0
+version: 0.2.0
 status: draft
 owner: product-owner
 approvers:
@@ -10,7 +10,7 @@ approvers:
   - architecture-owner
   - security-owner
 created: 2026-07-19
-last_reviewed: 2026-07-19
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 related_documents:
@@ -1703,6 +1703,19 @@ Downstream documents:
 | Mobile overreach | Sensitive action risk | Restrict consequential actions |
 | Accessibility deferred | Redesign and exclusion | Include acceptance from first prototype |
 | Persona-role confusion | Excess authority | Separate responsibility and permission |
+
+## 65A. ADR-003 journey baseline
+
+The primary journeys must include:
+
+1. create or select a personal or team workspace;
+2. create a project, mission, and task;
+3. start a private conversation and optionally link it to the work;
+4. launch Codex, Hermes, or Claude Code from the interface;
+5. observe a durable run and its evidence;
+6. receive an approval request for an external, destructive, or critical action;
+7. share a conversation or artifact explicitly with a project or workspace audience;
+8. resume, retry, pause, cancel, archive, or delete work according to policy.
 
 ## 66. Open decisions
 

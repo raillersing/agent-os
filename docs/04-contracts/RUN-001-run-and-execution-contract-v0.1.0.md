@@ -1,7 +1,7 @@
 ---
 document_id: RUN-001
 title: Agent OS Run and Execution Contract
-version: 0.1.0
+version: 0.2.0
 status: draft
 owner: architecture-owner
 approvers:
@@ -12,7 +12,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-07-19
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 dependencies:
@@ -2277,6 +2277,10 @@ Decide checkpoint content, expiry, compatibility, and security.
 ### `ADR-TBD-RUN-005 — Unknown-state resolution authority`
 
 Define roles, evidence requirements, and permitted outcomes.
+
+## 97A. ADR-003 run and orchestration refinement
+
+Every run references one immutable task snapshot and may reference its project, mission, conversation, workspace, adapter, policy decision, and approval fingerprint. Temporal is the proposed durable workflow engine; PostgreSQL remains authoritative for Agent OS business state and audit. Run events must preserve attempt lineage, effect certainty, visibility scope, retention profile, and correlation IDs. A run cannot report protected success without the required evidence.
 
 ## 98. Open decisions
 

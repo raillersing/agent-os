@@ -1,7 +1,7 @@
 ---
 document_id: SRS-001
 title: Agent OS Functional Requirements Specification
-version: 0.1.0
+version: 0.2.0
 status: draft
 owner: product-owner
 approvers:
@@ -10,7 +10,7 @@ approvers:
   - security-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-07-19
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 related_documents:
@@ -2555,6 +2555,10 @@ This draft assumes:
 | Cost data delay | False budget view | Explicit pending/unavailable states |
 | Local operations neglected | Lost pilot data | Backup/restore and health Must requirements |
 | Requirement traceability drift | Unverifiable implementation | RTM and quality gates |
+
+## 34A. ADR-003 functional baseline
+
+The functional requirements must define resource relationships and authorization for `workspace`, `project`, `mission`, `task`, `conversation`, `run`, `artifact`, and `memory`. Conversation visibility must be explicit and enforced on reads, writes, search, notifications, exports, derived memory, and artifacts. The system must classify actions by risk and require exact approvals according to the approved policy. The initial adapter journey must cover Codex, Hermes, and Claude Code.
 
 ## 35. Open decisions
 

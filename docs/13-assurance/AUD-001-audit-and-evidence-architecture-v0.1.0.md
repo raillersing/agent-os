@@ -1,7 +1,7 @@
 ---
 document_id: AUD-001
 title: Agent OS Audit and Evidence Architecture
-version: 0.1.0
+version: 0.2.0
 status: draft
 register_status: proposed_unregistered
 owner: security-owner
@@ -13,7 +13,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-07-20
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 related_documents: []
@@ -1917,6 +1917,10 @@ Define C2/C3 handling, R4/R5 schedules, minimization, redaction, personal data, 
 ## 150. ADR-TBD-AUD-008 — Commercial assurance and external integration
 
 Define customer exports, SIEM integration direction, tenant partitioning, independent verification, regulatory mapping, and assurance claims.
+
+## 150A. ADR-003 evidence refinement
+
+Audit evidence must record workspace, resource visibility, conversation/resource scope, risk class, policy decision, approval fingerprint, actor chain, run correlation, effect certainty, retention profile, and deletion/reference treatment. Access to private, project, or workspace conversations and derived artifacts is itself auditable. Deletion of content must not silently delete the evidence that an access, decision, or deletion occurred.
 
 ## 151. Open decisions
 
