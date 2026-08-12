@@ -1,9 +1,19 @@
 """Persistent MVP control-plane domain models."""
 
-from datetime import datetime
 import uuid
+from datetime import datetime
 
-from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, JSON, String, Text, Uuid
+from sqlalchemy import (
+    JSON,
+    Column,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+    Uuid,
+)
 
 from ..core.database import Base
 
@@ -17,7 +27,9 @@ class Workspace(Base):
     status = Column(String(32), default="active", nullable=False, index=True)
     budget = Column(Float, default=0.0)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    updated_at = Column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
 
 
 class Mission(Base):
@@ -32,7 +44,9 @@ class Mission(Base):
     plan = Column(JSON, default=list)
     evidence = Column(JSON, default=list)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    updated_at = Column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
 
 
 class Automation(Base):
@@ -47,7 +61,9 @@ class Automation(Base):
     steps = Column(JSON, default=list)
     enabled = Column(Integer, default=1, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    updated_at = Column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
 
 
 class Approval(Base):

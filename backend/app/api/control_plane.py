@@ -8,18 +8,16 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..core.database import get_db
-from ..models.control_plane import (
-    Approval as ApprovalModel,
-    AuditEvent as AuditEventModel,
-    Automation as AutomationModel,
-    Mission as MissionModel,
-    Workspace as WorkspaceModel,
-)
+from ..models.control_plane import Approval as ApprovalModel
+from ..models.control_plane import AuditEvent as AuditEventModel
+from ..models.control_plane import Automation as AutomationModel
+from ..models.control_plane import Mission as MissionModel
+from ..models.control_plane import Workspace as WorkspaceModel
 from ..schemas.control_plane import (
     Approval,
-    AuditEvent,
     ApprovalCreate,
     ApprovalDecision,
+    AuditEvent,
     Automation,
     AutomationCreate,
     Mission,
@@ -40,13 +38,15 @@ def record_event(
     details: dict,
 ) -> None:
     """Queue an append-only audit record in the same transaction as the mutation."""
-    db.add(AuditEventModel(
-        workspace_id=workspace_id,
-        event_type=event_type,
-        resource_type=resource_type,
-        resource_id=resource_id,
-        details=details,
-    ))
+    db.add(
+        AuditEventModel(
+            workspace_id=workspace_id,
+            event_type=event_type,
+            resource_type=resource_type,
+            resource_id=resource_id,
+            details=details,
+        )
+    )
 
 
 async def require_workspace(db: AsyncSession, workspace_id: UUID) -> WorkspaceModel:
@@ -58,16 +58,27 @@ async def require_workspace(db: AsyncSession, workspace_id: UUID) -> WorkspaceMo
 
 @router.get("/workspaces", response_model=list[Workspace])
 async def list_workspaces(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(WorkspaceModel).order_by(WorkspaceModel.created_at))
+    result = await db.execute(
+        select(WorkspaceModel).order_by(WorkspaceModel.created_at)
+    )
     return result.scalars().all()
 
 
 @router.post("/workspaces", response_model=Workspace, status_code=201)
-async def create_workspace(payload: WorkspaceCreate, db: AsyncSession = Depends(get_db)):
+async def create_workspace(
+    payload: WorkspaceCreate, db: AsyncSession = Depends(get_db)
+):
     workspace = WorkspaceModel(**payload.model_dump())
     db.add(workspace)
     await db.flush()
-    record_event(db, workspace.id, "workspace.created", "workspace", workspace.id, {"name": workspace.name})
+    record_event(
+        db,
+        workspace.id,
+        "workspace.created",
+        "workspace",
+        workspace.id,
+        {"name": workspace.name},
+    )
     await db.commit()
     await db.refresh(workspace)
     return workspace
@@ -91,7 +102,14 @@ async def create_mission(payload: MissionCreate, db: AsyncSession = Depends(get_
     mission = MissionModel(**payload.model_dump())
     db.add(mission)
     await db.flush()
-    record_event(db, mission.workspace_id, "mission.created", "mission", mission.id, {"title": mission.title})
+    record_event(
+        db,
+        mission.workspace_id,
+        "mission.created",
+        "mission",
+        mission.id,
+        {"title": mission.title},
+    )
     await db.commit()
     await db.refresh(mission)
     return mission
@@ -107,13 +125,28 @@ async def update_mission_status(
     mission = await db.get(MissionModel, mission_id)
     if mission is None:
         raise HTTPException(status_code=404, detail="Mission not found")
-    allowed = {"draft", "planned", "running", "waiting_approval", "completed", "failed", "cancelled"}
+    allowed = {
+        "draft",
+        "planned",
+        "running",
+        "waiting_approval",
+        "completed",
+        "failed",
+        "cancelled",
+    }
     if status not in allowed:
         raise HTTPException(status_code=422, detail="Unsupported mission status")
     mission.status = status
     mission.progress = progress
     mission.updated_at = datetime.utcnow()
-    record_event(db, mission.workspace_id, "mission.status_updated", "mission", mission.id, {"status": status, "progress": progress})
+    record_event(
+        db,
+        mission.workspace_id,
+        "mission.status_updated",
+        "mission",
+        mission.id,
+        {"status": status, "progress": progress},
+    )
     await db.commit()
     await db.refresh(mission)
     return mission
@@ -132,12 +165,21 @@ async def list_automations(
 
 
 @router.post("/automations", response_model=Automation, status_code=201)
-async def create_automation(payload: AutomationCreate, db: AsyncSession = Depends(get_db)):
+async def create_automation(
+    payload: AutomationCreate, db: AsyncSession = Depends(get_db)
+):
     await require_workspace(db, payload.workspace_id)
     automation = AutomationModel(**payload.model_dump())
     db.add(automation)
     await db.flush()
-    record_event(db, automation.workspace_id, "automation.created", "automation", automation.id, {"name": automation.name, "trigger_type": automation.trigger_type})
+    record_event(
+        db,
+        automation.workspace_id,
+        "automation.created",
+        "automation",
+        automation.id,
+        {"name": automation.name, "trigger_type": automation.trigger_type},
+    )
     await db.commit()
     await db.refresh(automation)
     return automation
@@ -180,7 +222,14 @@ async def create_approval(payload: ApprovalCreate, db: AsyncSession = Depends(ge
     mission.status = "waiting_approval"
     db.add(approval)
     await db.flush()
-    record_event(db, mission.workspace_id, "approval.requested", "approval", approval.id, {"mission_id": str(mission.id), "action": approval.action})
+    record_event(
+        db,
+        mission.workspace_id,
+        "approval.requested",
+        "approval",
+        approval.id,
+        {"mission_id": str(mission.id), "action": approval.action},
+    )
     await db.commit()
     await db.refresh(approval)
     return approval
@@ -203,7 +252,14 @@ async def decide_approval(
     mission = await db.get(MissionModel, approval.mission_id)
     if mission is None:
         raise HTTPException(status_code=409, detail="Approval has no mission record")
-    record_event(db, mission.workspace_id, f"approval.{payload.status}", "approval", approval.id, {"mission_id": str(mission.id), "decision_note": payload.decision_note})
+    record_event(
+        db,
+        mission.workspace_id,
+        f"approval.{payload.status}",
+        "approval",
+        approval.id,
+        {"mission_id": str(mission.id), "decision_note": payload.decision_note},
+    )
     await db.commit()
     await db.refresh(approval)
     return approval

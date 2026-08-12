@@ -2,17 +2,18 @@
 Agent API Routes
 """
 
-from typing import List, Optional
 from datetime import datetime
+from typing import List, Optional
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..core.database import get_db
 from ..models.agent import Agent as AgentModel
-from ..schemas.agent import Agent as AgentSchema, AgentCreate, AgentUpdate
+from ..schemas.agent import Agent as AgentSchema
+from ..schemas.agent import AgentCreate, AgentUpdate
 
 router = APIRouter()
 
@@ -64,7 +65,9 @@ async def get_agent(agent_id: UUID, db: AsyncSession = Depends(get_db)):
 
 
 @router.patch("/{agent_id}", response_model=AgentSchema)
-async def update_agent(agent_id: UUID, update: AgentUpdate, db: AsyncSession = Depends(get_db)):
+async def update_agent(
+    agent_id: UUID, update: AgentUpdate, db: AsyncSession = Depends(get_db)
+):
     """Update agent."""
     query = select(AgentModel).where(AgentModel.id == agent_id)
     result = await db.execute(query)

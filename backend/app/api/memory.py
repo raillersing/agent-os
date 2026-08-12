@@ -2,16 +2,17 @@
 Memory API Routes
 """
 
-from typing import List, Optional
 from datetime import datetime, timedelta
+from typing import List, Optional
 
-from fastapi import APIRouter, HTTPException, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..core.database import get_db
 from ..models.memory import Memory as MemoryModel
-from ..schemas.memory import Memory as MemorySchema, MemoryCreate, MemorySearchResults
+from ..schemas.memory import Memory as MemorySchema
+from ..schemas.memory import MemoryCreate, MemorySearchResults
 
 router = APIRouter()
 
@@ -46,7 +47,9 @@ async def create_memory(memory: MemoryCreate, db: AsyncSession = Depends(get_db)
         agent_id=memory.agent_id,
         metadata_=memory.metadata_ or {},
         created_at=datetime.utcnow(),
-        expires_at=datetime.utcnow() + timedelta(seconds=memory.ttl) if memory.ttl else None,
+        expires_at=(
+            datetime.utcnow() + timedelta(seconds=memory.ttl) if memory.ttl else None
+        ),
     )
     db.add(db_memory)
     await db.commit()

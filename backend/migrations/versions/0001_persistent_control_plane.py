@@ -5,8 +5,8 @@ Revises:
 Create Date: 2026-07-28
 """
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 
 revision = "0001"
 down_revision = None
@@ -31,7 +31,9 @@ def upgrade():
     op.create_table(
         "missions",
         sa.Column("id", sa.Uuid(), primary_key=True),
-        sa.Column("workspace_id", sa.Uuid(), sa.ForeignKey("workspaces.id"), nullable=False),
+        sa.Column(
+            "workspace_id", sa.Uuid(), sa.ForeignKey("workspaces.id"), nullable=False
+        ),
         sa.Column("title", sa.String(255), nullable=False),
         sa.Column("objective", sa.Text(), nullable=False),
         sa.Column("status", sa.String(32), nullable=False),
@@ -46,7 +48,9 @@ def upgrade():
     op.create_table(
         "automations",
         sa.Column("id", sa.Uuid(), primary_key=True),
-        sa.Column("workspace_id", sa.Uuid(), sa.ForeignKey("workspaces.id"), nullable=False),
+        sa.Column(
+            "workspace_id", sa.Uuid(), sa.ForeignKey("workspaces.id"), nullable=False
+        ),
         sa.Column("name", sa.String(255), nullable=False),
         sa.Column("description", sa.Text(), nullable=True),
         sa.Column("trigger_type", sa.String(64), nullable=False),
@@ -60,7 +64,9 @@ def upgrade():
     op.create_table(
         "approvals",
         sa.Column("id", sa.Uuid(), primary_key=True),
-        sa.Column("mission_id", sa.Uuid(), sa.ForeignKey("missions.id"), nullable=False),
+        sa.Column(
+            "mission_id", sa.Uuid(), sa.ForeignKey("missions.id"), nullable=False
+        ),
         sa.Column("action", sa.String(255), nullable=False),
         sa.Column("scope", sa.JSON(), nullable=True),
         sa.Column("status", sa.String(32), nullable=False),

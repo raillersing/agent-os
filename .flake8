@@ -1,0 +1,3 @@
+[flake8]
+# Black owns line wrapping; migration/model registration imports are intentional.
+ignore = E501,E402,F401

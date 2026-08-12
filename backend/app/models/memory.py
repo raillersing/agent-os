@@ -3,7 +3,8 @@ Memory Model
 """
 
 from datetime import datetime
-from sqlalchemy import Column, String, DateTime, JSON, Integer, Text, Uuid
+
+from sqlalchemy import JSON, Column, DateTime, Integer, String, Text, Uuid
 
 from ..core.database import Base
 

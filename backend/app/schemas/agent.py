@@ -22,6 +22,7 @@ class AgentBase(BaseModel):
 
 class AgentCreate(AgentBase):
     """Schema for creating an agent."""
+
     pass
 
 

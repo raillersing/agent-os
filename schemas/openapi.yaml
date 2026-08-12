@@ -646,9 +646,9 @@ components:
           properties:
             id: { type: string, format: uuid }
             status: { type: string, enum: [pending, approved, rejected] }
-            decision_note: { type: string, nullable: true }
+            decision_note: { type: [string, 'null'] }
             created_at: { type: string, format: date-time }
-            decided_at: { type: string, format: date-time, nullable: true }
+            decided_at: { type: [string, 'null'], format: date-time }
     AuditEvent:
       type: object
       required: [id, workspace_id, event_type, resource_type, resource_id, actor, details, created_at]

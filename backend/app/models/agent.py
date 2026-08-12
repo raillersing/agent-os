@@ -2,9 +2,20 @@
 Agent Model
 """
 
-from datetime import datetime
-from sqlalchemy import Column, String, DateTime, JSON, Float, Text, Integer, BigInteger, Uuid
 import uuid
+from datetime import datetime
+
+from sqlalchemy import (
+    JSON,
+    BigInteger,
+    Column,
+    DateTime,
+    Float,
+    Integer,
+    String,
+    Text,
+    Uuid,
+)
 
 from ..core.database import Base
 

@@ -2,18 +2,19 @@
 Run API Routes
 """
 
-from typing import List, Optional
 from datetime import datetime
+from typing import List, Optional
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..core.database import get_db
-from ..models.run import Run as RunModel
 from ..models.agent import Agent
-from ..schemas.run import Run as RunSchema, RunCreate
+from ..models.run import Run as RunModel
+from ..schemas.run import Run as RunSchema
+from ..schemas.run import RunCreate
 
 router = APIRouter()
 
@@ -39,7 +40,9 @@ async def list_runs(
 
 
 @router.post("/{agent_id}/run", response_model=RunSchema, status_code=202)
-async def create_run(agent_id: UUID, run: RunCreate, db: AsyncSession = Depends(get_db)):
+async def create_run(
+    agent_id: UUID, run: RunCreate, db: AsyncSession = Depends(get_db)
+):
     """Create and start a run."""
     # Verify agent exists
     query = select(Agent).where(Agent.id == agent_id)

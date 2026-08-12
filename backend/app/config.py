@@ -27,12 +27,17 @@ class Settings(BaseSettings):
     REDIS_URL: str = "redis://localhost:6381/0"
 
     # Security
-    SECRET_KEY: str = "change-me-in-production"
+    # Secrets and bootstrap credentials must be supplied by the environment.
+    SECRET_KEY: str = ""
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
     ALGORITHM: str = "HS256"
 
+    # No account is created when these values are empty.
+    ADMIN_EMAIL: str = ""
+    ADMIN_PASSWORD: str = ""
+
     # CORS
-    CORS_ORIGINS: List[str] = ["http://localhost:3080", "http://localhost:8080"]
+    CORS_ORIGINS: List[str] = []
 
     # LLM Providers
     OPENAI_API_KEY: str = ""

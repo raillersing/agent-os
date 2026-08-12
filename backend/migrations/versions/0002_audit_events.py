@@ -5,8 +5,8 @@ Revises: 0001
 Create Date: 2026-07-30
 """
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 
 revision = "0002"
 down_revision = "0001"
@@ -18,7 +18,9 @@ def upgrade():
     op.create_table(
         "audit_events",
         sa.Column("id", sa.Uuid(), primary_key=True),
-        sa.Column("workspace_id", sa.Uuid(), sa.ForeignKey("workspaces.id"), nullable=False),
+        sa.Column(
+            "workspace_id", sa.Uuid(), sa.ForeignKey("workspaces.id"), nullable=False
+        ),
         sa.Column("event_type", sa.String(96), nullable=False),
         sa.Column("resource_type", sa.String(64), nullable=False),
         sa.Column("resource_id", sa.Uuid(), nullable=False),

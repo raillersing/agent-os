@@ -1,16 +1,14 @@
 # Agent OS Docker Compose — Development
 
-version: '3.8'
-
 services:
   # PostgreSQL Database
   postgres:
     image: postgres:16-alpine
     container_name: agent-os-postgres
     environment:
-      POSTGRES_DB: agent_os
-      POSTGRES_USER: agent_os
-      POSTGRES_PASSWORD: agent_os
+      POSTGRES_DB: ${POSTGRES_DB:?Set POSTGRES_DB in .env}
+      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
     ports:
       - "5435:5432"
     volumes:
@@ -42,10 +40,12 @@ services:
       dockerfile: Dockerfile
     container_name: agent-os-backend
     environment:
-      - DATABASE_URL=postgresql://agent_os:agent_os@postgres:5432/agent_os
+      - DATABASE_URL=postgresql://${POSTGRES_USER:?Set POSTGRES_USER in .env}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:?Set POSTGRES_DB in .env}
       - REDIS_URL=redis://redis:6379/0
-      - SECRET_KEY=dev-secret-key-change-in-production
-      - DEBUG=true
+      - SECRET_KEY=${SECRET_KEY:?Set SECRET_KEY in .env}
+      - ADMIN_EMAIL=${ADMIN_EMAIL:?Set ADMIN_EMAIL in .env}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in .env}
+      - CORS_ORIGINS=["http://localhost:3080","http://127.0.0.1:3080"]
     ports:
       - "8080:8080"
     depends_on:
@@ -55,7 +55,12 @@ services:
         condition: service_healthy
     volumes:
       - ./backend:/app
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8080 --reload
+    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8080 --reload"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8080/health')\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # Frontend (Next.js)
   frontend:
@@ -64,11 +69,12 @@ services:
       dockerfile: Dockerfile
     container_name: agent-os-frontend
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8080
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8080}
     ports:
       - "3080:3000"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     volumes:
       - ./frontend/src:/app/src
 

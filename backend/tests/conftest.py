@@ -3,11 +3,17 @@ Test Configuration
 """
 
 import asyncio
+import os
+
 import pytest
 from fastapi.testclient import TestClient
 
-from app.main import app
+os.environ.setdefault("SECRET_KEY", "test-secret-key-with-more-than-32-characters")
+os.environ.setdefault("ADMIN_EMAIL", "admin@test.local")
+os.environ.setdefault("ADMIN_PASSWORD", "test-password")
+
 from app.core.database import init_db
+from app.main import app
 
 
 def pytest_sessionstart(session):
@@ -18,4 +24,15 @@ def pytest_sessionstart(session):
 @pytest.fixture
 def client():
     """Create test client."""
-    return TestClient(app)
+    with TestClient(app) as test_client:
+        test_client.headers.update(auth_headers(test_client))
+        yield test_client
+
+
+def auth_headers(test_client: TestClient) -> dict[str, str]:
+    response = test_client.post(
+        "/api/v1/auth/token",
+        json={"email": "admin@test.local", "password": "test-password"},
+    )
+    response.raise_for_status()
+    return {"Authorization": f"Bearer {response.json()['access_token']}"}
