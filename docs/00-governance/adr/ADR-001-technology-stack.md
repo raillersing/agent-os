@@ -1,8 +1,8 @@
 ---
 document_id: ADR-001
 title: Technology Stack Selection
-version: 1.0.0
-status: approved
+version: 1.1.0
+status: in-review
 owner: architecture-owner
 approvers:
   - architecture-owner
@@ -24,7 +24,7 @@ supersedes: []
 
 ## Status
 
-**Approved** — 2026-07-20
+**In review** — the durable orchestration decision is being amended by ADR-004.
 
 ## Context
 
@@ -51,7 +51,7 @@ We will use the following technology stack:
 | **ORM** | SQLAlchemy | 2.0+ | Industry standard, async support |
 | **Migrations** | Alembic | 1.13+ | Mature, works with SQLAlchemy |
 | **Validation** | Pydantic | 2.0+ | Data validation, settings management |
-| **Task Queue** | Celery + Redis | - | Background tasks, scheduled jobs |
+| **Durable orchestration** | Temporal | current supported release | Long-running workflows, approvals, retries, timers, cancellation, and recovery |
 
 ### Frontend
 
@@ -67,7 +67,7 @@ We will use the following technology stack:
 | Component | Technology | Version | Justification |
 |-----------|------------|---------|---------------|
 | **Primary DB** | PostgreSQL | 16+ | ACID, JSONB, mature |
-| **Cache** | Redis | 7+ | Sessions, queues, pub/sub |
+| **Cache** | Redis | 7+ | Sessions, cache, notifications, pub/sub, and bounded auxiliary transport; not authoritative workflow history |
 | **Vector DB** | ChromaDB | 0.4+ | Local, Python-native |
 | **File Storage** | Local + S3 | - | Artifacts, documents |
 
@@ -133,7 +133,7 @@ We will use the following technology stack:
 
 ### Mitigations
 
-1. Use Celery for CPU-bound tasks, async for I/O
+1. Use Temporal for durable workflow execution; use bounded asynchronous workers for non-authoritative auxiliary jobs.
 2. Start with Next.js App Router for simplicity
 3. Provide Docker Compose for zero-config PostgreSQL
 
@@ -152,4 +152,4 @@ This decision aligns with:
 - [SQLAlchemy 2.0](https://docs.sqlalchemy.org/)
 - [Next.js Documentation](https://nextjs.org/docs)
 - [PostgreSQL Documentation](https://www.postgresql.org/docs/)
-- Julian Goldie SEO Agent OS — Similar architecture with Claude + Hermes + Obsidian
+- external reference SEO Agent OS — Similar architecture with Claude + Hermes + Obsidian

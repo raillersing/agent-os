@@ -24,10 +24,10 @@ documents:
   - id: ADR-001
     title: Technology Stack Selection
     path: docs/00-governance/adr/ADR-001-technology-stack.md
-    version: 1.0.0
+    version: 1.1.0
     wave: 1
     priority: P0
-    status: approved
+    status: in-review
     owner: architecture-owner
     approval_date: 2026-07-20
     source_of_truth: true
@@ -55,20 +55,20 @@ documents:
   - id: ADR-004
     title: Durable Orchestration Engine
     path: docs/00-governance/adr/ADR-004-durable-orchestration-engine.md
-    version: 0.1.0
+    version: 0.2.0
     wave: 1
     priority: P0
-    status: draft
+    status: in-review
     owner: architecture-owner
     source_of_truth: true
     dependencies: [ADR-001, ADR-003, SAD-001, ORC-001, RUN-001, EVT-001, DEP-001]
   - id: ADR-005
     title: Conversation Domain, Visibility, and Derived Data Privacy
     path: docs/00-governance/adr/ADR-005-conversation-domain-and-privacy.md
-    version: 0.1.0
+    version: 0.2.0
     wave: 1
     priority: P0
-    status: draft
+    status: in-review
     owner: architecture-owner
     source_of_truth: true
     dependencies: [ADR-003, DDD-001, DAT-001, DCT-001, API-001, EVT-001, MEM-001, ART-001, IAM-001, AUD-001]
@@ -87,10 +87,10 @@ documents:
   - id: VSN-001
     title: Product Vision and Project Charter
     path: docs/01-product/VSN-001-product-vision-and-charter.md
-    version: 1.0.0
+    version: 1.1.0
     wave: 1
     priority: P0
-    status: approved
+    status: in-review
     owner: product-owner
     approval_date: 2026-07-16
     source_of_truth: true
@@ -206,8 +206,9 @@ documents:
     path: docs/03-architecture/DAT-002-data-classification-retention-and-deletion-standard-v0.1.0.md
     wave: 2
     priority: P1
-    status: draft
+    status: in-review
     owner: data-owner
+    source_of_truth: true
     dependencies: [DAT-001]
   - id: DCT-001
     title: Data Dictionary
@@ -562,125 +563,140 @@ documents:
     dependencies: [API-001, AGC-001, RUN-001, APR-001]
 
   # ═══════════════════════════════════════════════════════════════════════════
-  # V2 GOLDIE EDITION DOCUMENTS
+  # ARCHIVED LEGACY DOCUMENTS — retained for history only; not sources of truth
   - id: VSN-002
-    title: Agent OS v2 Goldie Edition Product Vision
+    title: Agent OS v2 Agent OS Edition Product Vision
     path: docs/01-PRODUCT_VISION.md
     wave: 1
     priority: P0
-    status: draft
+    status: archived
+    source_of_truth: false
     owner: product-owner
     dependencies: [VSN-001, SCP-001, PRD-001]
   - id: PRD-002
-    title: Agent OS v2 Goldie Edition Product Requirements Document
+    title: Agent OS v2 Agent OS Edition Product Requirements Document
     path: docs/02-PRD.md
     wave: 1
     priority: P0
-    status: draft
+    status: archived
+    source_of_truth: false
     owner: product-owner
     dependencies: [VSN-002, SCP-001, SRS-001]
   - id: DSN-002
-    title: Agent OS v2 Goldie Edition Design System
+    title: Agent OS v2 Agent OS Edition Design System
     path: docs/03-DESIGN_SYSTEM.md
     wave: 4
     priority: P0
-    status: draft
+    status: archived
+    source_of_truth: false
     owner: product-owner
     dependencies: [DSN-001, UXA-001, A11Y-001, VVR-001]
   - id: SAD-002
-    title: Agent OS v2 Goldie Edition Architecture
+    title: Agent OS v2 Agent OS Edition Architecture
     path: docs/04-ARCHITECTURE.md
     wave: 2
     priority: P0
-    status: draft
+    status: archived
+    source_of_truth: false
     owner: architecture-owner
     dependencies: [SAD-001, C4-001, C4-002, INT-001]
   - id: DAT-003
-    title: Agent OS v2 Goldie Edition Data Model
+    title: Agent OS v2 Agent OS Edition Data Model
     path: docs/05-DATA_MODEL.md
     wave: 2
     priority: P0
-    status: draft
+    status: archived
+    source_of_truth: false
     owner: data-owner
     dependencies: [DAT-001, DCT-001, DDD-001]
   - id: API-002
-    title: Agent OS v2 Goldie Edition API Specification
+    title: Agent OS v2 Agent OS Edition API Specification
     path: docs/06-API_SPEC.md
     wave: 3
     priority: P0
-    status: draft
+    status: archived
+    source_of_truth: false
     owner: api-owner
     dependencies: [API-001, AGC-001, RUN-001, APR-001]
   - id: DEV-002
-    title: Agent OS v2 Goldie Edition Agents and Conventions
+    title: Agent OS v2 Agent OS Edition Agents and Conventions
     path: docs/07-AGENTS.md
     wave: 4
     priority: P1
-    status: draft
+    status: archived
+    source_of_truth: false
     owner: architecture-owner
     dependencies: [DEV-001, AGC-001, SAD-002]
   - id: DEP-002
-    title: Agent OS v2 Goldie Edition Installation and Deployment Guide
+    title: Agent OS v2 Agent OS Edition Installation and Deployment Guide
     path: docs/08-INSTALL.md
     wave: 4
     priority: P1
-    status: draft
+    status: archived
+    source_of_truth: false
     owner: operations-owner
     dependencies: [DEP-001, OPS-001, SEC-001]
   - id: REL-002
-    title: Agent OS v2 Goldie Edition Roadmap and Release Plan
+    title: Agent OS v2 Agent OS Edition Roadmap and Release Plan
     path: docs/09-ROADMAP.md
     wave: 4
     priority: P1
-    status: draft
+    status: archived
+    source_of_truth: false
     owner: product-owner
     dependencies: [VSN-002, PRD-002, QAG-001]
   - id: MOD-002
-    title: Agent OS v2 Goldie Edition SEO Module
+    title: Agent OS v2 Agent OS Edition SEO Module
     path: docs/10-SEO_MODULE.md
     wave: 4
     priority: P1
-    status: draft
+    status: archived
+    source_of_truth: false
     owner: product-owner
     dependencies: [PRD-002, PLG-001, ART-001]
   - id: ORC-002
-    title: Agent OS v2 Goldie Edition Advanced Workflow Builder
+    title: Agent OS v2 Agent OS Edition Advanced Workflow Builder
     path: docs/11-WORKFLOW_ADVANCED.md
     wave: 3
     priority: P1
-    status: draft
+    status: archived
+    source_of_truth: false
     owner: architecture-owner
     dependencies: [ORC-001, RUN-001, APR-001]
   - id: AIG-002
-    title: Agent OS v2 Goldie Edition Agentic Patterns
+    title: Agent OS v2 Agent OS Edition Agentic Patterns
     path: docs/12-AGENTIC_PATTERNS.md
     wave: 3
     priority: P1
-    status: draft
+    status: archived
+    source_of_truth: false
     owner: architecture-owner
-    dependencies: [AIG-001, AUT-001, AGC-001]
+    dependencies: [AUT-001, AGC-001]
   - id: MOD-003
-    title: Agent OS v2 Goldie Edition Voice and Talk Mode Module
+    title: Agent OS v2 Agent OS Edition Voice and Talk Mode Module
     path: docs/13-VOICE_MODULE.md
     wave: 4
     priority: P1
-    status: draft
+    status: archived
+    source_of_truth: false
     owner: product-owner
     dependencies: [PRD-002, INT-001, ART-001]
   - id: ART-002
-    title: Agent OS v2 Goldie Edition Import and Export Module
+    title: Agent OS v2 Agent OS Edition Import and Export Module
     path: docs/14-IMPORT_EXPORT.md
     wave: 4
     priority: P1
-    status: draft
+    status: archived
+    source_of_truth: false
     owner: data-owner
     dependencies: [ART-001, DAT-003, SEC-001]
   - id: BCP-002
-    title: Agent OS v2 Goldie Edition Disaster Recovery
+    title: Agent OS v2 Agent OS Edition Disaster Recovery
     path: docs/15-DISASTER_RECOVERY.md
     wave: 4
     priority: P1
-    status: draft
+    status: archived
+    source_of_truth: false
     owner: operations-owner
     dependencies: [BCP-001, OPS-001, DEP-002]
 

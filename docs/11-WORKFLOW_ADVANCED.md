@@ -1,20 +1,20 @@
 ---
 document_id: ORC-002
-title: Agent OS v2 Goldie Edition Advanced Workflow Builder
+title: Agent OS v2 Advanced Workflow Builder
 version: 2.0.0
-status: draft
+status: archived
 owner: architecture-owner
 approvers:
   - architecture-owner
 created: 2026-08-11
 last_reviewed: 2026-08-12
 classification: internal
-source_of_truth: true
+source_of_truth: false
 related_documents: [ORC-001, RUN-001, APR-001]
 related_adrs: []
 ---
 
-# Agent OS v2 — Goldie Edition / Advanced Workflow Builder
+# Agent OS v2 / Advanced Workflow Builder
 
 > **Document:** `11-WORKFLOW_ADVANCED.md`
 > **Version:** 2.0.0

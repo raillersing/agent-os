@@ -64,10 +64,10 @@ See [VIDEO-001](VIDEO-001-video-inventory-and-methodology.md) for labels and lim
 
 ### D — How to Build Your Own Agent OS (FREE)
 
-- **STATED:** Mission Control is positioned as a clean home base [Video: How to Build Your Own Agent OS (FREE) - Julian Goldie.mp4, 00:01:07–00:01:30].
-- **OBSERVED:** Hermes, image/video artifact galleries, skills, and Kanban/project views appear in the dark shell [Video: How to Build Your Own Agent OS (FREE) - Julian Goldie.mp4, 00:03:54–00:05:07].
-- **STATED:** an email inbox is connected through MCP, voice/talk is added, Studio covers images/video/voice notes, and agents can be switched [Video: How to Build Your Own Agent OS (FREE) - Julian Goldie.mp4, 00:02:46–00:05:07].
-- **STATED:** Goal Mode is presented as working for hours and checking completion [Video: How to Build Your Own Agent OS (FREE) - Julian Goldie.mp4, 00:05:56–00:06:31].
+- **STATED:** Mission Control is positioned as a clean home base [Video: How to Build Your Own Agent OS (FREE) - external reference.mp4, 00:01:07–00:01:30].
+- **OBSERVED:** Hermes, image/video artifact galleries, skills, and Kanban/project views appear in the dark shell [Video: How to Build Your Own Agent OS (FREE) - external reference.mp4, 00:03:54–00:05:07].
+- **STATED:** an email inbox is connected through MCP, voice/talk is added, Studio covers images/video/voice notes, and agents can be switched [Video: How to Build Your Own Agent OS (FREE) - external reference.mp4, 00:02:46–00:05:07].
+- **STATED:** Goal Mode is presented as working for hours and checking completion [Video: How to Build Your Own Agent OS (FREE) - external reference.mp4, 00:05:56–00:06:31].
 - **NOT CONFIRMED:** the email connection, real machine actions, trained voice, media assembly, saved skills, or completion verification.
 
 ## Screen and module inventory
@@ -109,7 +109,7 @@ flowchart LR
   C --> K[Update board/workspace]
 ```
 
-This second flow is principally **STATED** [Video: How to Build Your Own Agent OS (FREE) - Julian Goldie.mp4, 00:05:56–00:06:31]; orchestration, retries, approval, and durable state are **NOT CONFIRMED**.
+This second flow is principally **STATED** [Video: How to Build Your Own Agent OS (FREE) - external reference.mp4, 00:05:56–00:06:31]; orchestration, retries, approval, and durable state are **NOT CONFIRMED**.
 
 ## Visual design system
 

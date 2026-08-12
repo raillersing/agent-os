@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
 
 export const metadata: Metadata = {
-  title: 'Agent OS v2 — Goldie Edition',
+  title: 'Agent OS v2 — Agent OS baseline',
   description: 'The intelligent operating system for AI agents',
 };
 

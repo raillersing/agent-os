@@ -1,27 +1,27 @@
 ---
 document_id: PRD-002
-title: Agent OS v2 Goldie Edition Product Requirements Document
+title: Agent OS v2 Product Requirements Document
 version: 2.0.0
-status: draft
+status: archived
 owner: product-owner
 approvers:
   - product-owner
 created: 2026-08-11
 last_reviewed: 2026-08-12
 classification: internal
-source_of_truth: true
+source_of_truth: false
 related_documents: [VSN-002, SCP-001, SRS-001]
 related_adrs: []
 ---
 
-# Agent OS v2 — Goldie Edition: Product Requirements Document
+# Agent OS v2: Product Requirements Document
 
 > **Document:** `02-PRD.md`
 > **Version:** 2.0.0
 > **Status:** Draft
 > **Date:** 2026-08-11
 > **Classification:** Internal
-> **Source of Truth:** True (for v2 Goldie Edition requirements)
+> **Source of Truth:** True (for v2 Agent OS requirements)
 
 ---
 
@@ -60,7 +60,7 @@ related_adrs: []
 
 ## 1. Document Purpose
 
-This document translates the Agent OS v2 — Goldie Edition Product Vision into detailed, actionable product requirements. It serves as the single source of truth for feature definition, user story derivation, acceptance criteria, and non-functional requirements for the v2 development team.
+This document translates the Agent OS v2 Product Vision into detailed, actionable product requirements. It serves as the single source of truth for feature definition, user story derivation, acceptance criteria, and non-functional requirements for the v2 development team.
 
 Every requirement includes:
 - Stable identifier (`PRD-v2-<DOMAIN>-<NUMBER>`)
@@ -74,7 +74,7 @@ Every requirement includes:
 
 ## 2. Product Summary
 
-Agent OS v2 — Goldie Edition is a local-first, self-hosted, white-label Agent Operating System that coordinates multiple AI agents through a unified dark-theme Mission Control dashboard. It introduces named agent personas, a live DAG status view, Kanban mission board, media Studio, self-hosted Notebook knowledge base, Two-Lane artifact verification, and an intelligent BYOK Model Gateway.
+Agent OS v2 is a local-first, self-hosted, white-label Agent Operating System that coordinates multiple AI agents through a unified dark-theme Mission Control dashboard. It introduces named agent personas, a live DAG status view, Kanban mission board, media Studio, self-hosted Notebook knowledge base, Two-Lane artifact verification, and an intelligent BYOK Model Gateway.
 
 The platform enforces durable execution, human-in-the-loop approvals, workspace isolation, artifact provenance, and complete cost attribution. It is built on Next.js 15 + React 19 + Tailwind CSS v4 (frontend) and FastAPI + SQLAlchemy 2.0 + Alembic (backend), with SQLite/PostgreSQL + pgvector for persistence and Redis for cache/queue.
 
@@ -138,7 +138,7 @@ The platform enforces durable execution, human-in-the-loop approvals, workspace 
 
 ## 4. Release Model
 
-### Release `v2.0-MVP` — Goldie Foundation
+### Release `v2.0-MVP` — Agent OS Foundation
 - Dark-theme Mission Control shell
 - Named agents (Crystal, Alex, Elvis, Joe) with circular avatars
 - Claude + Hermes adapters
@@ -407,7 +407,7 @@ Complete observability with immutable audit events and cost attribution.
 
 ### 5.13 SEO Module (PRD-v2-SEO)
 
-Search engine optimization module powering Goldie’s agency workflows: SERP intelligence, rank tracking, competitor watch, content brief generation, and direct CMS publishing.
+Search engine optimization module powering Agent OS’s agency workflows: SERP intelligence, rank tracking, competitor watch, content brief generation, and direct CMS publishing.
 
 | ID | Requirement | Priority | User Story | Acceptance Criteria |
 |---|---|---|---|---|
@@ -861,4 +861,4 @@ The following decisions remain open and require stakeholder input:
 
 ---
 
-*End of Document — Agent OS v2 Goldie Edition Product Requirements Document*
+*End of Document — Agent OS v2 Product Requirements Document*

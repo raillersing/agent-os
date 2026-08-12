@@ -1,27 +1,27 @@
 ---
 document_id: VSN-002
-title: Agent OS v2 Goldie Edition Product Vision
+title: Agent OS v2 Product Vision
 version: 2.0.0
-status: draft
+status: archived
 owner: product-owner
 approvers:
   - product-owner
 created: 2026-08-11
 last_reviewed: 2026-08-12
 classification: internal
-source_of_truth: true
+source_of_truth: false
 related_documents: [VSN-001, SCP-001, PRD-001]
 related_adrs: []
 ---
 
-# Agent OS v2 — Goldie Edition: Product Vision
+# Agent OS v2: Product Vision
 
 > **Document:** `01-PRODUCT_VISION.md`
 > **Version:** 2.0.0
 > **Status:** Draft
 > **Date:** 2026-08-11
 > **Classification:** Internal
-> **Source of Truth:** True (for v2 Goldie Edition product direction)
+> **Source of Truth:** True (for v2 Agent OS product direction)
 
 ---
 
@@ -35,7 +35,7 @@ related_adrs: []
 6. [Target Personas](#6-target-personas)
 7. [Competitive Analysis](#7-competitive-analysis)
 8. [7-Layer Blueprint](#8-7-layer-blueprint)
-9. [Goldie Edition Differentiators](#9-goldie-edition-differentiators)
+9. [Agent OS Differentiators](#9-agent-os-baseline-differentiators)
 10. [Success Metrics](#10-success-metrics)
 11. [Explicit Non-Goals](#11-explicit-non-goals)
 12. [Risks & Mitigations](#12-risks--mitigations)
@@ -44,11 +44,11 @@ related_adrs: []
 
 ## 1. Executive Summary
 
-**Agent OS v2 — Goldie Edition** is a local-first, self-hosted, white-label control plane that coordinates multiple AI agents through a unified Mission Control dashboard. Inspired by Julian Goldie's "Agentic OS" concept, it replaces fragmented AI workflows — scattered across ChatGPT, Claude Code, GitHub Copilot, Midjourney, and a dozen browser tabs — with a single, durable workspace where humans remain in control.
+**Agent OS v2** is a local-first, self-hosted, white-label control plane that coordinates multiple AI agents through a unified Mission Control dashboard. Inspired by external reference's "Agentic OS" concept, it replaces fragmented AI workflows — scattered across ChatGPT, Claude Code, GitHub Copilot, Midjourney, and a dozen browser tabs — with a single, durable workspace where humans remain in control.
 
 The platform is **Bring Your Own Keys (BYOK)**, **provider-agnostic**, and **workspace-centered**. It does not replace your operating system, your ERP, or your judgment. It makes AI work *durable, governable, and observable* at the workspace level while preserving a clean upgrade path from solo local use to team production deployment.
 
-The Goldie Edition introduces:
+The Agent OS introduces:
 - **Named agent personas** (Crystal, Alex, Elvis, Joe) alongside model-native adapters (Claude, Hermes, OpenClaw, Kimi, Grok)
 - **Mission Control** — a live DAG node-graph showing agent status, heartbeat, and latency
 - **Mission Board** — a Kanban-style drag-drop board for agent team coordination
@@ -175,7 +175,7 @@ Joe is the Two-Lane Verifier: he runs deterministic checks (lint, schema, policy
 | **LangChain / LlamaIndex** | Powerful frameworks; extensible | Requires engineering assembly; no UI; no governance out-of-box | Complete product; dark-theme UI; BYOK deployment |
 | **Vercel AI SDK** | Great streaming; React components | Framework, not product; no persistence; no multi-agent | Full-stack product with durable execution |
 | **Dify / Flowise** | Visual workflow builders; open source | Limited governance; weak approval model; no Studio | Two-Lane Verifier; Kanban board; media Studio |
-| **Julian Goldie's "Agentic OS" (Concept)** | Inspiring vision; named agents; Mission Control | Not a shipping product; no technical detail | Real implementation of the vision with engineering rigor |
+| **external reference's "Agentic OS" (Concept)** | Inspiring vision; named agents; Mission Control | Not a shipping product; no technical detail | Real implementation of the vision with engineering rigor |
 
 **Key Differentiator:** Agent OS v2 is the only local-first, self-hosted, white-label product that combines **multi-agent orchestration**, **durable execution with recovery**, **human-in-the-loop approvals**, **artifact provenance**, **cost attribution**, and **media Studio** in one coherent platform.
 
@@ -252,7 +252,7 @@ Agent OS v2 is conceptualized as seven interconnected layers. Each layer is repl
 
 ---
 
-## 9. Goldie Edition Differentiators
+## 9. Agent OS Differentiators
 
 ### 9.1 Named Agents with Personas
 Unlike generic "Agent 1" and "Agent 2," Agent OS v2 ships with four named personas — Crystal, Alex, Elvis, Joe — each with distinct capabilities, color identities, and specialization. Users can also register model-native agents (Claude, Hermes, OpenClaw, Kimi, Grok) with their own color-coded circular avatars.
@@ -330,7 +330,7 @@ The routing gateway intelligently selects providers based on:
 
 ## 11. Explicit Non-Goals
 
-The following are **explicitly excluded** from Agent OS v2 Goldie Edition:
+The following are **explicitly excluded** from Agent OS v2:
 
 1. **Replace operating systems** — Agent OS is an application, not an OS kernel
 2. **Build or train foundation models** — We route to models; we do not build them
@@ -381,4 +381,4 @@ The following are **explicitly excluded** from Agent OS v2 Goldie Edition:
 
 ---
 
-*End of Document — Agent OS v2 Goldie Edition Product Vision*
+*End of Document — Agent OS v2 Product Vision*

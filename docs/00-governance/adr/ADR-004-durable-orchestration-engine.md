@@ -1,8 +1,8 @@
 ---
 document_id: ADR-004
 title: Durable Orchestration Engine
-version: 0.1.0
-status: draft
+version: 0.2.0
+status: in-review
 owner: architecture-owner
 approvers:
   - product-owner
@@ -27,13 +27,23 @@ related_adrs:
   - ADR-001
   - ADR-003
 supersedes: []
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-12
+    evidence: explicit user decision selecting Temporal as the durable orchestration engine
+pending_approvals:
+  - architecture-owner
+  - security-owner
+  - operations-owner
+  - quality-owner
 ---
 
 # ADR-004 — Durable Orchestration Engine
 
 ## Status
 
-**Draft — proposed decision.** This ADR selects the proposed durable orchestration boundary. It does not claim that Temporal is deployed or that execution is implemented.
+**In review — product decision recorded.** This ADR selects Temporal as the proposed durable orchestration boundary. It does not claim that Temporal is deployed or that execution is implemented.
 
 ## Context
 

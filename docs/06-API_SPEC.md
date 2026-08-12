@@ -1,8 +1,8 @@
 ---
 document_id: API-002
-title: Agent OS v2 Goldie Edition API Specification
+title: Agent OS v2 API Specification
 version: 2.1.0
-status: draft
+status: archived
 owner: api-owner
 approvers:
   - api-owner
@@ -10,16 +10,16 @@ approvers:
 created: 2026-08-11
 last_reviewed: 2026-08-12
 classification: internal
-source_of_truth: true
+source_of_truth: false
 related_documents: [API-001, AGC-001, RUN-001, APR-001]
 related_adrs: []
 ---
 
 # Agent OS v2 — API Specification
 
-## Goldie Edition
+## Agent OS
 
-**Version:** 2.1.0-Goldie
+**Version:** 2.1.0-Agent OS
 **Base URL:** `https://agentos.local`
 **Date:** 2026-08-11
 
@@ -664,7 +664,7 @@ Base path: `/api/v1/gateway`
     {
       "id": "uuid",
       "name": "Q3 Organic Growth",
-      "target_domain": "goldie.agency",
+      "target_domain": "example.invalid",
       "target_locale": "en-US",
       "status": "active",
       "start_date": "2026-07-01",
@@ -684,7 +684,7 @@ Base path: `/api/v1/gateway`
 ```json
 {
   "name": "Q3 Organic Growth",
-  "target_domain": "goldie.agency",
+  "target_domain": "example.invalid",
   "target_locale": "en-US",
   "start_date": "2026-07-01",
   "end_date": "2026-09-30",
@@ -800,12 +800,12 @@ Base path: `/api/v1/gateway`
 
 #### GET `/seo/audits`
 - **Auth:** Bearer
-- **Query:** `?domain=goldie.agency&depth=100`
+- **Query:** `?domain=example.invalid&depth=100`
 - **Response:** Paginated audit results (speed, mobile, schema, broken links)
 
 #### POST `/seo/audits`
 - **Auth:** Bearer
-- **Request:** `{ "target_domain": "goldie.agency", "crawl_depth": 100, "checks": ["speed","mobile","schema","broken_links"] }`
+- **Request:** `{ "target_domain": "example.invalid", "crawl_depth": 100, "checks": ["speed","mobile","schema","broken_links"] }`
 - **Response:** `202 Accepted` with audit job ID
 
 #### GET `/seo/audits/{audit_id}`
@@ -853,9 +853,9 @@ Base path: `/api/v1/gateway`
   "data": [
     {
       "id": "uuid",
-      "name": "Goldie Blog WP",
+      "name": "Agent OS Blog WP",
       "cms_type": "wordpress",
-      "base_url": "https://blog.goldie.agency",
+      "base_url": "https://blog.example.invalid",
       "is_connected": true,
       "last_synced_at": "2026-08-11T12:00:00Z"
     }
@@ -868,9 +868,9 @@ Base path: `/api/v1/gateway`
 - **Request:**
 ```json
 {
-  "name": "Goldie Blog WP",
+  "name": "Agent OS Blog WP",
   "cms_type": "wordpress",
-  "base_url": "https://blog.goldie.agency",
+  "base_url": "https://blog.example.invalid",
   "auth_method": "api_key",
   "credentials_ref": "vault://cms/wp-api-key"
 }
@@ -1847,8 +1847,8 @@ Interactive docs: `https://agentos.local/docs/api`
 
 | Version | Date | Notes |
 |---------|------|-------|
-| 2.0.0-MVP | 2026-08-11 | Initial Goldie Edition spec |
-| 2.1.0-Goldie | 2026-08-11 | Added SEO Module (§6.15), CMS Connections (§6.16), Visual Workflows (§6.17), Agent Roles (§6.18), Agent Reflections (§6.19), Swarm Sessions (§6.20) |
+| 2.0.0-MVP | 2026-08-11 | Initial Agent OS spec |
+| 2.1.0-Agent OS | 2026-08-11 | Added SEO Module (§6.15), CMS Connections (§6.16), Visual Workflows (§6.17), Agent Roles (§6.18), Agent Reflections (§6.19), Swarm Sessions (§6.20) |
 
 ---
 
@@ -1888,7 +1888,7 @@ curl -X POST https://agentos.local/api/v1/seo/campaigns \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Q3 Organic Growth",
-    "target_domain": "goldie.agency",
+    "target_domain": "example.invalid",
     "target_locale": "en-US",
     "serp_provider": "serpapi",
     "budget_usd": 50000
@@ -2087,4 +2087,4 @@ curl -X POST https://agentos.local/api/v1/swarm/sessions/{session_id}/participan
 
 ---
 
-*End of API Specification — Agent OS v2 Goldie Edition*
+*End of API Specification — Agent OS v2*

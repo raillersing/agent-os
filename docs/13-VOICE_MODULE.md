@@ -1,20 +1,20 @@
 ---
 document_id: MOD-003
-title: Agent OS v2 Goldie Edition Voice and Talk Mode Module
+title: Agent OS v2 Voice and Talk Mode Module
 version: 2.0.0
-status: draft
+status: archived
 owner: product-owner
 approvers:
   - product-owner
 created: 2026-08-11
 last_reviewed: 2026-08-12
 classification: internal
-source_of_truth: true
+source_of_truth: false
 related_documents: [PRD-002, INT-001, ART-001]
 related_adrs: []
 ---
 
-# Agent OS v2 — Goldie Edition / Voice & Talk Mode Module
+# Agent OS v2 / Voice & Talk Mode Module
 
 > **Document:** `13-VOICE_MODULE.md`
 > **Version:** 2.0.0
@@ -44,7 +44,7 @@ related_adrs: []
 
 ## 1. Overview
 
-Voice transforms Agent OS from a chatbot interface into a true operating system — one you can talk to, listen to, and control hands-free. Goldie's vision of "talk mode" and a "voice assistant that controls the computer" is not a gimmick; it is a fundamental interaction paradigm that removes friction for power users and unlocks accessibility for everyone.
+Voice transforms Agent OS from a chatbot interface into a true operating system — one you can talk to, listen to, and control hands-free. Agent OS's vision of "talk mode" and a "voice assistant that controls the computer" is not a gimmick; it is a fundamental interaction paradigm that removes friction for power users and unlocks accessibility for everyone.
 
 **Why voice matters:**
 - **Accessibility** — users with motor or vision impairments can operate the entire system without a keyboard.

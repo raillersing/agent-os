@@ -1,8 +1,8 @@
 ---
 document_id: ADR-005
 title: Conversation Domain, Visibility, and Derived Data Privacy
-version: 0.1.0
-status: draft
+version: 0.2.0
+status: in-review
 owner: architecture-owner
 approvers:
   - product-owner
@@ -30,13 +30,23 @@ related_documents:
 related_adrs:
   - ADR-003
 supersedes: []
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-12
+    evidence: explicit user validation of workspace isolation, private conversations, capture boundary, and derived-data rules
+pending_approvals:
+  - architecture-owner
+  - security-owner
+  - data-owner
+  - quality-owner
 ---
 
 # ADR-005 — Conversation Domain, Visibility, and Derived Data Privacy
 
 ## Status
 
-**Draft — proposed decision.** This ADR defines the domain and privacy boundary for conversations that pass through Agent OS. It does not claim that conversation capture, synchronization, or access control is implemented.
+**In review — product decision recorded.** This ADR defines the domain and privacy boundary for conversations that pass through Agent OS. It does not claim that conversation capture, synchronization, or access control is implemented.
 
 ## Decision
 

@@ -1,8 +1,8 @@
 ---
 document_id: SAD-002
-title: Agent OS v2 Goldie Edition Architecture
+title: Agent OS v2 Architecture
 version: 2.0.0
-status: draft
+status: archived
 owner: architecture-owner
 approvers:
   - architecture-owner
@@ -10,24 +10,24 @@ approvers:
 created: 2026-08-11
 last_reviewed: 2026-08-12
 classification: internal
-source_of_truth: true
+source_of_truth: false
 related_documents: [SAD-001, C4-001, C4-002, INT-001]
 related_adrs: [ADR-001]
 ---
 
-# Agent OS v2 — Goldie Edition / Architecture
+# Agent OS v2 / Architecture
 
 > **Document:** `04-ARCHITECTURE.md`
 > **Version:** 2.0.0
 > **Status:** Draft — single source of truth for the development team
 > **Last updated:** 2026-08-11
-> **Scope:** C4 model (Context → Code), deployment, communication patterns, auth, data flows, and Goldie-v2 feature mapping.
+> **Scope:** C4 model (Context → Code), deployment, communication patterns, auth, data flows, and Agent OS-v2 feature mapping.
 
 ---
 
 ## 1. Purpose & Non-Goals
 
-This document is the **single source of truth** for Agent OS v2 architecture. It replaces and consolidates all prior architecture drafts (`SAD-001`, `C4-001`, `C4-002`, `INT-001`) for the Goldie Edition vertical slice.
+This document is the **single source of truth** for Agent OS v2 architecture. It replaces and consolidates all prior architecture drafts (`SAD-001`, `C4-001`, `C4-002`, `INT-001`) for the Agent OS vertical slice.
 
 **In scope:**
 - C4 diagrams (Level 1 Context → Level 4 Code)
@@ -776,7 +776,7 @@ sequenceDiagram
 
 ---
 
-## 11. Goldie Edition v2 Feature Mapping
+## 11. Agent OS v2 Feature Mapping
 
 ### 11.1 Named Agents
 

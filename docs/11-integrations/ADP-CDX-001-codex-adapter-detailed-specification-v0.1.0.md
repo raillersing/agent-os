@@ -47,7 +47,7 @@ related_proposed_documents:
   - ADP-HER-001
   - PRI-001
   - MCP-001
-  - HUM-001
+  - APR-001
   - FIN-001
   - UIF-001
   - SLO-001

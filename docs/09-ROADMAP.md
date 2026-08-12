@@ -1,22 +1,22 @@
 ---
 document_id: REL-002
-title: Agent OS v2 Goldie Edition Roadmap and Release Plan
+title: Agent OS v2 Roadmap and Release Plan
 version: 2.0.0
-status: draft
+status: archived
 owner: product-owner
 approvers:
   - product-owner
 created: 2026-08-11
 last_reviewed: 2026-08-12
 classification: internal
-source_of_truth: true
+source_of_truth: false
 related_documents: [VSN-002, PRD-002, QAG-001]
 related_adrs: []
 ---
 
 # Agent OS v2 — Roadmap & Release Plan
 
-## Goldie Edition
+## Agent OS
 
 **Version:** 2.0.0-MVP
 **Date:** 2026-08-11
@@ -34,7 +34,7 @@ v2.0.0-MVP      →  v2.1.0  →  v2.2.0  →  v2.3.0  →  v2.4.0  →  v2.5.0 
 
 | Version | Codename | Focus | Target |
 |---------|----------|-------|--------|
-| `v2.0.0-MVP` | Goldie | Core chat, auth, notebook, agents registry | Day 0 |
+| `v2.0.0-MVP` | Agent OS | Core chat, auth, notebook, agents registry | Day 0 |
 | `v2.1.0` | Studio | Media generation, terminal, file manager | Day 14 |
 | `v2.2.0` | Orchestrator | Live DAG, Kanban, workflows, multi-agent | Day 30 |
 | `v2.3.0` | Polish | Voice, Import/Export, Disaster Recovery, desktop app, PWA, white-label, governance | Day 60 |
@@ -518,7 +518,7 @@ import { isFeatureEnabled } from '@/lib/features';
 
 | Version | Date | Notes |
 |---------|------|-------|
-| 2.0.0-MVP | 2026-08-11 | Initial roadmap for Goldie Edition |
+| 2.0.0-MVP | 2026-08-11 | Initial roadmap for Agent OS |
 
 ---
 

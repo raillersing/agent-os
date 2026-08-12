@@ -1,8 +1,8 @@
 ---
 document_id: DAT-003
-title: Agent OS v2 Goldie Edition Data Model
+title: Agent OS v2 Data Model
 version: 2.0.0
-status: draft
+status: archived
 owner: data-owner
 approvers:
   - data-owner
@@ -10,12 +10,12 @@ approvers:
 created: 2026-08-11
 last_reviewed: 2026-08-12
 classification: internal
-source_of_truth: true
+source_of_truth: false
 related_documents: [DAT-001, DCT-001, DDD-001]
 related_adrs: []
 ---
 
-# Agent OS v2 — Goldie Edition / Data Model
+# Agent OS v2 / Data Model
 
 > **Document:** `05-DATA_MODEL.md`
 > **Version:** 2.0.0
@@ -27,7 +27,7 @@ related_adrs: []
 
 ## 1. Purpose & Non-Goals
 
-This document defines the **complete physical data model** for Agent OS v2 — Goldie Edition. It is the single source of truth for database schema design, migrations (Alembic), query patterns, and data governance.
+This document defines the **complete physical data model** for Agent OS v2. It is the single source of truth for database schema design, migrations (Alembic), query patterns, and data governance.
 
 **In scope:**
 - All 55 tables with field definitions, types, defaults, and constraints
@@ -1997,7 +1997,7 @@ For local-first (`local` profile):
 | `UUID` | `TEXT` with application-level validation |
 | `JSONB` | `JSON` (SQLite 3.38+) or `TEXT` |
 | `VECTOR` | Disabled; semantic search falls back to lexical (`fts5`) |
-| `TIMESTAMPTZ` | `TEXT` (ISO 8601) or `REAL` (Julian day) |
+| `TIMESTAMPTZ` | `TEXT` (ISO 8601) or `REAL` (days since epoch) |
 | `INET` | `TEXT` |
 | `gen_random_uuid()` | Application-generated or `uuid` extension |
 | `ivfflat` | Not available; skip index creation |

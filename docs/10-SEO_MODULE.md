@@ -1,20 +1,20 @@
 ---
 document_id: MOD-002
-title: Agent OS v2 Goldie Edition SEO Module
+title: Agent OS v2 SEO Module
 version: 2.0.0
-status: draft
+status: archived
 owner: product-owner
 approvers:
   - product-owner
 created: 2026-08-11
 last_reviewed: 2026-08-12
 classification: internal
-source_of_truth: true
+source_of_truth: false
 related_documents: [PRD-002, PLG-001, ART-001]
 related_adrs: []
 ---
 
-# Agent OS v2 — Goldie Edition / SEO Module
+# Agent OS v2 / SEO Module
 
 > **Document:** `10-SEO_MODULE.md`
 > **Version:** 2.0.0
@@ -26,7 +26,7 @@ related_adrs: []
 
 ## 1. Overview
 
-SEO is not an add-on to Agent OS — it is a core competency. Goldie's $10M+ agency runs on systematic, data-driven search optimization, and the SEO Module brings that operational rigor into the platform.
+SEO is not an add-on to Agent OS — it is a core competency. Agent OS's $10M+ agency runs on systematic, data-driven search optimization, and the SEO Module brings that operational rigor into the platform.
 
 The SEO Module connects to third-party data providers (SerpAPI, DataForSEO), scrapes SERPs via Playwright when needed, tracks rankings over time, monitors competitors, generates content briefs from live SERP analysis, and publishes finished content through CMS connectors. All data is workspace-scoped and feeds into the audit and cost attribution systems.
 
