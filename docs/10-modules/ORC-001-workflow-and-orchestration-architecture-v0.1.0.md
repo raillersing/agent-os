@@ -1,7 +1,7 @@
 ---
 document_id: ORC-001
 title: Agent OS Workflow and Orchestration Architecture
-version: 0.2.0
+version: 0.3.0
 status: draft
 owner: architecture-owner
 approvers:
@@ -168,7 +168,7 @@ Every run has explicit limits and termination conditions.
 
 - tasks and immutable snapshots;
 - durable runs, steps, and attempts;
-- Hermes and Codex adapters;
+- Codex, Hermes, and Claude Code adapters;
 - human approval waits;
 - approved tools and sandbox workers;
 - scheduling and delayed jobs;

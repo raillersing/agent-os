@@ -1,7 +1,7 @@
 ---
 document_id: THR-001
 title: Agent OS Threat Model
-version: 0.1.0
+version: 0.2.0
 status: draft
 owner: security-owner
 approvers:
@@ -12,7 +12,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-07-19
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 related_documents:
@@ -101,7 +101,7 @@ The first local Agent OS MVP, including:
 - organization/workspace/project structures;
 - task and run orchestration;
 - policy and approval;
-- Hermes and Codex adapters;
+- Codex, Hermes, and Claude Code adapters;
 - model-provider gateway;
 - Tool Gateway;
 - sandbox workers;

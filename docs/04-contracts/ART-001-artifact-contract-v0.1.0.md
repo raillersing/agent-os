@@ -1,7 +1,7 @@
 ---
 document_id: ART-001
 title: Agent OS Artifact Contract
-version: 0.1.0
+version: 0.2.0
 status: draft
 owner: data-owner
 approvers:
@@ -12,7 +12,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-07-19
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 dependencies:
@@ -2446,6 +2446,10 @@ Define malware/secret/active-content scanning tools, limitations, and blocking r
 ### `ADR-TBD-ART-005 — Retention and deletion implementation`
 
 Define lifecycle, tombstones, purge scheduling, backup reconciliation, and secure-deletion limitations.
+
+## 110A. ADR-005 artifact scope refinement
+
+An artifact derived from a conversation must retain `conversation_id`, source visibility, source classification, retention profile, and derivation correlation. Sharing an artifact does not share the source conversation. Revoking conversation access must trigger artifact access re-evaluation where the artifact remains linked to private source content. Artifact preview, export, indexing, and download are separately authorized.
 
 ## 111. Open decisions
 

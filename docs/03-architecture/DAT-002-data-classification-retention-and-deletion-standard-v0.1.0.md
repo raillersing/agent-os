@@ -2093,12 +2093,12 @@ The proposed default profiles are:
 | Artifacts | Retain until explicit deletion; preserve version lineage |
 | Memory | Retain until correction, expiry, or deletion; preserve provenance |
 | Run metadata | Long-lived; archive high-volume logs separately |
-| Consequential audit evidence | Seven years by default where no stricter policy applies |
+| Consequential audit evidence | `R4`; seven years is a proposal pending approval |
 | Secrets | Never in ordinary content; revoke immediately when compromised |
 | Derived indexes and previews | Follow source deletion and rebuild policy |
 | Backups | Encrypted, rotated, and bounded by the deployment recovery policy |
 
-Deletion uses a 30-day recoverable period for ordinary content. Audit references may remain without the deleted content. These are product defaults and do not constitute legal retention advice.
+Deletion uses a 30-day recoverable period for ordinary content. Audit references may remain without the deleted content. The seven-year R4 value remains a proposal until the retention schedule is approved by the data, security, and legal/organizational owners. These are product defaults and do not constitute legal retention advice.
 
 ## 197. Open decisions
 

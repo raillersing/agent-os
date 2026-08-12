@@ -1,7 +1,7 @@
 ---
 document_id: API-001
 title: Agent OS API Specification
-version: 0.2.0
+version: 0.3.0
 status: draft
 owner: architecture-owner
 approvers:
@@ -2497,6 +2497,22 @@ Choose OpenAPI or equivalent, code generation, contract testing, and publication
 ## 142A. ADR-003 API scope fields
 
 Resource APIs must carry or derive the following scope where applicable: `workspace_id`, `project_id`, `mission_id`, `task_id`, `conversation_id`, actor identity, visibility (`private`, `project`, `workspace`), risk class, policy decision, approval reference, retention profile, correlation ID, and run ID. Authorization is enforced server-side for every resource and derived result. Client-provided identifiers never replace authorization checks.
+
+## 142B. Conversation API profile
+
+The conversation API is governed by `ADR-005` and must expose explicit scope and visibility:
+
+| Operation | Endpoint direction | Required behavior |
+|---|---|---|
+| Create conversation | `POST /workspaces/{workspace_id}/conversations` | Defaults to `private`; records owner and capture boundary |
+| List conversations | `GET /workspaces/{workspace_id}/conversations` | Returns only authorized conversations; filters before search/pagination |
+| Read conversation | `GET /conversations/{conversation_id}` | Enforces conversation-level authorization |
+| Add message | `POST /conversations/{conversation_id}/messages` | Records actor/provider/adapter provenance and correlation |
+| Share conversation | `POST /conversations/{conversation_id}/shares` | Explicit project/workspace share, expiry, and audit event |
+| Revoke share | `DELETE /conversations/{conversation_id}/shares/{share_id}` | Immediately invalidates derived access |
+| Archive/delete | `POST /conversations/{conversation_id}/archive` and delete command | Applies retention, hold, backup, and derived-index rules |
+
+Conversation responses must not expose messages, attachments, derived memory, artifacts, or run evidence outside the authorized visibility scope. Search and notification endpoints apply the same authorization predicate.
 
 ## 143. Open decisions
 

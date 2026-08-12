@@ -50,7 +50,7 @@ This glossary defines the initial vocabulary used by the project. Terms remain d
 | Policy decision | Structured authorization or governance result produced by the policy subsystem for a proposed action. |
 | Mission | Outcome-oriented objective within a project. A mission may contain one or more executable tasks. |
 | Project | Durable domain or body of work within a workspace. Projects organize missions, conversations, artifacts, memory, and runs. |
-| Risk class | Standard classification of an action used to determine policy controls and approval requirements: read, generate, controlled_write, external_effect, destructive, or critical. |
+| Risk class | Product-facing action tag mapped by AUT-001 to the canonical R0–R4 risk, L0–L5 autonomy, and I0–I3 independence matrix. Tags include read, generate, controlled_write, external_effect, destructive, and critical. |
 | Run | Durable execution record created when an agent or workflow processes a task. |
 | Run step | Ordered unit of execution, tool use, approval, delegation, or transformation within a run. |
 | Skill | Reusable instruction, reference, and optional script package that guides an agent through a repeatable workflow. |

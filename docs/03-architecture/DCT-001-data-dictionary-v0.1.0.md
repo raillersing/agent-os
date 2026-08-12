@@ -1,7 +1,7 @@
 ---
 document_id: DCT-001
 title: Agent OS Data Dictionary
-version: 0.1.0
+version: 0.2.0
 status: draft
 owner: data-owner
 approvers:
@@ -11,7 +11,7 @@ approvers:
   - security-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-07-19
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 related_documents:
@@ -1825,6 +1825,27 @@ The dictionary must contain no raw-secret field, client-provided authorization t
 - `ADR-TBD-DCT-001` — Identifier format.
 - `ADR-TBD-DCT-002` — Machine-readable dictionary format.
 - `ADR-TBD-DCT-003` — Closed versus extensible enum policy.
+
+## 83A. Conversation canonical fields
+
+The following fields are canonical for the `Conversation` aggregate and related records:
+
+| Field | Semantic type | Required | Meaning |
+|---|---|---|---|
+| `conversation_id` | UUID | Yes | Stable conversation identifier |
+| `workspace_id` | UUID | Yes | Isolation boundary |
+| `owner_identity_id` | UUID | Yes | Human or service owner |
+| `project_id` | UUID | No | Linked durable domain |
+| `mission_id` | UUID | No | Linked outcome objective |
+| `task_id` | UUID | No | Linked executable work |
+| `run_id` | UUID | No | Linked execution |
+| `visibility` | enum | Yes | `private`, `project`, or `workspace` |
+| `capture_boundary` | enum | Yes | Agent OS interface or adapter that observed the content |
+| `retention_profile` | enum | Yes | `R0` through `R6` under DAT-002 |
+| `classification` | enum | Yes | Data classification applied to content |
+| `deleted_at` | timestamp | No | Effective deletion time |
+
+`ConversationMessage` additionally requires `message_id`, `conversation_id`, `actor_chain`, `role`, `content_reference`, `provider_reference`, `created_at`, and `correlation_id`. Content references must not embed raw secrets. Derived artifacts, memory records, indexes, and previews retain a source conversation reference and cannot broaden its visibility.
 
 ## 84. Open decisions
 

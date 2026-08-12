@@ -1,7 +1,7 @@
 ---
 document_id: SAD-001
 title: Agent OS System Architecture Description
-version: 0.2.0
+version: 0.3.0
 status: draft
 owner: architecture-owner
 approvers:
@@ -12,7 +12,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-07-19
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: false
 related_documents:
@@ -77,7 +77,7 @@ The first MVP architecture includes:
 - one organization context;
 - multiple isolated workspaces;
 - projects, memberships, and predefined roles;
-- Hermes and Codex adapter targets;
+- Codex, Hermes, and Claude Code adapter targets;
 - provider-neutral model profiles;
 - bounded tasks;
 - durable runs and steps;
@@ -1094,8 +1094,9 @@ May remain in one application deployment:
 Likely separate processes:
 
 - orchestrator/worker;
-- Hermes adapter;
 - Codex adapter;
+- Hermes adapter;
+- Claude Code adapter;
 - sandbox/tool worker;
 - database;
 - optional event broker;
