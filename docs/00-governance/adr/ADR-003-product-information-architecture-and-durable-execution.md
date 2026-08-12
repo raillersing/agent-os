@@ -2,7 +2,7 @@
 document_id: ADR-003
 title: Product Information Architecture, Access Scope, Approval, Retention, and Durable Execution
 version: 0.1.0
-status: draft
+status: in-review
 owner: architecture-owner
 approvers:
   - product-owner
@@ -40,6 +40,17 @@ related_adrs:
   - ADR-001
   - ADR-002
 supersedes: []
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-12
+    evidence: explicit user approval in project conversation
+pending_approvals:
+  - architecture-owner
+  - security-owner
+  - data-owner
+  - operations-owner
+  - quality-owner
 ---
 
 # ADR-003 — Product Information Architecture, Access Scope, Approval, Retention, and Durable Execution
@@ -160,8 +171,13 @@ Plugins may expose broad capabilities comparable to modern AI agents, including 
 3. Create implementation and validation evidence before changing this ADR to `implemented`.
 4. Record formal approvers before changing this ADR to `approved`.
 
+## Approval state
+
+The product owner explicitly approved this decision baseline on 2026-08-12. The ADR remains `in-review` pending the other designated approver roles. This record does not authorize implementation status or silently approve the related draft documents.
+
 ## Revision history
 
 | Version | Date | Status | Change |
 |---|---|---|---|
 | 0.1.0 | 2026-08-12 | Draft | Initial validated product and architecture decision baseline |
+| 0.1.1 | 2026-08-12 | In-review | Product-owner approval recorded; remaining approvers listed |
