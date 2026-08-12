@@ -4,36 +4,40 @@ Agent API Routes
 
 from typing import List, Optional
 from datetime import datetime
+from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, Depends
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 
 from ..core.database import get_db
-from ..models.agent import Agent
-from ..schemas.agent import Agent, AgentCreate, AgentUpdate
+from ..models.agent import Agent as AgentModel
+from ..schemas.agent import Agent as AgentSchema, AgentCreate, AgentUpdate
 
 router = APIRouter()
 
 
-@router.get("/", response_model=List[Agent])
+@router.get("/", response_model=List[AgentSchema])
 async def list_agents(
     limit: int = 20,
     offset: int = 0,
     status: Optional[str] = None,
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_db),
 ):
     """List all agents."""
-    query = db.query(Agent)
+    query = select(AgentModel)
     if status:
-        query = query.filter(Agent.status == status)
-    agents = query.offset(offset).limit(limit).all()
+        query = query.where(AgentModel.status == status)
+    query = query.offset(offset).limit(limit)
+    result = await db.execute(query)
+    agents = result.scalars().all()
     return agents
 
 
-@router.post("/", response_model=Agent, status_code=201)
-async def create_agent(agent: AgentCreate, db: Session = Depends(get_db)):
+@router.post("/", response_model=AgentSchema, status_code=201)
+async def create_agent(agent: AgentCreate, db: AsyncSession = Depends(get_db)):
     """Create a new agent."""
-    db_agent = Agent(
+    db_agent = AgentModel(
         name=agent.name,
         model=agent.model,
         status="active",
@@ -43,24 +47,28 @@ async def create_agent(agent: AgentCreate, db: Session = Depends(get_db)):
         policies=agent.policies or {},
     )
     db.add(db_agent)
-    db.commit()
-    db.refresh(db_agent)
+    await db.commit()
+    await db.refresh(db_agent)
     return db_agent
 
 
-@router.get("/{agent_id}", response_model=Agent)
-async def get_agent(agent_id: str, db: Session = Depends(get_db)):
+@router.get("/{agent_id}", response_model=AgentSchema)
+async def get_agent(agent_id: UUID, db: AsyncSession = Depends(get_db)):
     """Get agent by ID."""
-    agent = db.query(Agent).filter(Agent.id == agent_id).first()
+    query = select(AgentModel).where(AgentModel.id == agent_id)
+    result = await db.execute(query)
+    agent = result.scalar_one_or_none()
     if not agent:
         raise HTTPException(status_code=404, detail="Agent not found")
     return agent
 
 
-@router.patch("/{agent_id}", response_model=Agent)
-async def update_agent(agent_id: str, update: AgentUpdate, db: Session = Depends(get_db)):
+@router.patch("/{agent_id}", response_model=AgentSchema)
+async def update_agent(agent_id: UUID, update: AgentUpdate, db: AsyncSession = Depends(get_db)):
     """Update agent."""
-    agent = db.query(Agent).filter(Agent.id == agent_id).first()
+    query = select(AgentModel).where(AgentModel.id == agent_id)
+    result = await db.execute(query)
+    agent = result.scalar_one_or_none()
     if not agent:
         raise HTTPException(status_code=404, detail="Agent not found")
 
@@ -69,16 +77,18 @@ async def update_agent(agent_id: str, update: AgentUpdate, db: Session = Depends
         setattr(agent, field, value)
 
     agent.updated_at = datetime.utcnow()
-    db.commit()
-    db.refresh(agent)
+    await db.commit()
+    await db.refresh(agent)
     return agent
 
 
 @router.delete("/{agent_id}", status_code=204)
-async def delete_agent(agent_id: str, db: Session = Depends(get_db)):
+async def delete_agent(agent_id: UUID, db: AsyncSession = Depends(get_db)):
     """Delete agent."""
-    agent = db.query(Agent).filter(Agent.id == agent_id).first()
+    query = select(AgentModel).where(AgentModel.id == agent_id)
+    result = await db.execute(query)
+    agent = result.scalar_one_or_none()
     if not agent:
         raise HTTPException(status_code=404, detail="Agent not found")
-    db.delete(agent)
-    db.commit()
+    await db.delete(agent)
+    await db.commit()

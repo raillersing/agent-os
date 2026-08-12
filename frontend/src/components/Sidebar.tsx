@@ -4,105 +4,82 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 const navigation = [
-  { name: 'Mission Control', href: '/', icon: '🏠', color: 'from-purple-500 to-pink-500' },
-  { name: 'Goals', href: '/goals', icon: '🎯', color: 'from-blue-500 to-cyan-500' },
-  { name: 'Workspace', href: '/workspace', icon: '📁', color: 'from-green-500 to-emerald-500' },
-  { name: 'Studio', href: '/studio', icon: '🎨', color: 'from-pink-500 to-rose-500' },
-  { name: 'Kanban', href: '/kanban', icon: '📋', color: 'from-yellow-500 to-orange-500' },
-  { name: 'Memory', href: '/memory', icon: '🧠', color: 'from-indigo-500 to-violet-500' },
-  { name: 'Notebook', href: '/notebook', icon: '📝', color: 'from-teal-500 to-cyan-500' },
+  { name: 'Home', href: '/', icon: 'home' },
+  { name: 'Mission Control', href: '/missions', icon: 'mission' },
+  { name: 'Workspaces', href: '/workspaces', icon: 'workspace' },
+  { name: 'Automations', href: '/automations', icon: 'automation' },
+  { name: 'Agents', href: '/agents', icon: 'agents' },
+  { name: 'Goals', href: '/goals', icon: 'goal' },
+  { name: 'Studio', href: '/studio', icon: 'studio' },
 ]
 
-const agents = [
-  { name: 'Hermes', status: 'active', color: '#8b5cf6' },
-  { name: 'Claude', status: 'active', color: '#3b82f6' },
-  { name: 'OpenClaw', status: 'active', color: '#22c55e' },
-  { name: 'Gemini', status: 'inactive', color: '#eab308' },
+const systemNavigation = [
+  { name: 'Runs', href: '/runs', icon: 'runs' },
+  { name: 'Tools', href: '/tools', icon: 'tools' },
+  { name: 'Memory', href: '/memory', icon: 'memory' },
 ]
+
+function NavIcon({ name }: { name: string }) {
+  const paths: Record<string, React.ReactNode> = {
+    home: <><path d="m3 11 9-8 9 8" /><path d="M5 10v10h14V10" /><path d="M9 20v-6h6v6" /></>,
+    mission: <><circle cx="12" cy="12" r="8" /><circle cx="12" cy="12" r="3" /><path d="M12 2V0M12 24v-2M2 12H0M24 12h-2" /></>,
+    workspace: <><path d="M3 6h7l2 2h9v11H3z" /><path d="M3 6V4h7l2 2" /></>,
+    automation: <><path d="M7 7h10v10H7z" /><path d="M12 2v5M12 17v5M2 12h5M17 12h5" /></>,
+    agents: <><circle cx="9" cy="8" r="3" /><circle cx="17" cy="10" r="2" /><path d="M3 20c0-4 2-6 6-6s6 2 6 6M15 15c4 0 6 2 6 5" /></>,
+    goal: <><path d="M12 3v18M3 12h18" /><circle cx="12" cy="12" r="8" /></>,
+    studio: <><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z" /><path d="m19 16 .8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z" /></>,
+    runs: <><path d="M5 5h14v14H5z" /><path d="m9 12 2 2 4-4" /></>,
+    tools: <><path d="m14.7 6.3 3-3 3 3-3 3" /><path d="m17.7 9.3-8.4 8.4a2.1 2.1 0 0 1-3-3l8.4-8.4" /><path d="m5 5 4 4" /></>,
+    memory: <><path d="M5 5.5A2.5 2.5 0 0 1 7.5 3H20v15H7.5A2.5 2.5 0 0 0 5 20.5z" /><path d="M5 5.5v15M9 7h7M9 10h7" /></>,
+  }
+  return <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">{paths[name]}</svg>
+}
 
 export default function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="w-64 h-screen flex flex-col" style={{ background: 'var(--bg-secondary)' }}>
-      {/* Logo */}
-      <div className="p-4 border-b" style={{ borderColor: 'var(--border)' }}>
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'var(--gradient-purple)' }}>
-            <span className="text-xl">🚀</span>
-          </div>
-          <div>
-            <h1 className="font-bold text-lg gradient-text">Agent OS</h1>
-            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Mission Control</p>
-          </div>
-        </div>
+    <aside className="sidebar">
+      <div className="brand">
+        <div className="brand-mark"><span>✦</span><i></i></div>
+        <div><strong>AgentOS</strong><small>Mission control</small></div>
+        <span className="brand-pulse" aria-label="System online"></span>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 p-3 space-y-1 overflow-auto">
+      <button className="workspace-switcher" aria-label="Current workspace"><span className="workspace-avatar">AC</span><span><small>Workspace</small><strong>Acme Studio</strong></span><b>⌄</b></button>
+
+      <nav className="primary-nav" aria-label="Primary navigation">
+        <p className="nav-label">Workspace</p>
         {navigation.map((item) => {
-          const isActive = pathname === item.href
+          const active = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
           return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
-                isActive
-                  ? 'bg-white/10 text-white'
-                  : 'text-gray-400 hover:bg-white/5 hover:text-white'
-              }`}
-            >
-              <span className="text-lg">{item.icon}</span>
-              <span className="text-sm font-medium">{item.name}</span>
+            <Link key={item.name} href={item.href} className={`nav-item ${active ? 'active' : ''}`}>
+              <span className="nav-icon-wrap"><NavIcon name={item.icon} /></span>
+              <span>{item.name}</span>
+              {item.name === 'Mission Control' && <em><i></i>2</em>}
+              {active && <b className="nav-active-mark"></b>}
             </Link>
           )
         })}
+
+        <p className="nav-label nav-label-system">Infrastructure</p>
+        {systemNavigation.map((item) => (
+          <Link key={item.name} href={item.href} className={`nav-item secondary ${pathname.startsWith(item.href) ? 'active' : ''}`}>
+            <span className="nav-icon-wrap"><NavIcon name={item.icon} /></span><span>{item.name}</span>
+          </Link>
+        ))}
       </nav>
 
-      {/* Agents Section */}
-      <div className="p-3 border-t" style={{ borderColor: 'var(--border)' }}>
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-            Agents
-          </span>
-          <button className="text-xs px-2 py-1 rounded" style={{ background: 'var(--bg-elevated)', color: 'var(--text-secondary)' }}>
-            + Add
-          </button>
+      <div className="sidebar-footer">
+        <div className="system-health">
+          <div className="health-row"><span className="live-dot"></span><strong>System operational</strong><span className="health-code">SYS/01</span></div>
+          <p><span>3 agents connected</span><span>1 approval waiting</span></p>
         </div>
-        <div className="space-y-2">
-          {agents.map((agent) => (
-            <div
-              key={agent.name}
-              className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all hover:bg-white/5"
-            >
-              <div
-                className="w-2 h-2 rounded-full status-pulse"
-                style={{ backgroundColor: agent.color }}
-              ></div>
-              <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>{agent.name}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* System Status */}
-      <div className="p-3 border-t" style={{ borderColor: 'var(--border)' }}>
-        <div className="p-3 rounded-lg" style={{ background: 'var(--bg-elevated)' }}>
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-2 h-2 rounded-full bg-green-500 status-pulse"></div>
-            <span className="text-xs font-medium">System Online</span>
-          </div>
-          <div className="text-xs space-y-1" style={{ color: 'var(--text-muted)' }}>
-            <div className="flex justify-between">
-              <span>Uptime</span>
-              <span style={{ color: 'var(--accent-green)' }}>99.9%</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Agents</span>
-              <span>3/4 active</span>
-            </div>
-          </div>
-        </div>
+        <button className="user-menu" aria-label="Open user menu">
+          <span className="avatar">ER</span>
+          <span><strong>Eric</strong><small>Owner</small></span>
+          <span className="chevron">⌄</span>
+        </button>
       </div>
     </aside>
   )

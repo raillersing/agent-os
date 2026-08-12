@@ -486,6 +486,32 @@ documents:
     owner: quality-owner
     dependencies: [TST-001, DSN-001]
 
+  # USER GUIDES
+  - id: UG-INSTALLATION
+    title: Installation Guide
+    path: docs/12-user-documentation/INSTALLATION.md
+    wave: 4
+    priority: P1
+    status: draft
+    owner: documentation-owner
+    dependencies: [DEP-001, OPS-001, SEC-001]
+  - id: UG-GETTING-STARTED
+    title: Getting Started Guide
+    path: docs/12-user-documentation/GETTING-STARTED.md
+    wave: 4
+    priority: P1
+    status: draft
+    owner: documentation-owner
+    dependencies: [VSN-001, SCP-001, PRD-001]
+  - id: UG-API-REFERENCE
+    title: API Reference
+    path: docs/12-user-documentation/API-REFERENCE.md
+    wave: 4
+    priority: P1
+    status: draft
+    owner: documentation-owner
+    dependencies: [API-001, AGC-001, RUN-001, APR-001]
+
   # ═══════════════════════════════════════════════════════════════════════════
   # RESEARCH
   # ═══════════════════════════════════════════════════════════════════════════

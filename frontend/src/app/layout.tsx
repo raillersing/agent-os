@@ -1,14 +1,11 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import './globals.css'
 import Sidebar from '@/components/Sidebar'
 import Header from '@/components/Header'
 
-const inter = Inter({ subsets: ['latin'] })
-
 export const metadata: Metadata = {
-  title: 'Agent OS — Mission Control',
-  description: 'Vendor-neutral orchestration, governance, and observability for AI agents',
+  title: 'AgentOS — Turn intent into outcomes',
+  description: 'A calm control plane for AI agents, missions, and automations',
 }
 
 export default function RootLayout({
@@ -18,12 +15,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className}`} style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
-        <div className="flex h-screen overflow-hidden">
+      <head>
+        <meta name="color-scheme" content="dark light" />
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var m=localStorage.getItem('agentos-theme');if(m==='light'||m==='dark')document.documentElement.dataset.theme=m;}catch(e){}})()` }} />
+      </head>
+      <body>
+        <div className="app-shell">
           <Sidebar />
-          <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="app-column">
             <Header />
-            <main className="flex-1 overflow-auto p-6">
+            <main className="app-main">
               {children}
             </main>
           </div>

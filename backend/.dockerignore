@@ -1,0 +1,12 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.db
+.pytest_cache/
+.coverage
+.mypy_cache/
+htmlcov/
+chroma_db/
+tests/
+migrations/

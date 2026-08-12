@@ -16,6 +16,7 @@ created: 2026-07-20
 last_reviewed: 2026-07-20
 classification: internal
 source_of_truth: false
+related_documents: []
 dependencies:
   - DAT-001
   - SEC-001

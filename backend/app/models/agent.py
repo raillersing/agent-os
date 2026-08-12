@@ -3,8 +3,7 @@ Agent Model
 """
 
 from datetime import datetime
-from sqlalchemy import Column, String, DateTime, JSON, Boolean, Float
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, String, DateTime, JSON, Float, Text, Integer, BigInteger, Uuid
 import uuid
 
 from ..core.database import Base
@@ -15,7 +14,7 @@ class Agent(Base):
 
     __tablename__ = "agents"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(Uuid, primary_key=True, default=uuid.uuid4)
     name = Column(String(255), nullable=False, index=True)
     model = Column(String(100), nullable=False)
     status = Column(String(50), default="active", index=True)

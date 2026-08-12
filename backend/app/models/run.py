@@ -3,8 +3,7 @@ Run Model
 """
 
 from datetime import datetime
-from sqlalchemy import Column, String, DateTime, JSON, Integer, Float, Text, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, String, DateTime, JSON, Integer, Float, Text, ForeignKey, Uuid
 from sqlalchemy.orm import relationship
 import uuid
 
@@ -16,8 +15,8 @@ class Run(Base):
 
     __tablename__ = "runs"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    agent_id = Column(UUID(as_uuid=True), ForeignKey("agents.id"), nullable=False, index=True)
+    id = Column(Uuid, primary_key=True, default=uuid.uuid4)
+    agent_id = Column(Uuid, ForeignKey("agents.id"), nullable=False, index=True)
     status = Column(String(50), default="pending", index=True)
     prompt = Column(Text, nullable=False)
     context = Column(JSON, default=dict)

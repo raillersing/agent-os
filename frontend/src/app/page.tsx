@@ -1,199 +1,63 @@
 'use client'
 
+import Link from 'next/link'
 import { useState } from 'react'
+import api from '@/lib/api'
 
-// Mock data
-const mockStats = [
-  { label: 'Total Runs', value: '1,247', change: '+12%', icon: '▶️', color: 'from-purple-500 to-pink-500' },
-  { label: 'Active Agents', value: '4', change: '+1', icon: '🤖', color: 'from-blue-500 to-cyan-500' },
-  { label: 'Tokens Used', value: '2.4M', change: '+18%', icon: '🪙', color: 'from-green-500 to-emerald-500' },
-  { label: 'Success Rate', value: '98.5%', change: '+0.5%', icon: '✅', color: 'from-yellow-500 to-orange-500' },
+const templates = ['Research a market', 'Prepare a brief', 'Review a codebase']
+const missions = [
+  { title: 'Customer research synthesis', detail: '18 interviews → themes and opportunities', status: 'RUNNING', progress: 68, accent: 'green', code: 'CR', updated: '12 min ago' },
+  { title: 'Website launch checklist', detail: 'Content, accessibility and release readiness', status: 'REVIEW', progress: 84, accent: 'gold', code: 'WL', updated: '1 decision' },
+]
+const activity = [
+  ['08:42', 'Research agent completed synthesis', 'Customer research synthesis', 'green'],
+  ['08:29', 'Approval requested', 'Website launch checklist', 'gold'],
+  ['08:00', 'Mission created', 'Monday operations brief', 'blue'],
 ]
 
-const mockAgents = [
-  { name: 'Hermes', model: 'GPT-4', status: 'active', runs: 456, progress: 78, color: '#8b5cf6' },
-  { name: 'Claude', model: 'Claude 3.5', status: 'active', runs: 324, progress: 92, color: '#3b82f6' },
-  { name: 'OpenClaw', model: 'Claude 3.5', status: 'active', runs: 287, progress: 65, color: '#22c55e' },
-  { name: 'Gemini', model: 'Gemini Pro', status: 'idle', runs: 180, progress: 45, color: '#eab308' },
-]
+export default function Home() {
+  const [intent, setIntent] = useState('')
+  const [prepared, setPrepared] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
 
-const mockRecentRuns = [
-  { agent: 'Hermes', task: 'Generate SEO content', status: 'completed', time: '2m ago' },
-  { agent: 'Claude', task: 'Analyze keywords', status: 'running', time: '5m ago' },
-  { agent: 'OpenClaw', task: 'Create image', status: 'completed', time: '12m ago' },
-  { agent: 'Hermes', task: 'Outreach emails', status: 'pending', time: '15m ago' },
-]
+  const createMission = async () => {
+    if (!intent.trim()) return
+    setSaving(true); setError('')
+    try {
+      let workspaces = await api.listWorkspaces()
+      if (!workspaces.length) workspaces = [await api.createWorkspace({ name: 'My workspace', description: 'Default local AgentOS workspace' })]
+      await api.createMission({ workspace_id: workspaces[0].id, title: intent.trim().slice(0, 80), objective: intent.trim(), plan: [{ name: 'Clarify scope', status: 'planned' }, { name: 'Execute bounded work', status: 'planned' }, { name: 'Review evidence', status: 'planned' }] })
+      setPrepared(true)
+    } catch (cause) { setError(cause instanceof Error ? cause.message : 'The mission could not be saved.') }
+    finally { setSaving(false) }
+  }
 
-const mockGoals = [
-  { name: 'SEO Campaign Q1', progress: 78, status: 'active' },
-  { name: 'Content Pipeline', progress: 92, status: 'active' },
-  { name: 'Lead Generation', progress: 45, status: 'active' },
-]
-
-export default function Dashboard() {
-  return (
-    <div className="space-y-6 animate-slide-in">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold gradient-text">Mission Control</h1>
-          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Welcome back, Julian</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <button className="px-4 py-2 rounded-lg text-sm font-medium transition-all hover:opacity-90" style={{ background: 'var(--gradient-purple)' }}>
-            ▶️ Quick Run
-          </button>
-        </div>
+  return <div className="page control-room">
+    <section className="control-hero">
+      <div className="control-hero-copy">
+        <p className="eyebrow hero-eyebrow"><span className="eyebrow-rule"></span>Wednesday · 12 August 2026</p>
+        <h1>Make progress<br /><em>visible.</em></h1>
+        <p className="control-lede">One calm place to direct your agents, follow the work, and decide what happens next.</p>
+        <div className="hero-actions"><Link className="primary-button" href="/missions">Open mission control <span>↗</span></Link><Link className="hero-secondary" href="/agents">View your agents <span>→</span></Link></div>
       </div>
+      <div className="hero-orb" aria-hidden="true"><div className="orb-ring ring-one"></div><div className="orb-ring ring-two"></div><div className="orb-core"><span>✦</span><small>AGENT<br />OS</small></div><div className="orb-node node-one">PLAN</div><div className="orb-node node-two">RUN</div><div className="orb-node node-three">PROVE</div></div>
+      <div className="hero-stats"><div><strong>03</strong><span>active missions</span></div><div><strong>01</strong><span>decision waiting</span></div><div><strong>99.8%</strong><span>system uptime</span></div></div>
+    </section>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {mockStats.map((stat, index) => (
-          <div
-            key={index}
-            className="p-4 rounded-xl border card-hover"
-            style={{ background: 'var(--bg-surface)', borderColor: 'var(--border)' }}
-          >
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-xs font-medium" style={{ color: 'var(--text-muted)' }}>{stat.label}</p>
-                <p className="text-2xl font-bold mt-1">{stat.value}</p>
-                <p className="text-xs mt-1" style={{ color: 'var(--accent-green)' }}>{stat.change}</p>
-              </div>
-              <div className={`w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br ${stat.color}`}>
-                <span className="text-lg">{stat.icon}</span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+    <section className="mission-launch">
+      <div className="launch-head"><div><p className="eyebrow">Start something new</p><h2>What should move forward?</h2></div><span className="launch-status"><i></i> Ready for input</span></div>
+      <div className="launch-input"><span className="launch-symbol">✦</span><textarea value={intent} onChange={(event) => { setIntent(event.target.value); setPrepared(false) }} placeholder="Describe an outcome in plain language…" aria-label="Describe your goal" /><button className="primary-button" disabled={!intent.trim() || saving} onClick={createMission}>{saving ? 'Creating…' : 'Create mission'} <span>↗</span></button></div>
+      <div className="launch-footer"><span>Try a starting point</span>{templates.map((template) => <button key={template} onClick={() => setIntent(template)}>{template}</button>)}</div>
+    </section>
+    {error && <p className="form-error" role="alert"><strong>Mission not saved.</strong> {error}</p>}
+    {prepared && <div className="prepared-message" role="status"><div><strong>Mission draft ready</strong><span>Your outcome is persisted and ready for review.</span></div><Link href="/missions" className="primary-button">Review plan ↗</Link></div>}
 
-      {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Active Agents */}
-        <div className="lg:col-span-2 rounded-xl border" style={{ background: 'var(--bg-surface)', borderColor: 'var(--border)' }}>
-          <div className="p-4 border-b flex items-center justify-between" style={{ borderColor: 'var(--border)' }}>
-            <h2 className="font-semibold">Active Agents</h2>
-            <button className="text-xs" style={{ color: 'var(--accent-purple)' }}>View All →</button>
-          </div>
-          <div className="p-4 space-y-3">
-            {mockAgents.map((agent, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-4 p-3 rounded-lg transition-all hover:bg-white/5"
-              >
-                <div
-                  className="w-10 h-10 rounded-lg flex items-center justify-center"
-                  style={{ backgroundColor: `${agent.color}20` }}
-                >
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: agent.color }}></div>
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium">{agent.name}</span>
-                    <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: `${agent.color}20`, color: agent.color }}>
-                      {agent.model}
-                    </span>
-                  </div>
-                  <div className="mt-2 h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--bg-elevated)' }}>
-                    <div
-                      className="h-full rounded-full transition-all duration-500"
-                      style={{ width: `${agent.progress}%`, backgroundColor: agent.color }}
-                    ></div>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-medium">{agent.runs}</p>
-                  <p className="text-xs" style={{ color: 'var(--text-muted)' }}>runs</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+    <section className="control-grid">
+      <div className="motion-panel"><div className="panel-heading"><div><p className="eyebrow">Live workspace</p><h2>In motion</h2></div><Link href="/missions">View all ↗</Link></div><div className="motion-list">{missions.map((mission) => <Link href="/missions" className="motion-row" key={mission.title}><span className={`mission-code ${mission.accent}`}>{mission.code}</span><span className="motion-copy"><strong>{mission.title}</strong><small>{mission.detail}</small><span className="motion-progress"><i style={{ width: `${mission.progress}%` }}></i></span></span><span className={`mission-tag ${mission.accent}`}>{mission.status}</span><span className="motion-arrow">→</span></Link>)}</div></div>
+      <aside className="decision-panel"><div className="panel-heading"><div><p className="eyebrow">Human in the loop</p><h2>One decision</h2></div><span className="decision-count">01</span></div><div className="decision-body"><div className="decision-icon">!</div><div><strong>Website launch checklist</strong><p>The release plan is ready for your approval.</p><Link href="/missions">Review decision <span>↗</span></Link></div></div><div className="decision-foot"><span>Waiting since</span><strong>21 min</strong></div></aside>
+    </section>
 
-        {/* Goals */}
-        <div className="rounded-xl border" style={{ background: 'var(--bg-surface)', borderColor: 'var(--border)' }}>
-          <div className="p-4 border-b flex items-center justify-between" style={{ borderColor: 'var(--border)' }}>
-            <h2 className="font-semibold">Goals</h2>
-            <button className="text-xs" style={{ color: 'var(--accent-purple)' }}>View All →</button>
-          </div>
-          <div className="p-4 space-y-3">
-            {mockGoals.map((goal, index) => (
-              <div
-                key={index}
-                className="p-3 rounded-lg transition-all hover:bg-white/5"
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium">{goal.name}</span>
-                  <span className="text-xs" style={{ color: 'var(--accent-green)' }}>{goal.progress}%</span>
-                </div>
-                <div className="h-2 rounded-full overflow-hidden" style={{ background: 'var(--bg-elevated)' }}>
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-500"
-                    style={{ width: `${goal.progress}%` }}
-                  ></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Recent Runs & Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Runs */}
-        <div className="rounded-xl border" style={{ background: 'var(--bg-surface)', borderColor: 'var(--border)' }}>
-          <div className="p-4 border-b flex items-center justify-between" style={{ borderColor: 'var(--border)' }}>
-            <h2 className="font-semibold">Recent Runs</h2>
-            <button className="text-xs" style={{ color: 'var(--accent-purple)' }}>View All →</button>
-          </div>
-          <div className="divide-y" style={{ borderColor: 'var(--border)' }}>
-            {mockRecentRuns.map((run, index) => (
-              <div key={index} className="p-4 flex items-center gap-3 hover:bg-white/5 transition-all">
-                <div className={`w-2 h-2 rounded-full ${
-                  run.status === 'completed' ? 'bg-green-500' :
-                  run.status === 'running' ? 'bg-blue-500 status-pulse' :
-                  'bg-yellow-500'
-                }`}></div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">{run.task}</p>
-                  <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{run.agent}</p>
-                </div>
-                <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{run.time}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="rounded-xl border" style={{ background: 'var(--bg-surface)', borderColor: 'var(--border)' }}>
-          <div className="p-4 border-b" style={{ borderColor: 'var(--border)' }}>
-            <h2 className="font-semibold">Quick Actions</h2>
-          </div>
-          <div className="p-4 grid grid-cols-2 gap-3">
-            <button className="p-4 rounded-lg text-left transition-all hover:bg-white/5" style={{ background: 'var(--bg-elevated)' }}>
-              <span className="text-2xl">🔍</span>
-              <p className="text-sm font-medium mt-2">Research</p>
-              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Find keywords</p>
-            </button>
-            <button className="p-4 rounded-lg text-left transition-all hover:bg-white/5" style={{ background: 'var(--bg-elevated)' }}>
-              <span className="text-2xl">📝</span>
-              <p className="text-sm font-medium mt-2">Content</p>
-              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Write articles</p>
-            </button>
-            <button className="p-4 rounded-lg text-left transition-all hover:bg-white/5" style={{ background: 'var(--bg-elevated)' }}>
-              <span className="text-2xl">🎨</span>
-              <p className="text-sm font-medium mt-2">Studio</p>
-              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Generate media</p>
-            </button>
-            <button className="p-4 rounded-lg text-left transition-all hover:bg-white/5" style={{ background: 'var(--bg-elevated)' }}>
-              <span className="text-2xl">📧</span>
-              <p className="text-sm font-medium mt-2">Outreach</p>
-              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Send emails</p>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+    <section className="activity-panel"><div className="panel-heading"><div><p className="eyebrow">Traceable by design</p><h2>Recent activity</h2></div><Link href="/runs">Open run log ↗</Link></div><div className="activity-list">{activity.map(([time, title, detail, tone]) => <div className="activity-row" key={title}><time>{time}</time><span className={`activity-dot ${tone}`}></span><div><strong>{title}</strong><small>{detail}</small></div><span className="activity-check">✓</span></div>)}</div></section>
+  </div>
 }

@@ -36,6 +36,10 @@ credentials/
 .DS_Store
 Thumbs.db
 
+# Local AgentOS runtime state
+*.db
+backend/.venv/
+
 # Build
 dist/
 build/

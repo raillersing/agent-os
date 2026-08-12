@@ -350,6 +350,173 @@ paths:
               schema:
                 $ref: '#/components/schemas/ToolResult'
 
+  /workspaces:
+    get:
+      operationId: listWorkspaces
+      summary: List persisted workspaces
+      tags: [Control Plane]
+      responses:
+        '200':
+          description: Workspaces listed
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Workspace' }
+    post:
+      operationId: createWorkspace
+      summary: Create a workspace boundary
+      tags: [Control Plane]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/WorkspaceCreate' }
+      responses:
+        '201':
+          description: Workspace created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Workspace' }
+
+  /missions:
+    get:
+      operationId: listMissions
+      summary: List persisted missions
+      tags: [Control Plane]
+      parameters:
+        - name: workspace_id
+          in: query
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Missions listed
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Mission' }
+    post:
+      operationId: createMission
+      summary: Create a workspace-scoped mission
+      tags: [Control Plane]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/MissionCreate' }
+      responses:
+        '201':
+          description: Mission created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Mission' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /automations:
+    get:
+      operationId: listAutomations
+      summary: List persisted automations
+      tags: [Control Plane]
+      responses:
+        '200':
+          description: Automations listed
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Automation' }
+    post:
+      operationId: createAutomation
+      summary: Create a workspace-scoped automation
+      tags: [Control Plane]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AutomationCreate' }
+      responses:
+        '201':
+          description: Automation created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Automation' }
+
+  /approvals:
+    get:
+      operationId: listApprovals
+      summary: List approval records
+      tags: [Control Plane]
+      responses:
+        '200':
+          description: Approvals listed
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Approval' }
+    post:
+      operationId: createApproval
+      summary: Request a durable human decision
+      tags: [Control Plane]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ApprovalCreate' }
+      responses:
+        '201':
+          description: Approval requested
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Approval' }
+
+  /approvals/{approval_id}/decision:
+    post:
+      operationId: decideApproval
+      summary: Record an approval decision once
+      tags: [Control Plane]
+      parameters:
+        - name: approval_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ApprovalDecision' }
+      responses:
+        '200':
+          description: Decision recorded
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Approval' }
+        '409':
+          description: Approval was already decided
+
+  /audit-events:
+    get:
+      operationId: listAuditEvents
+      summary: List append-only workspace audit evidence
+      tags: [Control Plane]
+      parameters:
+        - name: workspace_id
+          in: query
+          required: true
+          schema: { type: string, format: uuid }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 200, default: 50 }
+      responses:
+        '200':
+          description: Audit events listed
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/AuditEvent' }
+
 components:
   securitySchemes:
     bearerAuth:
@@ -401,6 +568,99 @@ components:
             $ref: '#/components/schemas/Error'
 
   schemas:
+    WorkspaceCreate:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string }
+        description: { type: string, default: '' }
+        budget: { type: number, minimum: 0, default: 0 }
+    Workspace:
+      allOf:
+        - $ref: '#/components/schemas/WorkspaceCreate'
+        - type: object
+          required: [id, status, created_at, updated_at]
+          properties:
+            id: { type: string, format: uuid }
+            status: { type: string, example: active }
+            created_at: { type: string, format: date-time }
+            updated_at: { type: string, format: date-time }
+    MissionCreate:
+      type: object
+      required: [workspace_id, title, objective]
+      properties:
+        workspace_id: { type: string, format: uuid }
+        title: { type: string }
+        objective: { type: string }
+        plan: { type: array, items: { type: object } }
+    Mission:
+      allOf:
+        - $ref: '#/components/schemas/MissionCreate'
+        - type: object
+          required: [id, status, progress, evidence, created_at, updated_at]
+          properties:
+            id: { type: string, format: uuid }
+            status: { type: string }
+            progress: { type: integer, minimum: 0, maximum: 100 }
+            evidence: { type: array, items: { type: object } }
+            created_at: { type: string, format: date-time }
+            updated_at: { type: string, format: date-time }
+    AutomationCreate:
+      type: object
+      required: [workspace_id, name, trigger_type]
+      properties:
+        workspace_id: { type: string, format: uuid }
+        name: { type: string }
+        description: { type: string }
+        trigger_type: { type: string }
+        trigger_config: { type: object }
+        steps: { type: array, items: { type: object } }
+    Automation:
+      allOf:
+        - $ref: '#/components/schemas/AutomationCreate'
+        - type: object
+          required: [id, enabled, created_at, updated_at]
+          properties:
+            id: { type: string, format: uuid }
+            enabled: { type: integer, enum: [0, 1] }
+            created_at: { type: string, format: date-time }
+            updated_at: { type: string, format: date-time }
+    ApprovalCreate:
+      type: object
+      required: [mission_id, action]
+      properties:
+        mission_id: { type: string, format: uuid }
+        action: { type: string }
+        scope: { type: object }
+    ApprovalDecision:
+      type: object
+      required: [status]
+      properties:
+        status: { type: string, enum: [approved, rejected] }
+        decision_note: { type: string }
+    Approval:
+      allOf:
+        - $ref: '#/components/schemas/ApprovalCreate'
+        - type: object
+          required: [id, status, created_at]
+          properties:
+            id: { type: string, format: uuid }
+            status: { type: string, enum: [pending, approved, rejected] }
+            decision_note: { type: string, nullable: true }
+            created_at: { type: string, format: date-time }
+            decided_at: { type: string, format: date-time, nullable: true }
+    AuditEvent:
+      type: object
+      required: [id, workspace_id, event_type, resource_type, resource_id, actor, details, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        workspace_id: { type: string, format: uuid }
+        event_type: { type: string, example: approval.approved }
+        resource_type: { type: string, example: approval }
+        resource_id: { type: string, format: uuid }
+        actor: { type: string, example: local-system }
+        details: { type: object }
+        created_at: { type: string, format: date-time }
     HealthResponse:
       type: object
       properties:

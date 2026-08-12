@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     PORT: int = 8080
 
     # Database
-    DATABASE_URL: str = "postgresql://agent_os:agent_os@localhost:5435/agent_os"
+    DATABASE_URL: str = "sqlite+aiosqlite:///./agent_os.db"
     DATABASE_ECHO: bool = False
 
     # Redis

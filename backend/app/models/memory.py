@@ -3,9 +3,7 @@ Memory Model
 """
 
 from datetime import datetime
-from sqlalchemy import Column, String, DateTime, JSON, Integer, Text, Float
-from sqlalchemy.dialects.postgresql import UUID
-import uuid
+from sqlalchemy import Column, String, DateTime, JSON, Integer, Text, Uuid
 
 from ..core.database import Base
 
@@ -19,7 +17,7 @@ class Memory(Base):
     content = Column(Text, nullable=False)
     type = Column(String(50), default="knowledge", index=True)
     source = Column(String(255), nullable=True)
-    agent_id = Column(UUID(as_uuid=True), nullable=True, index=True)
+    agent_id = Column(Uuid, nullable=True, index=True)
 
     # Metadata
     metadata_ = Column("metadata", JSON, default=dict)

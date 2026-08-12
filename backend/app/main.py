@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
-from .api import agents, runs, memory, auth, tools
+from .api import agents, runs, memory, auth, tools, control_plane
 from .core.database import init_db
 
 
@@ -18,7 +18,7 @@ async def lifespan(app: FastAPI):
     # Startup
     print(f"Starting Agent OS Control Plane v{settings.VERSION}")
     print("Initializing database...")
-    init_db()
+    await init_db()
     print("Database initialized.")
     yield
     # Shutdown
@@ -49,6 +49,7 @@ app.include_router(agents.router, prefix="/api/v1/agents", tags=["Agents"])
 app.include_router(runs.router, prefix="/api/v1/runs", tags=["Runs"])
 app.include_router(memory.router, prefix="/api/v1/memory", tags=["Memory"])
 app.include_router(tools.router, prefix="/api/v1/tools", tags=["Tools"])
+app.include_router(control_plane.router, prefix="/api/v1", tags=["Control Plane"])
 
 
 @app.get("/health", tags=["Health"])

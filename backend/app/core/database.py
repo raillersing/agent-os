@@ -2,37 +2,39 @@
 Database Configuration
 """
 
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
+from sqlalchemy.orm import declarative_base
 
 from ..config import settings
 
-# Create engine
-engine = create_engine(
-    settings.DATABASE_URL,
-    echo=settings.DATABASE_ECHO,
-    pool_pre_ping=True,
-    pool_size=20,
-    max_overflow=0,
-)
+# Create async engine
+database_url = settings.DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://")
+engine_options = {"echo": settings.DATABASE_ECHO, "pool_pre_ping": True}
+if not database_url.startswith("sqlite"):
+    engine_options.update({"pool_size": 20, "max_overflow": 0})
+engine = create_async_engine(database_url, **engine_options)
 
-# Session factory
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# Async session factory
+AsyncSessionLocal = async_sessionmaker(
+    engine,
+    class_=AsyncSession,
+    expire_on_commit=False,
+)
 
 # Base class for models
 Base = declarative_base()
 
 
-def get_db():
-    """Dependency for getting database sessions."""
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+async def get_db():
+    """Dependency for getting async database sessions."""
+    async with AsyncSessionLocal() as session:
+        try:
+            yield session
+        finally:
+            await session.close()
 
 
-def init_db():
+async def init_db():
     """Initialize database tables."""
-    Base.metadata.create_all(bind=engine)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)

@@ -10,6 +10,7 @@ created: 2026-07-20
 last_reviewed: 2026-07-20
 classification: internal
 source_of_truth: false
+related_documents: []
 dependencies: [UXA-001, DSN-001, A11Y-001, TST-001, QAG-001]
 related_proposed_documents: [UXA-001, DSN-001, A11Y-001, UIF-001]
 related_adrs: [ADR-TBD-VVR-001, ADR-TBD-VVR-002, ADR-TBD-VVR-003, ADR-TBD-VVR-004, ADR-TBD-VVR-005, ADR-TBD-VVR-006]

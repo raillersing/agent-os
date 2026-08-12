@@ -162,6 +162,52 @@ class ApiClient {
   async healthCheck() {
     return this.request<any>('/health');
   }
+
+  async listWorkspaces() {
+    return this.request<any[]>('/api/v1/workspaces');
+  }
+
+  async createWorkspace(data: { name: string; description?: string; budget?: number }) {
+    return this.request<any>('/api/v1/workspaces', { method: 'POST', body: data });
+  }
+
+  async listMissions(workspaceId?: string) {
+    const query = workspaceId ? `?workspace_id=${encodeURIComponent(workspaceId)}` : '';
+    return this.request<any[]>(`/api/v1/missions${query}`);
+  }
+
+  async createMission(data: { workspace_id: string; title: string; objective: string; plan?: any[] }) {
+    return this.request<any>('/api/v1/missions', { method: 'POST', body: data });
+  }
+
+  async listAutomations(workspaceId?: string) {
+    const query = workspaceId ? `?workspace_id=${encodeURIComponent(workspaceId)}` : '';
+    return this.request<any[]>(`/api/v1/automations${query}`);
+  }
+
+  async createAutomation(data: { workspace_id: string; name: string; description?: string; trigger_type: string; trigger_config?: Record<string, unknown>; steps?: Array<Record<string, unknown>> }) {
+    return this.request<any>('/api/v1/automations', { method: 'POST', body: data });
+  }
+
+  async listApprovals(status?: string) {
+    const query = status ? `?status=${encodeURIComponent(status)}` : '';
+    return this.request<any[]>(`/api/v1/approvals${query}`);
+  }
+
+  async createApproval(data: { mission_id: string; action: string; scope?: Record<string, unknown> }) {
+    return this.request<any>('/api/v1/approvals', { method: 'POST', body: data });
+  }
+
+  async listAuditEvents(workspaceId: string, limit = 8) {
+    return this.request<any[]>(`/api/v1/audit-events?workspace_id=${encodeURIComponent(workspaceId)}&limit=${limit}`);
+  }
+
+  async decideApproval(id: string, status: 'approved' | 'rejected', decisionNote?: string) {
+    return this.request<any>(`/api/v1/approvals/${id}/decision`, {
+      method: 'POST',
+      body: { status, decision_note: decisionNote },
+    });
+  }
 }
 
 export const api = new ApiClient();

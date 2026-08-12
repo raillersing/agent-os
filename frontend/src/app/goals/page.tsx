@@ -2,130 +2,19 @@
 
 import { useState } from 'react'
 
-const mockGoals = [
-  {
-    id: 1,
-    name: 'SEO Campaign Q1 2026',
-    description: 'Rank for 50 target keywords in the AI agent space',
-    progress: 78,
-    status: 'active',
-    tasks: 24,
-    completedTasks: 18,
-    agents: ['Hermes', 'Claude'],
-    deadline: '2026-03-31',
-  },
-  {
-    id: 2,
-    name: 'Content Pipeline',
-    description: 'Produce 100 high-quality blog posts',
-    progress: 92,
-    status: 'active',
-    tasks: 100,
-    completedTasks: 92,
-    agents: ['Hermes', 'OpenClaw'],
-    deadline: '2026-06-30',
-  },
-  {
-    id: 3,
-    name: 'Lead Generation',
-    description: 'Generate 1000 qualified leads',
-    progress: 45,
-    status: 'active',
-    tasks: 50,
-    completedTasks: 22,
-    agents: ['Hermes'],
-    deadline: '2026-09-30',
-  },
-  {
-    id: 4,
-    name: 'Video Content',
-    description: 'Create 50 YouTube videos',
-    progress: 30,
-    status: 'active',
-    tasks: 50,
-    completedTasks: 15,
-    agents: ['OpenClaw'],
-    deadline: '2026-12-31',
-  },
+const goals = [
+  { name: 'SEO campaign Q1', description: 'Rank for 50 target keywords in the AI agent space.', progress: 78, tasks: '18 / 24', deadline: '31 Mar 2026', owner: 'Hermes', tone: 'gold' },
+  { name: 'Content pipeline', description: 'Produce a reliable, reviewable publishing workflow.', progress: 92, tasks: '92 / 100', deadline: '30 Jun 2026', owner: 'OpenClaw', tone: 'green' },
+  { name: 'Lead generation', description: 'Generate qualified leads with traceable provenance.', progress: 45, tasks: '22 / 50', deadline: '30 Sep 2026', owner: 'Hermes', tone: 'blue' },
+  { name: 'Video content', description: 'Create a reusable library of product education assets.', progress: 30, tasks: '15 / 50', deadline: '31 Dec 2026', owner: 'OpenClaw', tone: 'violet' },
 ]
 
 export default function GoalsPage() {
-  const [selectedGoal, setSelectedGoal] = useState<any>(null)
-
-  return (
-    <div className="space-y-6 animate-slide-in">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold gradient-text">Goals</h1>
-          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Track your progress and objectives</p>
-        </div>
-        <button className="px-4 py-2 rounded-lg text-sm font-medium transition-all hover:opacity-90" style={{ background: 'var(--gradient-purple)' }}>
-          + New Goal
-        </button>
-      </div>
-
-      {/* Goals Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {mockGoals.map((goal) => (
-          <div
-            key={goal.id}
-            className="p-5 rounded-xl border card-hover cursor-pointer"
-            style={{ background: 'var(--bg-surface)', borderColor: 'var(--border)' }}
-            onClick={() => setSelectedGoal(goal)}
-          >
-            {/* Header */}
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <h3 className="font-semibold text-lg">{goal.name}</h3>
-                <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>{goal.description}</p>
-              </div>
-              <span className="text-xs px-2 py-1 rounded-full" style={{ background: 'var(--accent-green)20', color: 'var(--accent-green)' }}>
-                {goal.status}
-              </span>
-            </div>
-
-            {/* Progress */}
-            <div className="mb-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Progress</span>
-                <span className="text-sm font-bold" style={{ color: 'var(--accent-purple)' }}>{goal.progress}%</span>
-              </div>
-              <div className="h-2 rounded-full overflow-hidden" style={{ background: 'var(--bg-elevated)' }}>
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-500"
-                  style={{ width: `${goal.progress}%` }}
-                ></div>
-              </div>
-            </div>
-
-            {/* Stats */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Tasks:</span>
-                <span className="text-xs font-medium">{goal.completedTasks}/{goal.tasks}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                {goal.agents.map((agent, idx) => (
-                  <span
-                    key={idx}
-                    className="text-xs px-2 py-0.5 rounded-full"
-                    style={{ background: 'var(--bg-elevated)', color: 'var(--text-secondary)' }}
-                  >
-                    {agent}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Deadline */}
-            <div className="mt-4 pt-3 border-t flex items-center justify-between" style={{ borderColor: 'var(--border)' }}>
-              <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Deadline</span>
-              <span className="text-xs">{goal.deadline}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
+  const [selected, setSelected] = useState<typeof goals[number] | null>(null)
+  return <div className="page legacy-page">
+    <div className="legacy-header"><div><p className="eyebrow">Direction</p><h1 className="page-title">Goals with a clear horizon.</h1><p className="page-subtitle">Keep long-term outcomes visible without losing the next concrete step.</p></div><span className="preview-badge">Preview data</span></div>
+    <div className="legacy-toolbar"><div className="toolbar-copy"><span className="eyebrow">Portfolio view</span><strong>{goals.length} active outcomes</strong></div><button className="primary-button" onClick={() => setSelected(goals[0])}>＋ Inspect a goal</button></div>
+    <section className="goal-grid">{goals.map((goal) => <button className="goal-card" key={goal.name} onClick={() => setSelected(goal)}><div className="goal-card-head"><span className={`goal-glyph ${goal.tone}`}>◎</span><span className="mission-tag gold">ACTIVE</span></div><h2>{goal.name}</h2><p>{goal.description}</p><div className="goal-progress-head"><span>Progress</span><strong>{goal.progress}%</strong></div><div className="goal-progress"><i style={{ width: `${goal.progress}%` }}></i></div><div className="goal-meta"><span>{goal.tasks} tasks</span><span>{goal.owner}</span><span>{goal.deadline}</span></div></button>)}</section>
+    {selected && <div className="detail-backdrop" role="presentation" onClick={() => setSelected(null)}><section className="detail-drawer" role="dialog" aria-modal="true" aria-label={selected.name} onClick={(event) => event.stopPropagation()}><button className="drawer-close" onClick={() => setSelected(null)} aria-label="Close">×</button><p className="eyebrow">Goal detail · Preview</p><h2>{selected.name}</h2><p className="drawer-lede">{selected.description}</p><div className="drawer-stat"><span>Current progress</span><strong>{selected.progress}%</strong></div><div className="goal-progress"><i style={{ width: `${selected.progress}%` }}></i></div><div className="drawer-list"><div><span>Tasks complete</span><strong>{selected.tasks}</strong></div><div><span>Responsible agent</span><strong>{selected.owner}</strong></div><div><span>Deadline</span><strong>{selected.deadline}</strong></div></div><button className="secondary-button" onClick={() => setSelected(null)}>Close preview</button></section></div>}
+  </div>
 }
