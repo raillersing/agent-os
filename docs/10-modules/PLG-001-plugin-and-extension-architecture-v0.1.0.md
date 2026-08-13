@@ -61,9 +61,6 @@ related_adrs:
   - ADR-TBD-PLG-004
   - ADR-TBD-PLG-005
   - ADR-TBD-PLG-006
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # PLG-001 — Agent OS Plugin and Extension Architecture

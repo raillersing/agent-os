@@ -1,7 +1,7 @@
 ---
 document_id: OPS-001
 title: Agent OS Operations and Production Runbook
-version: 0.1.0
+version: 0.2.0
 status: approved
 owner: operations-owner
 approvers:
@@ -67,9 +67,6 @@ related_adrs:
   - ADR-CANDIDATE-OPS-004
   - ADR-CANDIDATE-OPS-005
   - ADR-CANDIDATE-OPS-006
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # OPS-001 — Agent OS Operations and Production Runbook
@@ -108,7 +105,13 @@ This runbook defines how authorized operators:
 9. avoid duplicate effects;
 10. close and learn from operational events.
 
-## 2. Operational objectives
+## 2. Current local verification
+
+For the current development stack, operators must first validate `.env`, run `docker compose config --quiet`, start the Compose services, verify `/health`, inspect `docker compose ps`, and review backend/frontend logs. The local bootstrap account is configured by `ADMIN_EMAIL` and `ADMIN_PASSWORD`; there is no separate admin-creation command in the current implementation.
+
+These procedures cover local development only and must not be treated as production runbooks until deployment, observability, backup/restore, incident response, and external secret-management evidence exists.
+
+## 3. Operational objectives
 
 Operations must ensure:
 

@@ -1,7 +1,7 @@
 ---
 document_id: QAG-001
 title: Agent OS Quality Assurance and Release Gates
-version: 0.1.0
+version: 0.2.0
 status: approved
 owner: quality-owner
 approvers:
@@ -67,16 +67,17 @@ related_adrs:
   - ADR-CANDIDATE-QAG-003
   - ADR-CANDIDATE-QAG-004
   - ADR-CANDIDATE-QAG-005
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # QAG-001 — Agent OS Quality Assurance and Release Gates
 
 > **Status: Approved baseline — 2026-08-13.** This document defines the quality governance model, formal release gates, mandatory evidence, blockers, waivers, sign-off responsibilities, stage-transition criteria, release decision records, and post-release obligations for Agent OS. It does not select the final CI/CD platform, deployment technology, test framework, or commercial certification scheme.
 
-## 1. Purpose
+## 1. Current baseline gates
+
+The repository CI baseline must include controlled-document validation, backend lint and tests, frontend lint and build, OpenAPI parity, OpenAPI/AsyncAPI syntax validation, Docker image builds, and Docker Compose configuration validation. A passing baseline gate does not authorize a production release while real provider execution, adapter evidence, security testing, persistence smoke, visual validation, backup/restore, and operational evidence remain incomplete.
+
+## 2. Purpose
 
 Agent OS coordinates software agents, adapters, model providers, tools, approvals, artifacts, memory, asynchronous execution, and recovery workflows.
 

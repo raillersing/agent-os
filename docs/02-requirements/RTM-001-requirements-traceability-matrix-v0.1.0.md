@@ -36,12 +36,6 @@ related_documents:
   - TST-001
   - QAG-001
 related_adrs: []
-related_evidence:
-  - VIDEO-001
-  - VIDEO-002
-  - VIDEO-003
-  - VIDEO-004
-  - VIDEO-EVIDENCE-INDEX
 ---
 
 # RTM-001 — Agent OS Requirements Traceability Matrix

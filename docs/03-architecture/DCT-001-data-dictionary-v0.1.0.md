@@ -64,9 +64,6 @@ related_adrs:
   - ADR-CANDIDATE-DCT-001
   - ADR-CANDIDATE-DCT-002
   - ADR-CANDIDATE-DCT-003
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # DCT-001 — Agent OS Data Dictionary

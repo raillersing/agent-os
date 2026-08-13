@@ -20,13 +20,7 @@ source_of_truth: true
 related_documents:
   - DOC-000
   - GLO-001
-  - VIDEO-001
-  - VIDEO-002
-  - VIDEO-003
-  - VIDEO-004
 related_adrs: []
-related_evidence:
-  - VIDEO-EVIDENCE-INDEX
 ---
 
 # VSN-001 — Agent OS Product Vision and Project Charter
@@ -71,7 +65,7 @@ The product problem is therefore broader than multi-provider chat. It is the abs
 
 The opportunity is to provide a consistent operating model across agents, models, tools, knowledge, and artifacts while leaving each implementation replaceable. A governed Agent OS can reduce tool switching, preserve work context, improve review and recovery, expose cost and risk, and make integrations reusable.
 
-The video audit shows a recurring desire for Mission Control, named agents, goals, workspaces, task boards, media artifacts, skills, and memory. Those concepts are useful research inputs. The larger opportunity is to engineer the production foundations that the videos do not demonstrate: durable execution, authorization, isolation, provenance, evaluation, auditability, and authoritative data boundaries.
+The product direction is captured by the approved product baseline and roadmap: Mission Control, named agents, goals, workspaces, tasks, artifacts, skills, memory, durable execution, authorization, isolation, provenance, evaluation, auditability, and authoritative data boundaries. These documents, together with the controlled contracts and ADRs, are the current planning authority.
 
 ## 6. Product definition
 
@@ -433,17 +427,9 @@ No assumption is an approved business decision.
 15. What budget, schedule, staffing, and provider-spend constraints govern the MVP?
 16. What review and reapproval conditions apply to future material revisions of VSN-001?
 
-## 28. Relationship to the video audit
+## 28. Relationship to the roadmap
 
-The local video audit is Draft research evidence, not an approved product or architecture authority.
-
-- [VIDEO-001](../research/agent-os-video-audit/VIDEO-001-video-inventory-and-methodology.md) defines source inventory, method, evidence labels, and limitations.
-- [VIDEO-002](../research/agent-os-video-audit/VIDEO-002-ui-ux-evidence-audit.md) records `OBSERVED`, `STATED`, `INFERRED`, `PROPOSED`, and `NOT CONFIRMED` UI/UX findings.
-- [VIDEO-003](../research/agent-os-video-audit/VIDEO-003-agent-os-capability-opportunity-brief.md) proposes capability opportunities and MVP/post-MVP priorities.
-- [VIDEO-004](../research/agent-os-video-audit/VIDEO-004-architecture-and-documentation-impact.md) identifies future architecture and documentation impacts.
-- [Video evidence index](../research/agent-os-video-audit/video-evidence-index.csv) provides timestamped supporting evidence.
-
-The audit supports exploration of a unified Mission Control, named agents, goals/tasks, workspaces, artifacts, Studio, skills, and memory. It does **not** confirm backend persistence, provider routing, secure execution, authorization, accounting accuracy, autonomous reliability, or production readiness. This vision adopts recommendations only as labeled proposals and explicitly rejects treating interface presence or narration as proof.
+The roadmap and the approved controlled documents are the current planning authority. Product concepts remain proposals until they are represented by an approved requirement or contract and supported by implementation evidence. Informal references do not establish persistence, provider routing, secure execution, authorization, accounting accuracy, autonomous reliability, or production readiness.
 
 ## 29. Related controlled documents
 
@@ -451,7 +437,6 @@ The audit supports exploration of a unified Mission Control, named agents, goals
 |---|---|---|
 | DOC-000 | Governs document status, evidence, approval, and traceability | Draft |
 | GLO-001 | Defines Agent OS terminology used here | Draft |
-| VIDEO-001 through VIDEO-004 | Draft research inputs and limitations | Draft |
 | SCP-001 | Will define detailed scope and MVP acceptance boundaries | Planned; not created |
 | PRD-001 | Will convert approved vision/scope into product requirements | Planned; not created |
 | PER-001 / UCD-001 | Will validate users, jobs, and journeys | Planned; not created |

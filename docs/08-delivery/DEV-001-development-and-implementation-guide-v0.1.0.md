@@ -1,7 +1,7 @@
 ---
 document_id: DEV-001
 title: Agent OS Development and Implementation Guide
-version: 0.1.0
+version: 0.2.0
 status: approved
 owner: architecture-owner
 approvers:
@@ -67,9 +67,6 @@ related_adrs:
   - ADR-CANDIDATE-DEV-004
   - ADR-CANDIDATE-DEV-005
   - ADR-CANDIDATE-DEV-006
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # DEV-001 — Agent OS Development and Implementation Guide
@@ -101,7 +98,21 @@ It provides:
 - forbidden shortcuts and common failure patterns;
 - traceability to controlled documents.
 
-## 2. Development objectives
+## 2. Current repository controls
+
+The current repository provides executable checks for the first development baseline:
+
+```text
+python3 scripts/validate_docs.py
+backend/.venv/bin/python scripts/check_openapi_parity.py
+frontend: npm ci && npm run lint && npm run build
+backend: pytest, black, isort, flake8
+docker compose config --quiet
+```
+
+The same control categories are represented in `.github/workflows/ci.yml`. These checks prove contract, syntax, quality, and build consistency; they do not prove provider execution, adapter readiness, production deployment, or visual-regression coverage.
+
+## 3. Development objectives
 
 The implementation must:
 

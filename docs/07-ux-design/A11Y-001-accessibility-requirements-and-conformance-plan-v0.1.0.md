@@ -76,10 +76,6 @@ related_adrs:
   - ADR-TBD-A11Y-004
   - ADR-TBD-A11Y-005
   - ADR-TBD-A11Y-006
-related_evidence:
-  - VIDEO-002
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # A11Y-001 — Agent OS Accessibility Requirements and Conformance Plan

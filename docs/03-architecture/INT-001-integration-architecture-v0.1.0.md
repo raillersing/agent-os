@@ -70,9 +70,6 @@ related_adrs:
   - ADR-TBD-INT-004
   - ADR-TBD-INT-005
   - ADR-TBD-INT-006
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # INT-001 — Agent OS Integration Architecture

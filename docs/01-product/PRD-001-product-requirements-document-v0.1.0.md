@@ -45,10 +45,6 @@ related_documents:
   - SEC-001
   - TST-001
 related_adrs: []
-related_evidence:
-  - VIDEO-002
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # PRD-001 — Agent OS Product Requirements Document
@@ -1090,6 +1086,3 @@ PRD-001 may advance to version `1.0.0` when:
 - `SCP-001` — Scope and System Boundaries
 - `PER-001` — Personas and Jobs to Be Done
 - `UCD-001` — User Journeys and Use Cases
-- `VIDEO-002` — UI/UX Evidence Audit
-- `VIDEO-003` — Agent OS Capability and Opportunity Brief
-- `VIDEO-004` — Architecture and Documentation Impact

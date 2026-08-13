@@ -67,9 +67,6 @@ related_adrs:
   - ADR-CANDIDATE-BCP-004
   - ADR-CANDIDATE-BCP-005
   - ADR-CANDIDATE-BCP-006
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # BCP-001 — Agent OS Business Continuity and Disaster Recovery Plan

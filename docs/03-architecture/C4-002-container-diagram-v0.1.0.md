@@ -62,9 +62,6 @@ related_adrs:
   - ADR-TBD-003
   - ADR-TBD-004
   - ADR-TBD-005
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # C4-002 — Agent OS Container Diagram

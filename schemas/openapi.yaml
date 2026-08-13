@@ -840,6 +840,7 @@ components:
       properties:
         id:
           type: string
+          format: uuid
         name:
           type: string
         model:
@@ -851,6 +852,8 @@ components:
           type: array
           items:
             type: string
+        description:
+          type: [string, 'null']
         config:
           type: object
         policies:
@@ -861,6 +864,12 @@ components:
         updated_at:
           type: string
           format: date-time
+        total_runs: { type: integer, default: 0 }
+        successful_runs: { type: integer, default: 0 }
+        failed_runs: { type: integer, default: 0 }
+        total_tokens: { type: integer, default: 0 }
+        total_cost: { type: number, default: 0.0 }
+        last_run_at: { type: [string, 'null'], format: date-time }
 
     AgentCreate:
       type: object
@@ -870,6 +879,8 @@ components:
           type: string
         model:
           type: string
+        description:
+          type: [string, 'null']
         capabilities:
           type: array
           items:
@@ -889,6 +900,11 @@ components:
         status:
           type: string
           enum: [active, inactive]
+        description:
+          type: [string, 'null']
+        capabilities:
+          type: [array, 'null']
+          items: { type: string }
         config:
           type: object
         policies:
@@ -901,6 +917,7 @@ components:
           type: string
         agent_id:
           type: string
+          format: uuid
         status:
           type: string
           enum: [pending, running, completed, failed, cancelled]
@@ -909,13 +926,28 @@ components:
         context:
           type: object
         result:
-          type: object
+          type: [object, 'null']
+        error: { type: [string, 'null'] }
+        progress: { type: integer, default: 0 }
+        current_step: { type: [string, 'null'] }
+        steps: { type: array, items: { type: object }, default: [] }
+        tokens_used: { type: integer, default: 0 }
+        cost: { type: number, default: 0.0 }
+        duration_ms: { type: [integer, 'null'] }
+        options: { type: [object, 'null'] }
         started_at:
           type: string
           format: date-time
         completed_at:
-          type: string
+          type: [string, 'null']
           format: date-time
+        created_at: { type: string, format: date-time }
+
+    RunOptions:
+      type: object
+      properties:
+        stream: { type: boolean, default: false }
+        timeout: { type: integer, default: 30 }
 
     RunCreate:
       type: object
@@ -942,14 +974,20 @@ components:
           type: string
         content:
           type: string
-        metadata:
+        metadata_:
           type: object
+        type: { type: string }
+        source: { type: [string, 'null'] }
+        agent_id: { type: [string, 'null'], format: uuid }
+        access_count: { type: integer, default: 0 }
+        last_accessed_at: { type: [string, 'null'], format: date-time }
         created_at:
           type: string
           format: date-time
         expires_at:
-          type: string
+          type: [string, 'null']
           format: date-time
+        updated_at: { type: string, format: date-time }
 
     MemoryCreate:
       type: object
@@ -959,8 +997,11 @@ components:
           type: string
         content:
           type: string
-        metadata:
-          type: object
+        metadata_:
+          type: [object, 'null']
+        type: { type: [string, 'null'], default: knowledge }
+        source: { type: [string, 'null'] }
+        agent_id: { type: [string, 'null'], format: uuid }
         ttl:
           type: integer
           description: Time to live in seconds

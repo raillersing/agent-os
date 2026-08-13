@@ -80,9 +80,6 @@ related_adrs:
   - ADR-CANDIDATE-EVT-003
   - ADR-CANDIDATE-EVT-004
   - ADR-CANDIDATE-EVT-005
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # EVT-001 — Agent OS Event Catalog and Async Contract

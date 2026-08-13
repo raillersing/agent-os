@@ -61,9 +61,6 @@ related_adrs:
   - ADR-CANDIDATE-THR-001
   - ADR-CANDIDATE-THR-002
   - ADR-CANDIDATE-THR-003
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # THR-001 — Agent OS Threat Model

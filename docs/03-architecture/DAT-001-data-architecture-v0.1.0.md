@@ -58,9 +58,6 @@ related_adrs:
   - ADR-CANDIDATE-DAT-003
   - ADR-CANDIDATE-DAT-004
   - ADR-CANDIDATE-DAT-005
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # DAT-001 — Agent OS Data Architecture

@@ -67,9 +67,6 @@ related_adrs:
   - ADR-CANDIDATE-RUN-003
   - ADR-CANDIDATE-RUN-004
   - ADR-CANDIDATE-RUN-005
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # RUN-001 — Agent OS Run and Execution Contract

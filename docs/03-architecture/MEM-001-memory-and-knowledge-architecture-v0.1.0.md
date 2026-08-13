@@ -59,10 +59,6 @@ related_adrs:
   - ADR-TBD-MEM-002
   - ADR-TBD-MEM-003
   - ADR-TBD-MEM-004
-related_evidence:
-  - VIDEO-002
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # MEM-001 — Agent OS Memory and Knowledge Architecture

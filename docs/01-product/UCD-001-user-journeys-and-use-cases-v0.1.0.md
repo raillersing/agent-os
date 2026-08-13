@@ -43,9 +43,6 @@ related_documents:
   - A11Y-001
   - TST-001
 related_adrs: []
-related_evidence:
-  - VIDEO-002
-  - VIDEO-003
 ---
 
 # UCD-001 — Agent OS User Journeys and Use Cases
@@ -1804,5 +1801,3 @@ UCD-001 may advance to version 1.0.0 when:
 - `VSN-001` — Product Vision and Project Charter
 - `SCP-001` — Scope and System Boundaries
 - `PER-001` — Personas and Jobs to Be Done
-- `VIDEO-002` — UI/UX Evidence Audit
-- `VIDEO-003` — Agent OS Capability and Opportunity Brief

@@ -1,4 +1,4 @@
-register_version: 0.5.0
+register_version: 0.6.0
 last_updated: 2026-08-13
 status_values:
   - draft
@@ -96,7 +96,6 @@ documents:
     approval_date: 2026-08-13
     source_of_truth: true
     dependencies: [DOC-000, GLO-001]
-    research_inputs: [VIDEO-001, VIDEO-002, VIDEO-003, VIDEO-004, VIDEO-EVIDENCE-INDEX]
     downstream_documents: [SCP-001, PRD-001, PER-001, UCD-001, NFR-001, AUT-001, SAD-001, SEC-001, TST-001]
   - id: SCP-001
     title: Scope and System Boundaries
@@ -763,51 +762,3 @@ documents:
     source_of_truth: false
     owner: operations-owner
     dependencies: [BCP-001, OPS-001, DEP-002]
-
-  # RESEARCH
-  # ═══════════════════════════════════════════════════════════════════════════
-  - id: VIDEO-001
-    title: Video Inventory and Methodology
-    path: docs/research/agent-os-video-audit/VIDEO-001-video-inventory-and-methodology.md
-    wave: research
-    priority: P1
-    status: draft
-    owner: research-owner
-    dependencies: [DOC-000, GLO-001]
-    research_inputs_to: [VSN-001, SCP-001, PRD-001, SAD-001, UXA-001, DSN-001, SEC-001, TST-001]
-  - id: VIDEO-002
-    title: UI/UX Evidence Audit
-    path: docs/research/agent-os-video-audit/VIDEO-002-ui-ux-evidence-audit.md
-    wave: research
-    priority: P1
-    status: draft
-    owner: research-owner
-    dependencies: [VIDEO-001]
-    research_inputs_to: [VSN-001, SCP-001, PRD-001, SAD-001, UXA-001, DSN-001, SEC-001, TST-001]
-  - id: VIDEO-003
-    title: Agent OS Capability and Opportunity Brief
-    path: docs/research/agent-os-video-audit/VIDEO-003-agent-os-capability-opportunity-brief.md
-    wave: research
-    priority: P1
-    status: draft
-    owner: research-owner
-    dependencies: [VIDEO-001, VIDEO-002]
-    research_inputs_to: [VSN-001, SCP-001, PRD-001, SAD-001, UXA-001, DSN-001, SEC-001, TST-001]
-  - id: VIDEO-004
-    title: Architecture and Documentation Impact
-    path: docs/research/agent-os-video-audit/VIDEO-004-architecture-and-documentation-impact.md
-    wave: research
-    priority: P1
-    status: draft
-    owner: research-owner
-    dependencies: [VIDEO-001, VIDEO-002, VIDEO-003]
-    research_inputs_to: [VSN-001, SCP-001, PRD-001, SAD-001, UXA-001, DSN-001, SEC-001, TST-001]
-  - id: VIDEO-EVIDENCE-INDEX
-    title: Video Evidence Index Dataset
-    path: docs/research/agent-os-video-audit/video-evidence-index.csv
-    wave: research
-    priority: P1
-    status: draft
-    owner: research-owner
-    dependencies: [VIDEO-001, VIDEO-002]
-    research_inputs_to: [VSN-001, SCP-001, PRD-001, SAD-001, UXA-001, DSN-001, SEC-001, TST-001]

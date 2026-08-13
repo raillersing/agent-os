@@ -50,9 +50,6 @@ related_adrs:
   - ADR-CANDIDATE-003
   - ADR-CANDIDATE-004
   - ADR-CANDIDATE-005
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # SAD-001 — Agent OS System Architecture Description

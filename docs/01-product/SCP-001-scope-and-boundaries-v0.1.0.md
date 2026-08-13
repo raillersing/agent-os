@@ -30,10 +30,6 @@ related_documents:
   - DOC-000
   - GLO-001
   - VSN-001
-  - VIDEO-001
-  - VIDEO-002
-  - VIDEO-003
-  - VIDEO-004
   - PER-001
   - UCD-001
   - PRD-001
@@ -41,8 +37,6 @@ related_documents:
   - SAD-001
   - SEC-001
 related_adrs: []
-related_evidence:
-  - VIDEO-EVIDENCE-INDEX
 ---
 
 # SCP-001 — Agent OS Scope and System Boundaries
@@ -873,7 +867,6 @@ This document depends on:
 - DOC-000;
 - GLO-001;
 - approved VSN-001;
-- VIDEO-001 through VIDEO-004 as research evidence.
 
 Downstream dependencies include:
 
@@ -977,15 +970,10 @@ Any downstream proposal outside this scope requires a controlled scope change.
 
 | Version | Date | Status | Summary | Authority |
 |---|---|---|---|---|
-| 0.1.0 | 2026-07-18 | Draft | Initial scope and system-boundary baseline derived from approved VSN-001 and video-audit research | Draft authoring; not approved |
+| 0.1.0 | 2026-07-18 | Draft | Initial scope and system-boundary baseline derived from approved VSN-001 and the controlled roadmap | Draft authoring; not approved |
 
 ## References
 
 - [DOC-000 — Documentation Governance](../00-governance/DOC-000-documentation-governance.md)
 - [GLO-001 — Glossary](../00-governance/GLO-001-glossary.md)
 - [VSN-001 — Product Vision and Project Charter](VSN-001-product-vision-and-charter.md)
-- [VIDEO-001 — Video Inventory and Methodology](../research/agent-os-video-audit/VIDEO-001-video-inventory-and-methodology.md)
-- [VIDEO-002 — UI/UX Evidence Audit](../research/agent-os-video-audit/VIDEO-002-ui-ux-evidence-audit.md)
-- [VIDEO-003 — Capability and Opportunity Brief](../research/agent-os-video-audit/VIDEO-003-agent-os-capability-opportunity-brief.md)
-- [VIDEO-004 — Architecture and Documentation Impact](../research/agent-os-video-audit/VIDEO-004-architecture-and-documentation-impact.md)
-- [Video evidence index](../research/agent-os-video-audit/video-evidence-index.csv)

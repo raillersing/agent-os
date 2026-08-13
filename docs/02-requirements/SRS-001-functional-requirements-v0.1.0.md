@@ -35,10 +35,6 @@ related_documents:
   - SEC-001
   - TST-001
 related_adrs: []
-related_evidence:
-  - VIDEO-002
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # SRS-001 — Agent OS Functional Requirements Specification

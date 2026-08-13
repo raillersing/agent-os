@@ -36,9 +36,6 @@ related_documents:
   - UXA-001
   - A11Y-001
 related_adrs: []
-related_evidence:
-  - VIDEO-002
-  - VIDEO-003
 ---
 
 # PER-001 — Agent OS Personas and Jobs to Be Done
@@ -1006,5 +1003,3 @@ PER-001 may advance to version 1.0.0 when:
 - `GLO-001` — Glossary and Controlled Terminology
 - `VSN-001` — Product Vision and Project Charter
 - `SCP-001` — Scope and System Boundaries
-- `VIDEO-002` — UI/UX Evidence Audit
-- `VIDEO-003` — Agent OS Capability and Opportunity Brief

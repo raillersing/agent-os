@@ -64,9 +64,6 @@ related_adrs:
   - ADR-CANDIDATE-SEC-005
   - ADR-CANDIDATE-SEC-006
   - ADR-CANDIDATE-SEC-007
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # SEC-001 — Agent OS Security Architecture

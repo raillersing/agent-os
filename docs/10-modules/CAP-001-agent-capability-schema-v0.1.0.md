@@ -72,9 +72,6 @@ related_adrs:
   - ADR-TBD-CAP-002
   - ADR-TBD-CAP-003
   - ADR-TBD-CAP-004
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # CAP-001 — Agent OS Agent Capability Schema

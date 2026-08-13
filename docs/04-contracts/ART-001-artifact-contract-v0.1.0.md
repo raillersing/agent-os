@@ -76,9 +76,6 @@ related_adrs:
   - ADR-TBD-ART-003
   - ADR-TBD-ART-004
   - ADR-TBD-ART-005
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # ART-001 — Agent OS Artifact Contract

@@ -81,9 +81,6 @@ related_adrs:
   - ADR-CANDIDATE-API-003
   - ADR-CANDIDATE-API-004
   - ADR-CANDIDATE-API-005
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # API-001 — Agent OS API Specification

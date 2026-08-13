@@ -1423,7 +1423,6 @@ frontend/src/
 | Import / Export | `IMP-001` | Migration formats and job API |
 | Disaster Recovery | `DR-001` | Backup targets, restore procedures |
 | Accessibility | `A11Y-001` | Detailed a11y conformance plan |
-| Video Evidence | `VIDEO-002` | Screenshot audit, observed patterns |
 
 ---
 

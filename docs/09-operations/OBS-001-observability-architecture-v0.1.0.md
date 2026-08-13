@@ -68,9 +68,6 @@ related_adrs:
   - ADR-CANDIDATE-OBS-003
   - ADR-CANDIDATE-OBS-004
   - ADR-CANDIDATE-OBS-005
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # OBS-001 — Agent OS Observability Architecture

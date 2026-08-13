@@ -85,9 +85,6 @@ related_adrs:
   - ADR-CANDIDATE-IAM-005
   - ADR-CANDIDATE-IAM-006
   - ADR-CANDIDATE-IAM-007
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # IAM-001 — Agent OS Identity and Access Management Architecture

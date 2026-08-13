@@ -89,10 +89,6 @@ related_adrs:
   - ADR-TBD-UXA-003
   - ADR-TBD-UXA-004
   - ADR-TBD-UXA-005
-related_evidence:
-  - VIDEO-002
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # UXA-001 — Agent OS UX Architecture and User Journey Specification

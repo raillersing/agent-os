@@ -59,9 +59,6 @@ related_documents:
   - API-001
   - EVT-001
 related_adrs: []
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # DDD-001 — Agent OS Domain Model

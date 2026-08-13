@@ -77,10 +77,6 @@ related_adrs:
   - ADR-TBD-DSN-004
   - ADR-TBD-DSN-005
   - ADR-TBD-DSN-006
-related_evidence:
-  - VIDEO-002
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # DSN-001 — Agent OS Design System Specification

@@ -66,9 +66,6 @@ related_adrs:
   - ADR-CANDIDATE-APR-003
   - ADR-CANDIDATE-APR-004
   - ADR-CANDIDATE-APR-005
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # APR-001 — Agent OS Approval Contract

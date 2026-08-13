@@ -1,7 +1,7 @@
 ---
 document_id: TST-001
 title: Agent OS Test Strategy and Verification Plan
-version: 0.1.0
+version: 0.2.0
 status: approved
 owner: quality-owner
 approvers:
@@ -68,16 +68,17 @@ related_adrs:
   - ADR-CANDIDATE-TST-003
   - ADR-CANDIDATE-TST-004
   - ADR-CANDIDATE-TST-005
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # TST-001 — Agent OS Test Strategy and Verification Plan
 
 > **Status: Approved baseline — 2026-08-13.** This document defines the verification strategy, test levels, environments, fixtures, coverage model, evidence requirements, automation, release-stage testing, defect handling, and acceptance criteria for Agent OS. It does not select the final CI platform, test runner, browser automation framework, security scanner, performance harness, or hosted test infrastructure.
 
-## 1. Purpose
+## 1. Current executable baseline
+
+The repository currently verifies the following baseline: 11 backend tests pass locally, Python quality checks pass, the frontend lint is non-interactive, the OpenAPI contract is checked against mounted FastAPI paths and application-schema properties, controlled documentation validates, and Docker Compose resolves with CI-safe variables. These results are implementation evidence for the current baseline only; they do not replace integration, provider, adapter, visual, security, or production tests.
+
+## 2. Purpose
 
 Agent OS coordinates autonomous and semi-autonomous software components that can:
 

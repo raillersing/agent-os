@@ -1,7 +1,7 @@
 ---
 document_id: DEP-001
 title: Agent OS Deployment Architecture and Environment Strategy
-version: 0.2.0
+version: 0.3.0
 status: approved
 owner: operations-owner
 approvers:
@@ -70,9 +70,6 @@ related_adrs:
   - ADR-CANDIDATE-DEP-004
   - ADR-CANDIDATE-DEP-005
   - ADR-CANDIDATE-DEP-006
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # DEP-001 — Agent OS Deployment Architecture and Environment Strategy
@@ -109,7 +106,13 @@ developer workstation
 
 without treating a local demo as production readiness.
 
-## 2. Document status
+## 2. Current local implementation baseline
+
+The supported local environment is the root `docker-compose.yml` stack with PostgreSQL, Redis, FastAPI backend, and Next.js frontend. The host endpoints are API `http://localhost:8080`, API documentation `http://localhost:8080/docs`, frontend `http://localhost:3080`, PostgreSQL `localhost:5435`, and Redis `localhost:6381`. Required local variables are defined by `.env.example`; Compose configuration can be checked without starting services using `docker compose config --quiet` with those variables supplied.
+
+This is a development baseline only. It is not evidence of production deployment, high availability, provider execution, adapter execution, backup/restore, or secure external exposure.
+
+## 3. Document status
 
 `DEP-001` is being drafted as an autonomous document because deployment architecture and operational procedures are different concerns.
 

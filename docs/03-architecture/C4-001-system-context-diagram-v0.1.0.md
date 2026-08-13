@@ -51,10 +51,6 @@ related_documents:
   - THR-001
   - DEP-001
 related_adrs: []
-related_evidence:
-  - VIDEO-002
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # C4-001 — Agent OS System Context Diagram

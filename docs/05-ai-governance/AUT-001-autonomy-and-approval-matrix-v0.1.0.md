@@ -40,9 +40,6 @@ related_documents:
   - RUN-001
   - AUD-001
 related_adrs: []
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # AUT-001 — Agent OS Autonomy and Approval Matrix

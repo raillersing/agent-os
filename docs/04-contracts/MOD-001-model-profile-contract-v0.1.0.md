@@ -75,9 +75,6 @@ related_adrs:
   - ADR-TBD-MOD-003
   - ADR-TBD-MOD-004
   - ADR-TBD-MOD-005
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # MOD-001 — Agent OS Model Profile Contract

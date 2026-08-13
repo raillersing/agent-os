@@ -43,10 +43,6 @@ related_documents:
   - OBS-001
   - BCP-001
 related_adrs: []
-related_evidence:
-  - VIDEO-002
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # NFR-001 — Agent OS Non-Functional Requirements

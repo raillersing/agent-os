@@ -57,9 +57,6 @@ related_adrs:
   - ADR-CANDIDATE-ORC-003
   - ADR-CANDIDATE-ORC-004
   - ADR-CANDIDATE-ORC-005
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # ORC-001 — Agent OS Workflow and Orchestration Architecture

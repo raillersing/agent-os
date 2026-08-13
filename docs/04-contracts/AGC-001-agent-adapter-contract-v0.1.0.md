@@ -63,9 +63,6 @@ related_adrs:
   - ADR-CANDIDATE-AGC-002
   - ADR-CANDIDATE-AGC-003
   - ADR-CANDIDATE-AGC-004
-related_evidence:
-  - VIDEO-003
-  - VIDEO-004
 ---
 
 # AGC-001 — Agent OS Agent Adapter Contract
