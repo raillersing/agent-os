@@ -1,8 +1,8 @@
 ---
 document_id: MOD-001
 title: Agent OS Model Profile Contract
-version: 1.0.0
-status: approved
+version: 1.0.1
+status: in-review
 owner: architecture-owner
 approvers:
   - product-owner
@@ -12,18 +12,17 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-07-19
-approval_date: 2026-08-13
+last_reviewed: 2026-08-13
 review_records:
   - role: product-owner
     review_status: approved
     review_date: 2026-08-13
-    evidence: explicit user authorization after document review; architecture approval remains required
+    evidence: explicit user authorization after document review; specialist approvals remain required
 approval_records:
   - role: product-owner
     status: approved
     approval_date: 2026-08-13
-    evidence: explicit user authorization in this request
+    evidence: explicit user authorization after document review
 pending_approvals:
   - architecture-owner
   - security-owner
@@ -70,7 +69,7 @@ related_documents:
   - OBS-001
   - OPS-001
 related_adrs:
-  - ADR-TBD-MOD-001
+  - ADR-006
   - ADR-TBD-MOD-002
   - ADR-TBD-MOD-003
   - ADR-TBD-MOD-004
@@ -79,7 +78,7 @@ related_adrs:
 
 # MOD-001 — Agent OS Model Profile Contract
 
-> **Status: Approved contract baseline — 2026-08-13.** This document defines the provider-neutral model profile, provider binding, routing, fallback, usage, cost, privacy, and actual-model observation contract for Agent OS. It does not approve any provider, model, current price, legal term, retention promise, or production use.
+> **Status: In review — Product Owner approved on 2026-08-13; Architecture, Security, Data, Operations, and Quality approvals remain pending.** This document defines the provider-neutral model profile, provider binding, routing, fallback, usage, cost, privacy, and actual-model observation contract for Agent OS. It does not itself approve any provider, model, current price, legal term, retention promise, or production use. `ADR-006` carries the proposed MVP provider implementation baseline and is also in review.
 
 ## 1. Purpose
 
@@ -149,10 +148,12 @@ This document does not:
 - define provider billing as platform truth;
 - guarantee model quality or determinism;
 - guarantee actual model reporting;
-- select initial providers;
+- select initial providers within this contract;
 - approve restricted-data processing;
 - define production inference infrastructure;
 - replace `AGC-001`, `CAP-001`, or policy.
+
+The concrete MVP provider sequence is delegated to `ADR-006`; until that ADR has all required approvals, its provider choices remain in review.
 
 ## 5. Model abstraction layers
 
@@ -816,7 +817,7 @@ A secret reference defines:
 - delivery mode;
 - last validation.
 
-Production credentials remain prohibited.
+Production credentials remain prohibited from ordinary model-profile content.
 
 ## 39. Rate limits
 
@@ -1397,7 +1398,7 @@ Approval cannot authorize a prohibited provider, production credential, financia
 - provider/account/region restrictions are enforced;
 - revoked bindings receive no new work;
 - logs omit full sensitive prompts by default;
-- production credentials are prohibited.
+- production credentials are prohibited from ordinary application content.
 
 ## 70. Privacy requirements
 
@@ -1612,7 +1613,7 @@ A profile/binding cannot be enabled when:
 - provider is prohibited;
 - capability is incompatible;
 - external disclosure is unknown for confidential data;
-- production credentials are required;
+- production credentials are required in ordinary model content;
 - secret values are embedded;
 - endpoint/network scope is unrestricted;
 - validation expired;
@@ -1635,7 +1636,7 @@ A profile/binding cannot be enabled when:
 - `MOD-SEC-007` — Model output remains untrusted.
 - `MOD-SEC-008` — Tool calls remain proposals.
 - `MOD-SEC-009` — Provider/account/region restrictions are enforced.
-- `MOD-SEC-010` — Production credentials are excluded.
+- `MOD-SEC-010` — Production credentials are excluded from ordinary model content.
 
 ### Reliability
 
@@ -1692,18 +1693,20 @@ A profile/binding cannot be enabled when:
 | Secrets | Secrets Service |
 | UI | Mission Control |
 
-## 83. ADR backlog
+## 83. ADR backlog and resolved decision
 
-- `ADR-TBD-MOD-001` — Initial provider and local-runtime set
+- `ADR-006` — MVP provider and cost-control baseline — **in review; Product Owner approved**
 - `ADR-TBD-MOD-002` — Deterministic routing algorithm
 - `ADR-TBD-MOD-003` — Pricing/cost source and reconciliation
 - `ADR-TBD-MOD-004` — Provider privacy/retention metadata governance
 - `ADR-TBD-MOD-005` — Actual model and usage evidence
 
+The former `ADR-TBD-MOD-001` initial-provider question is represented by `ADR-006` and must not be treated as fully resolved until the remaining `ADR-006` approvers sign off.
+
 ## 84. Open decisions
 
-1. Which providers and local runtimes enter MVP?
-2. Which profiles are created first?
+1. Complete specialist approval of `ADR-006` before its provider sequence becomes authoritative.
+2. Which logical profiles are created first?
 3. Which capabilities/modalities are mandatory?
 4. Which data classes may use external providers?
 5. Which retention/training states are acceptable?
@@ -1758,22 +1761,21 @@ A profile/binding cannot be enabled when:
 
 ## 87. Constraints
 
-- no provider/model is approved here;
+- no provider/model is approved by this contract alone;
 - no price is assumed current;
 - no provider privacy claim is a guarantee;
-- no production credentials;
+- no production credentials in ordinary model content;
 - no restricted-data processing by default;
 - no silent fallback;
 - no raw secrets;
 - no model authority over tools/policy/approval;
-- no accepted mock identity, usage, or cost state;
-- Git versioning remains deferred until drafting and consistency review complete.
+- no accepted mock identity, usage, or cost state.
 
 ## 88. Acceptance criteria
 
-MOD-001 may advance to `1.0.0` when:
+MOD-001 may advance from `in-review` to `approved` when:
 
-1. Product accepts profile catalogue and routing behavior.
+1. Product approval remains recorded.
 2. Architecture accepts layers, bindings, routing, and fallback.
 3. Security accepts provider, endpoint, secret, tool, and data controls.
 4. Data accepts identity, usage, cost, pricing, and freshness semantics.
@@ -1788,6 +1790,8 @@ MOD-001 may advance to `1.0.0` when:
 13. material changes trigger revalidation;
 14. downstream contracts can proceed;
 15. metadata, terminology, diagrams, and examples validate.
+
+Implementation evidence remains a separate gate; approval of this contract does not claim that any provider binding is implemented.
 
 ## 89. Downstream impact
 
@@ -1804,21 +1808,28 @@ MOD-001 may advance to `1.0.0` when:
 | `OBS-001` | Provider/model health and cost metrics |
 | `OPS-001` | Configure, validate, rotate, deprecate, disable |
 | `RTM-001` | Model requirements-to-tests traceability |
+| `ADR-006` | Concrete MVP provider and cost-control sequence |
 
 ## 90. Revision and approval history
 
 ### Approval state
 
-- Current status: `approved`
-- Current version: `0.1.0`
-- Approved by: product-owner on 2026-08-13
-- Required next action: Product, Architecture, Security, Data, Operations, and Quality review
+- Current status: `in-review`
+- Current version: `1.0.1`
+- Product Owner: approved 2026-08-13
+- Architecture Owner: pending
+- Security Owner: pending
+- Data Owner: pending
+- Operations Owner: pending
+- Quality Owner: pending
 
 ### Revision history
 
 | Version | Date | Status | Summary |
 |---|---|---|---|
 | 0.1.0 | 2026-07-19 | Draft | Initial provider-neutral model profile contract covering intent, provider bindings, routing, fallback, data handling, context/output limits, secrets, quotas, pricing, usage, cost, identity, validation, drift, deprecation, audit, testing, and governance |
+| 1.0.0 | 2026-08-13 | Inconsistent approval metadata | Product approval recorded while specialist approvals remained pending |
+| 1.0.1 | 2026-08-13 | In review | Corrected approval state, linked `ADR-006`, and removed the false implication of full approval |
 
 ## References
 
@@ -1831,3 +1842,4 @@ MOD-001 may advance to `1.0.0` when:
 - `ORC-001` — Workflow and Orchestration Architecture
 - `SEC-001` — Security Architecture
 - `THR-001` — Threat Model
+- `ADR-006` — MVP Model Provider and Cost-Control Baseline
