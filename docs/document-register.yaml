@@ -1,4 +1,4 @@
-register_version: 0.6.0
+register_version: 0.7.0
 last_updated: 2026-08-13
 status_values:
   - draft
@@ -10,9 +10,6 @@ status_values:
   - archived
 
 documents:
-  # ═══════════════════════════════════════════════════════════════════════════
-  # 00-GOVERNANCE
-  # ═══════════════════════════════════════════════════════════════════════════
   - id: DOC-000
     title: Documentation Governance and Source-of-Truth Policy
     path: docs/00-governance/DOC-000-documentation-governance.md
@@ -35,13 +32,12 @@ documents:
   - id: ADR-002
     title: Runtime Authentication and Secret Configuration
     path: docs/00-governance/adr/ADR-002-runtime-authentication-and-configuration.md
-    version: 1.0.0
+    version: 1.0.1
     wave: 1
     priority: P0
-    status: approved
+    status: in-review
     owner: architecture-owner
-    approval_date: 2026-08-13
-    source_of_truth: true
+    source_of_truth: false
     dependencies: [ADR-001, SEC-001, API-001, DEP-001]
   - id: ADR-003
     title: Product Information Architecture, Access Scope, Approval, Retention, and Durable Execution
@@ -73,6 +69,36 @@ documents:
     owner: architecture-owner
     source_of_truth: true
     dependencies: [ADR-003, DDD-001, DAT-001, DCT-001, API-001, EVT-001, MEM-001, ART-001, IAM-001, AUD-001]
+  - id: ADR-006
+    title: MVP Model Provider and Cost-Control Baseline
+    path: docs/00-governance/adr/ADR-006-mvp-model-provider-baseline.md
+    version: 0.1.0
+    wave: 1
+    priority: P0
+    status: in-review
+    owner: architecture-owner
+    source_of_truth: false
+    dependencies: [MOD-001, CST-001, DAT-002, SEC-001, INT-001, RUN-001]
+  - id: ADR-007
+    title: MVP Adapter Sequencing, Runtime Profile, and Transport Boundaries
+    path: docs/00-governance/adr/ADR-007-mvp-adapter-sequencing-and-runtime.md
+    version: 0.1.0
+    wave: 1
+    priority: P0
+    status: in-review
+    owner: architecture-owner
+    source_of_truth: false
+    dependencies: [ADR-003, ADR-004, AGC-001, ADP-HER-001, ADP-CDX-001, ADP-CLA-001, DEP-001]
+  - id: ADR-008
+    title: Pilot Deployment, Secret Handling, Backup, and Recovery Baseline
+    path: docs/00-governance/adr/ADR-008-pilot-deployment-secrets-and-recovery.md
+    version: 0.1.0
+    wave: 1
+    priority: P0
+    status: in-review
+    owner: operations-owner
+    source_of_truth: false
+    dependencies: [ADR-002, ADR-004, DEP-001, OPS-001, BCP-001, SEC-001, DAT-002, OBS-001, QAG-001]
   - id: GLO-001
     title: Glossary and Controlled Terminology
     path: docs/00-governance/GLO-001-glossary.md
@@ -81,10 +107,6 @@ documents:
     status: approved
     owner: product-owner
     dependencies: [DOC-000]
-
-  # ═══════════════════════════════════════════════════════════════════════════
-  # 01-PRODUCT
-  # ═══════════════════════════════════════════════════════════════════════════
   - id: VSN-001
     title: Product Vision and Project Charter
     path: docs/01-product/VSN-001-product-vision-and-charter.md
@@ -137,10 +159,6 @@ documents:
     owner: product-owner
     approval_date: 2026-08-13
     dependencies: [PER-001, SCP-001]
-
-  # ═══════════════════════════════════════════════════════════════════════════
-  # 02-REQUIREMENTS
-  # ═══════════════════════════════════════════════════════════════════════════
   - id: SRS-001
     title: Functional Requirements Specification
     path: docs/02-requirements/SRS-001-functional-requirements-v0.1.0.md
@@ -168,10 +186,6 @@ documents:
     approval_date: 2026-08-13
     owner: quality-owner
     dependencies: [SRS-001, NFR-001]
-
-  # ═══════════════════════════════════════════════════════════════════════════
-  # 03-ARCHITECTURE
-  # ═══════════════════════════════════════════════════════════════════════════
   - id: SAD-001
     title: System Architecture Description
     path: docs/03-architecture/SAD-001-system-architecture-description-v0.1.0.md
@@ -261,10 +275,6 @@ documents:
     owner: architecture-owner
     approval_date: 2026-08-13
     dependencies: [SAD-001]
-
-  # ═══════════════════════════════════════════════════════════════════════════
-  # 04-CONTRACTS
-  # ═══════════════════════════════════════════════════════════════════════════
   - id: AGC-001
     title: Agent Adapter Contract
     path: docs/04-contracts/AGC-001-agent-adapter-contract-v0.1.0.md
@@ -318,10 +328,9 @@ documents:
     path: docs/04-contracts/MOD-001-model-profile-contract-v0.1.0.md
     wave: 3
     priority: P0
-    version: 1.0.0
-    status: approved
+    version: 1.0.1
+    status: in-review
     owner: architecture-owner
-    approval_date: 2026-08-13
     dependencies: [INT-001]
   - id: RUN-001
     title: Run and Execution Contract
@@ -332,10 +341,6 @@ documents:
     approval_date: 2026-08-13
     owner: architecture-owner
     dependencies: [ORC-001]
-
-  # ═══════════════════════════════════════════════════════════════════════════
-  # 05-AI-GOVERNANCE
-  # ═══════════════════════════════════════════════════════════════════════════
   - id: AUT-001
     title: Autonomy and Approval Matrix
     path: docs/05-ai-governance/AUT-001-autonomy-and-approval-matrix-v0.1.0.md
@@ -363,10 +368,6 @@ documents:
     approval_date: 2026-08-13
     owner: security-owner
     dependencies: [AUT-001, IAM-001]
-
-  # ═══════════════════════════════════════════════════════════════════════════
-  # 06-SECURITY
-  # ═══════════════════════════════════════════════════════════════════════════
   - id: IAM-001
     title: Identity and Access Management Architecture
     path: docs/06-security/IAM-001-identity-and-access-management-architecture-v0.1.0.md
@@ -412,18 +413,14 @@ documents:
     approval_date: 2026-08-13
     owner: security-owner
     dependencies: [SEC-001, C4-001, C4-002]
-
-  # ═══════════════════════════════════════════════════════════════════════════
-  # 07-UX-DESIGN
-  # ═══════════════════════════════════════════════════════════════════════════
   - id: A11Y-001
     title: Accessibility Requirements and Conformance Plan
     path: docs/07-ux-design/A11Y-001-accessibility-requirements-and-conformance-plan-v0.1.0.md
     wave: 3
     priority: P1
-    version: 1.0.0
-    status: approved
-    owner: ux-owner
+    version: 1.0.1
+    status: in-review
+    owner: quality-owner
     dependencies: [UXA-001, DSN-001]
   - id: DSN-001
     title: Agent OS Design System Specification
@@ -443,10 +440,6 @@ documents:
     status: approved
     owner: ux-owner
     dependencies: [UCD-001, SAD-001]
-
-  # ═══════════════════════════════════════════════════════════════════════════
-  # 08-DELIVERY
-  # ═══════════════════════════════════════════════════════════════════════════
   - id: DEV-001
     title: Development and Implementation Guide
     path: docs/08-delivery/DEV-001-development-and-implementation-guide-v0.1.0.md
@@ -465,10 +458,6 @@ documents:
     approval_date: 2026-08-13
     owner: quality-owner
     dependencies: [SRS-001, NFR-001, THR-001]
-
-  # ═══════════════════════════════════════════════════════════════════════════
-  # 09-OPERATIONS
-  # ═══════════════════════════════════════════════════════════════════════════
   - id: BCP-001
     title: Business Continuity and Disaster Recovery Plan
     path: docs/09-operations/BCP-001-business-continuity-and-disaster-recovery-plan-v0.1.0.md
@@ -505,10 +494,6 @@ documents:
     approval_date: 2026-08-13
     owner: operations-owner
     dependencies: [DEP-001, SEC-001]
-
-  # ═══════════════════════════════════════════════════════════════════════════
-  # 10-MODULES
-  # ═══════════════════════════════════════════════════════════════════════════
   - id: CAP-001
     title: Agent Capability Schema
     path: docs/10-modules/CAP-001-agent-capability-schema-v0.1.0.md
@@ -536,10 +521,6 @@ documents:
     status: draft
     owner: architecture-owner
     dependencies: [SAD-001]
-
-  # ═══════════════════════════════════════════════════════════════════════════
-  # 11-INTEGRATIONS
-  # ═══════════════════════════════════════════════════════════════════════════
   - id: ADP-CDX-001
     title: Codex Adapter Detailed Specification
     path: docs/11-integrations/ADP-CDX-001-codex-adapter-detailed-specification-v0.1.0.md
@@ -567,10 +548,6 @@ documents:
     status: approved
     owner: integration-owner
     dependencies: [AGC-001, INT-001, ADR-005]
-
-  # ═══════════════════════════════════════════════════════════════════════════
-  # 13-ASSURANCE
-  # ═══════════════════════════════════════════════════════════════════════════
   - id: AUD-001
     title: Audit and Evidence Architecture
     path: docs/13-assurance/AUD-001-audit-and-evidence-architecture-v0.1.0.md
@@ -595,11 +572,10 @@ documents:
     path: docs/13-assurance/VVR-001-visual-validation-and-regression-plan-v0.1.0.md
     wave: 4
     priority: P1
-    status: draft
+    version: 0.3.0
+    status: in-review
     owner: quality-owner
-    dependencies: [TST-001, DSN-001]
-
-  # USER GUIDES
+    dependencies: [TST-001, DSN-001, A11Y-001, QAG-001]
   - id: UG-INSTALLATION
     title: Installation Guide
     path: docs/12-user-documentation/INSTALLATION.md
@@ -624,9 +600,6 @@ documents:
     status: draft
     owner: documentation-owner
     dependencies: [API-001, AGC-001, RUN-001, APR-001]
-
-  # ═══════════════════════════════════════════════════════════════════════════
-  # ARCHIVED LEGACY DOCUMENTS — retained for history only; not sources of truth
   - id: VSN-002
     title: Agent OS v2 Agent OS Edition Product Vision
     path: docs/01-PRODUCT_VISION.md
