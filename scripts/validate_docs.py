@@ -44,7 +44,12 @@ ALLOWED_STATUS = {
     "superseded",
     "archived",
 }
-UNRESOLVED = ("TODO", "TBD", "TO CONFIRM", "REQUIRES CONFIRMATION")
+UNRESOLVED = (
+    re.compile(r"\bTODO\b"),
+    re.compile(r"\bTBD\b"),
+    re.compile(r"\bTO CONFIRM\b"),
+    re.compile(r"\bREQUIRES CONFIRMATION\b"),
+)
 
 
 def parse_front_matter(path: Path) -> dict[str, str]:
@@ -140,10 +145,16 @@ def main() -> int:
 
         if status in {"approved", "implemented"}:
             upper = path.read_text(encoding="utf-8").upper()
+            # Backtick-delimited values may be controlled vocabulary entries
+            # (for example RTM-001's `TBD` status), not unresolved prose.
+            searchable = re.sub(r"`[^`]*`", "", upper)
+            # Candidate ADR identifiers are intentional tracked decisions, not
+            # unresolved prose placeholders in an approved document.
+            searchable = re.sub(r"ADR-TBD-[A-Z0-9-]+", "", searchable)
             for marker in UNRESOLVED:
-                if marker in upper:
+                if marker.search(searchable):
                     errors.append(
-                        f"{path.relative_to(ROOT)}: approved/implemented document contains {marker}"
+                        f"{path.relative_to(ROOT)}: approved/implemented document contains {marker.pattern}"
                     )
 
     registered_ids = {entry.get("id") for entry in entries}

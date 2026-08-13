@@ -1,7 +1,7 @@
 ---
 document_id: PLG-001
 title: Agent OS Plugin and Extension Architecture
-version: 0.2.0
+version: 0.3.0
 status: draft
 priority: P1
 owner: architecture-owner
@@ -69,6 +69,8 @@ related_evidence:
 # PLG-001 — Agent OS Plugin and Extension Architecture
 
 > **Status: Draft — Priority P1.** This document defines the future plugin and extension architecture for Agent OS. It covers extension types, manifests, capability declaration, installation, validation, trust, signing, permissions, sandboxing, lifecycle, compatibility, configuration, secrets, data access, UI extensions, API/event extensions, MCP integration direction, skills, adapters, governance, operations, testing, marketplace direction, revocation, uninstall, backup, restore, and vendor exit. It does not authorize dynamic third-party code execution in the MVP, define a public marketplace, select a package format, approve MCP as an authentication mechanism, or allow plugins to bypass Agent OS policy, approval, workspace isolation, audit, or security controls.
+
+> **Implementation boundary (2026-08-13).** The repository currently contains no plugin manifest schema, package registry, installation endpoint, enablement workflow, plugin runtime, extension gateway, signature verification flow, or isolated plugin execution service. The supported integration surfaces are the core API and the separately documented adapter contracts; the in-memory tool catalogue is not a plugin system. The architecture below is therefore a target design and must not be cited as implemented capability.
 
 ## 1. Purpose
 
@@ -156,6 +158,10 @@ This document does not:
 - allow plugins to merge Git branches or perform prohibited actions.
 
 ## 4. Core principles
+
+### 4.0 — Current implementation boundary
+
+The MVP is intentionally non-extensible at runtime. First-party adapters and future extensions may be developed as versioned repository components or separately deployed services, but no third-party package may be installed or executed dynamically by the current application. Until the required ADRs, contracts, security controls, and runtime evidence exist, plugin-related API, UI, marketplace, signing, sandbox, and lifecycle claims remain proposals.
 
 ### `PLG-P-001 — Extension is not authority`
 

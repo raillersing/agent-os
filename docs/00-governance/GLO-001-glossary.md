@@ -2,12 +2,18 @@
 document_id: GLO-001
 title: Agent OS Glossary and Controlled Terminology
 version: 0.2.0
-status: draft
+status: approved
 owner: product-owner
 approvers:
   - product-owner
 created: 2026-07-16
 last_reviewed: 2026-08-12
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization after document review
 classification: internal
 source_of_truth: true
 related_documents:

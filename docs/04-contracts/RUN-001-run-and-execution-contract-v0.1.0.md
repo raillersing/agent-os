@@ -2,7 +2,7 @@
 document_id: RUN-001
 title: Agent OS Run and Execution Contract
 version: 0.2.0
-status: draft
+status: approved
 owner: architecture-owner
 approvers:
   - product-owner
@@ -12,7 +12,14 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization; user assumes the designated approval roles for this finalization
+pending_approvals: []
 classification: internal
 source_of_truth: false
 dependencies:
@@ -55,11 +62,11 @@ related_documents:
   - OPS-001
   - BCP-001
 related_adrs:
-  - ADR-TBD-RUN-001
-  - ADR-TBD-RUN-002
-  - ADR-TBD-RUN-003
-  - ADR-TBD-RUN-004
-  - ADR-TBD-RUN-005
+  - ADR-CANDIDATE-RUN-001
+  - ADR-CANDIDATE-RUN-002
+  - ADR-CANDIDATE-RUN-003
+  - ADR-CANDIDATE-RUN-004
+  - ADR-CANDIDATE-RUN-005
 related_evidence:
   - VIDEO-003
   - VIDEO-004
@@ -67,7 +74,7 @@ related_evidence:
 
 # RUN-001 — Agent OS Run and Execution Contract
 
-> **Status: Draft.** This document defines the formal contract for Agent OS runs, steps, attempts, durable jobs, leases, checkpoints, commands, transitions, errors, retries, pause, resume, cancellation, reconciliation, evidence, and receipts. It does not select a final workflow engine, queue, database, scheduler, or worker technology.
+> **Status: Approved baseline — 2026-08-13.** This document defines the formal contract for Agent OS runs, steps, attempts, durable jobs, leases, checkpoints, commands, transitions, errors, retries, pause, resume, cancellation, reconciliation, evidence, and receipts. It does not select a final workflow engine, queue, database, scheduler, or worker technology.
 
 ## 1. Purpose
 
@@ -2258,29 +2265,29 @@ Before MVP acceptance:
 
 ## 97. ADR backlog
 
-### `ADR-TBD-RUN-001 — Run aggregate and transaction boundaries`
+### `ADR-CANDIDATE-RUN-001 — Run aggregate and transaction boundaries`
 
 Decide whether Run, Step, Attempt, and WaitingCondition share one aggregate or use coordinated aggregates.
 
-### `ADR-TBD-RUN-002 — Job and event persistence`
+### `ADR-CANDIDATE-RUN-002 — Job and event persistence`
 
 Decide database-backed queue, workflow engine, broker, or hybrid.
 
-### `ADR-TBD-RUN-003 — Terminal retry lineage`
+### `ADR-CANDIDATE-RUN-003 — Terminal retry lineage`
 
 Decide new child run versus explicit recovery-run model.
 
-### `ADR-TBD-RUN-004 — Checkpoint portability and storage`
+### `ADR-CANDIDATE-RUN-004 — Checkpoint portability and storage`
 
 Decide checkpoint content, expiry, compatibility, and security.
 
-### `ADR-TBD-RUN-005 — Unknown-state resolution authority`
+### `ADR-CANDIDATE-RUN-005 — Unknown-state resolution authority`
 
 Define roles, evidence requirements, and permitted outcomes.
 
 ## 97A. ADR-003 run and orchestration refinement
 
-Every run references one immutable task snapshot and may reference its project, mission, conversation, workspace, adapter, policy decision, and approval fingerprint. Temporal is the proposed durable workflow engine; PostgreSQL remains authoritative for Agent OS business state and audit. Run events must preserve attempt lineage, effect certainty, visibility scope, retention profile, and correlation IDs. A run cannot report protected success without the required evidence.
+Every run references one immutable task snapshot and may reference its project, mission, conversation, workspace, adapter, policy decision, and approval fingerprint. Temporal is the selected durable workflow engine under `ADR-004`; PostgreSQL remains authoritative for Agent OS business state and audit. Run events must preserve attempt lineage, effect certainty, visibility scope, retention profile, and correlation IDs. A run cannot report protected success without the required evidence.
 
 ## 98. Open decisions
 
@@ -2401,10 +2408,10 @@ RUN-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
-- Required next action: Product, Architecture, Security, Data, Operations, and Quality review
+- Approved by: Product Owner under explicit user authorization to finalize the declared scope
+- Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
 ### Revision history
 

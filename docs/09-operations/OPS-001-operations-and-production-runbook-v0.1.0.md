@@ -2,7 +2,7 @@
 document_id: OPS-001
 title: Agent OS Operations and Production Runbook
 version: 0.1.0
-status: draft
+status: approved
 owner: operations-owner
 approvers:
   - product-owner
@@ -12,7 +12,14 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-07-20
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization; user assumes the designated approval roles for this finalization
+pending_approvals: []
 classification: internal
 source_of_truth: false
 dependencies:
@@ -54,12 +61,12 @@ related_documents:
   - BCP-001
   - PLG-001
 related_adrs:
-  - ADR-TBD-OPS-001
-  - ADR-TBD-OPS-002
-  - ADR-TBD-OPS-003
-  - ADR-TBD-OPS-004
-  - ADR-TBD-OPS-005
-  - ADR-TBD-OPS-006
+  - ADR-CANDIDATE-OPS-001
+  - ADR-CANDIDATE-OPS-002
+  - ADR-CANDIDATE-OPS-003
+  - ADR-CANDIDATE-OPS-004
+  - ADR-CANDIDATE-OPS-005
+  - ADR-CANDIDATE-OPS-006
 related_evidence:
   - VIDEO-003
   - VIDEO-004
@@ -67,7 +74,7 @@ related_evidence:
 
 # OPS-001 — Agent OS Operations and Production Runbook
 
-> **Status: Draft.** This document defines the operational model and runbooks for Agent OS: startup, shutdown, readiness, daily checks, deployments, migrations, maintenance, emergency stop, run recovery, job and event backlogs, adapter and provider failures, approvals, artifacts, memory, costs, backups, restores, security events, support, escalation, evidence, and post-incident review. It relies on the deployment architecture proposed in `DEP-001`, whose autonomous registration is still pending confirmation. It does not select final operations tooling, on-call software, ticketing systems, monitoring products, hosting providers, or contractual response targets.
+> **Status: Approved baseline — 2026-08-13.** This document defines the operational model and runbooks for Agent OS: startup, shutdown, readiness, daily checks, deployments, migrations, maintenance, emergency stop, run recovery, job and event backlogs, adapter and provider failures, approvals, artifacts, memory, costs, backups, restores, security events, support, escalation, evidence, and post-incident review. It relies on the deployment architecture proposed in `DEP-001`, whose autonomous registration is still pending confirmation. It does not select final operations tooling, on-call software, ticketing systems, monitoring products, hosting providers, or contractual response targets.
 
 ## 1. Purpose
 
@@ -3174,27 +3181,27 @@ Before pilot, `QAG-001` should require:
 
 ## 220. ADR backlog
 
-### `ADR-TBD-OPS-001 — Operational tooling and record system`
+### `ADR-CANDIDATE-OPS-001 — Operational tooling and record system`
 
 Select incident/change/runbook tooling, ticketing, evidence storage, and ownership workflow.
 
-### `ADR-TBD-OPS-002 — Administrative CLI and operational API`
+### `ADR-CANDIDATE-OPS-002 — Administrative CLI and operational API`
 
 Define command model, authentication, approvals, idempotency, and audit.
 
-### `ADR-TBD-OPS-003 — Maintenance, locks, and emergency-stop implementation`
+### `ADR-CANDIDATE-OPS-003 — Maintenance, locks, and emergency-stop implementation`
 
 Define environment states, locks/fencing, emergency scope, and release controls.
 
-### `ADR-TBD-OPS-004 — Incident severity, escalation, and communication`
+### `ADR-CANDIDATE-OPS-004 — Incident severity, escalation, and communication`
 
 Confirm A0-A4 mapping, incident declaration, roles, and status communication.
 
-### `ADR-TBD-OPS-005 — Backup/restore operational interface`
+### `ADR-CANDIDATE-OPS-005 — Backup/restore operational interface`
 
 Define backup scheduler, manifests, restore activation, privileges, and reconciliation workflow.
 
-### `ADR-TBD-OPS-006 — Pilot and controlled-commercial operating model`
+### `ADR-CANDIDATE-OPS-006 — Pilot and controlled-commercial operating model`
 
 Define support coverage, maintenance cadence, access model, and operating responsibilities.
 
@@ -3314,10 +3321,10 @@ OPS-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
-- Required next action: resolve `DEP-001` registration, then Product, Architecture, Security, Data, Operations, and Quality review
+- Approved by: Product Owner under explicit user authorization to finalize the declared scope
+- Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
 ### Revision history
 

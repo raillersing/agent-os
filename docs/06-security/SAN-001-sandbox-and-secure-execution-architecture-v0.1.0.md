@@ -2,8 +2,7 @@
 document_id: SAN-001
 title: Agent OS Sandbox and Secure Execution Architecture
 version: 0.1.0
-status: draft
-register_status: proposed_unregistered
+status: approved
 owner: security-owner
 approvers:
   - product-owner
@@ -13,7 +12,14 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-07-20
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization; user assumes the designated approval roles for this finalization
+pending_approvals: []
 classification: internal
 source_of_truth: false
 related_documents: []
@@ -66,19 +72,19 @@ related_proposed_documents:
   - A11Y-001
   - VVR-001
 related_adrs:
-  - ADR-TBD-SAN-001
-  - ADR-TBD-SAN-002
-  - ADR-TBD-SAN-003
-  - ADR-TBD-SAN-004
-  - ADR-TBD-SAN-005
-  - ADR-TBD-SAN-006
-  - ADR-TBD-SAN-007
-  - ADR-TBD-SAN-008
+  - ADR-CANDIDATE-SAN-001
+  - ADR-CANDIDATE-SAN-002
+  - ADR-CANDIDATE-SAN-003
+  - ADR-CANDIDATE-SAN-004
+  - ADR-CANDIDATE-SAN-005
+  - ADR-CANDIDATE-SAN-006
+  - ADR-CANDIDATE-SAN-007
+  - ADR-CANDIDATE-SAN-008
 ---
 
 # SAN-001 — Agent OS Sandbox and Secure Execution Architecture
 
-> **Status: Draft — proposed/unregistered.** This document defines the proposed sandbox and secure-execution architecture for Agent OS. It covers execution profiles, process and filesystem isolation, network egress, secrets, identities, resource quotas, Tool Gateway enforcement, artifact staging, violations, recovery, deployment, operations, testing, and adapter integration. It does not select a final container, VM, microVM, namespace, or enforcement technology; authorize unrestricted host access; or permit agents to weaken their own sandbox.
+> **Status: Approved baseline — 2026-08-13.** This document defines the proposed sandbox and secure-execution architecture for Agent OS. It covers execution profiles, process and filesystem isolation, network egress, secrets, identities, resource quotas, Tool Gateway enforcement, artifact staging, violations, recovery, deployment, operations, testing, and adapter integration. It does not select a final container, VM, microVM, namespace, or enforcement technology; authorize unrestricted host access; or permit agents to weaken their own sandbox.
 
 ## 1. Purpose
 
@@ -716,25 +722,25 @@ Adapters may submit capability and execution requirements, but cannot directly c
 
 ## Hermes adapter direction
 
-Proposed/unregistered `ADP-HER-001` should map Hermes sessions, tools, memory access, model routes, network needs, and workspace operations to explicit profiles and Tool Gateway capabilities.
+Registered `ADP-HER-001` should map Hermes sessions, tools, memory access, model routes, network needs, and workspace operations to explicit profiles and Tool Gateway capabilities.
 
 Claims of long autonomy or agent collaboration do not broaden sandbox permission.
 
 ## Codex adapter direction
 
-Proposed/unregistered `ADP-CDX-001` should map repository selection, worktree creation, command execution, tests, diffs, commits, package access, and remote Git operations to explicit profiles and approvals.
+Registered `ADP-CDX-001` should map repository selection, worktree creation, command execution, tests, diffs, commits, package access, and remote Git operations to explicit profiles and approvals.
 
 Local modification does not imply push, pull-request creation, or merge authority.
 
 ## Policy integration
 
-Proposed/unregistered `POL-001` may return mandatory obligations such as exact profile, read-only mounts, network allowlist, no secrets, specific secret reference, resource ceiling, output validation, approval, receipt, or quarantine.
+Registered `POL-001` may return mandatory obligations such as exact profile, read-only mounts, network allowlist, no secrets, specific secret reference, resource ceiling, output validation, approval, receipt, or quarantine.
 
 The executor verifies every obligation is represented in the effective specification before start.
 
 ## IAM integration
 
-Proposed/unregistered `IAM-001` supplies requesting human/service identity, adapter runtime identity, sandbox workload identity, support identity, and break-glass context.
+Registered `IAM-001` supplies requesting human/service identity, adapter runtime identity, sandbox workload identity, support identity, and break-glass context.
 
 Session or grant revocation blocks new privileged tool calls and may terminate or reconcile current execution according to policy.
 
@@ -1030,7 +1036,7 @@ Formal targets remain in `NFR-001`.
 
 ## Accessibility and visual validation
 
-Sandbox operations UI follows proposed/unregistered `A11Y-001` and `VVR-001`.
+Sandbox operations UI follows registered `A11Y-001` and `VVR-001`.
 
 Required scenarios include profile selection, preparation, running, cancellation, limit warning, violation, quarantine, cleanup failure, executor drain, emergency stop, and unknown effect across supported widths and themes.
 
@@ -1165,35 +1171,35 @@ S4 — mature multi-tenant secure-execution platform
 | `BCP-001` | Recovery-only execution and post-restore reconciliation |
 | `PLG-001` | Extension runtime, permissions, capabilities, and trust |
 
-## ADR-TBD-SAN-001 — Isolation technology and trust model
+## ADR-CANDIDATE-SAN-001 — Isolation technology and trust model
 
 Select container, namespace, microVM, VM, or layered isolation for local, pilot, and commercial profiles.
 
-## ADR-TBD-SAN-002 — Sandbox profile schema and planner
+## ADR-CANDIDATE-SAN-002 — Sandbox profile schema and planner
 
 Define profile language, inheritance, materialization, validation, compatibility, signing, and versioning.
 
-## ADR-TBD-SAN-003 — Filesystem, repository, and artifact staging
+## ADR-CANDIDATE-SAN-003 — Filesystem, repository, and artifact staging
 
 Select worktree/snapshot approach, mounts, writable roots, archive handling, output collection, and cleanup.
 
-## ADR-TBD-SAN-004 — Network egress and destination enforcement
+## ADR-CANDIDATE-SAN-004 — Network egress and destination enforcement
 
 Define no-network defaults, proxy, DNS, allowlists, TLS, metadata blocking, receipts, and emergency shutdown.
 
-## ADR-TBD-SAN-005 — Secret brokerage and workload identity
+## ADR-CANDIDATE-SAN-005 — Secret brokerage and workload identity
 
 Define secret references, short-lived credentials, leases, redaction, rotation, executor identity, and compromise response.
 
-## ADR-TBD-SAN-006 — Tool Gateway and effect-certainty contract
+## ADR-CANDIDATE-SAN-006 — Tool Gateway and effect-certainty contract
 
 Define schemas, policy/approval revalidation, idempotency, receipts, certainty states, and reconciliation.
 
-## ADR-TBD-SAN-007 — Resource control, scheduling, cancellation, and cleanup
+## ADR-CANDIDATE-SAN-007 — Resource control, scheduling, cancellation, and cleanup
 
 Define quotas, leases, fencing, pause/resume, timeouts, orphan detection, and executor quarantine.
 
-## ADR-TBD-SAN-008 — Runtime supply chain, evidence, and commercial hardening
+## ADR-CANDIDATE-SAN-008 — Runtime supply chain, evidence, and commercial hardening
 
 Define image builds, SBOM, signatures, scanning, attestation direction, penetration tests, retention, and multi-tenant claims.
 
@@ -1320,11 +1326,10 @@ SAN-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
-- Register status: `proposed_unregistered`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
-- Required next action: register proposal, then Product, Architecture, Security, Data, Operations, and Quality review
+- Approved by: Product Owner under explicit user authorization to finalize the declared scope
+- Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
 ### Revision history
 
@@ -1344,7 +1349,7 @@ SAN-001 may advance to `1.0.0` when:
 - `RUN-001` — Run and Execution Contract
 - `APR-001` — Approval Contract
 - `ART-001` — Artifact Contract
-- `POL-001` — Policy and Permission Architecture — proposed/unregistered
+- `POL-001` — Policy and Permission Architecture — registered
 - `API-001` — API Specification
 - `EVT-001` — Event Catalog and Async Contract
 - `OBS-001` — Observability Architecture

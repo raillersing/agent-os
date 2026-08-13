@@ -1,14 +1,27 @@
 ---
 document_id: ADR-002
 title: Runtime Authentication and Secret Configuration
-version: 0.1.0
-status: draft
+version: 1.0.0
+status: approved
 owner: architecture-owner
 approvers:
   - product-owner
   - architecture-owner
 created: 2026-08-12
 last_reviewed: 2026-08-12
+approval_date: 2026-08-13
+review_records:
+  - role: product-owner
+    review_status: approved
+    review_date: 2026-08-13
+    evidence: explicit user authorization after document review; specialist approval remains required
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization in this request
+pending_approvals:
+  - architecture-owner
 classification: internal
 source_of_truth: true
 related_documents:
@@ -21,7 +34,7 @@ related_adrs:
 
 # ADR-002 — Runtime Authentication and Secret Configuration
 
-Status: Proposed
+Status: Approved — 2026-08-13.
 
 ## Context
 

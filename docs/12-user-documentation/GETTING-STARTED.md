@@ -1,144 +1,100 @@
 ---
 document_id: UG-GETTING-STARTED
-title: Guide de Démarrage Rapide - Agent OS
-version: 0.1.0
+title: Guide de démarrage - Agent OS
+version: 0.2.0
 status: draft
 owner: documentation-owner
 approvers:
   - product-owner
 created: 2026-07-20
-last_reviewed: 2026-07-20
+last_reviewed: 2026-08-13
 classification: public
 source_of_truth: false
 related_documents:
   - VSN-001
   - SCP-001
   - PRD-001
-related_adrs: []
+  - UG-INSTALLATION
+  - UG-API-REFERENCE
+related_adrs:
+  - ADR-002
 ---
 
-# Guide de Démarrage Rapide - Agent OS
+# Guide de démarrage — Agent OS
 
-**Version:** 0.1.0
-**Dernière mise à jour:** 2026-07-20
+Ce parcours utilise l'implémentation locale actuelle : Docker Compose, un compte administrateur de bootstrap et l'API FastAPI. Le lancement d'un run crée actuellement un enregistrement `pending`; il ne constitue pas encore la preuve d'une exécution LLM complète.
 
-## Introduction
+## 1. Démarrer la stack
 
-Agent OS est un système d'exploitation pour agents IA qui fournit un Control Plane vendor-neutral pour orchestrer, gérer et surveiller des agents intelligents.
-
-## Prérequis
-
-- Python 3.10+
-- Docker (recommandé)
-- Accès à une API LLM (OpenAI, Anthropic, etc.)
-
-## Installation Rapide
-
-### Option 1: Docker (Recommandé)
+Suivez d'abord le [guide d'installation](./INSTALLATION.md), puis vérifiez :
 
 ```bash
-# Cloner le dépôt
-git clone https://github.com/raillersing/agent-os.git
-cd agent-os
-
-# Lancer avec Docker Compose
-docker-compose up -d
-
-# Vérifier l'installation
-curl http://localhost:8080/health
+curl -fsS http://localhost:8080/health
 ```
 
-### Option 2: Installation Locale
+L'interface est disponible sur http://localhost:3080 et la documentation interactive sur http://localhost:8080/docs.
+
+## 2. Obtenir un token
+
+Le compte de bootstrap est défini par `ADMIN_EMAIL` et `ADMIN_PASSWORD` dans `.env` :
 
 ```bash
-# Cloner le dépôt
-git clone https://github.com/raillersing/agent-os.git
-cd agent-os
-
-# Installer les dépendances
-pip install -r requirements.txt
-
-# Configurer l'environnement
-cp .env.example .env
-# Éditer .env avec vos clés API
-
-# Lancer le serveur
-python -m agent_os.server
+export API_URL=http://localhost:8080
+export TOKEN=$(curl -fsS -X POST "$API_URL/api/v1/auth/token" \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"admin@example.local","password":"replace-with-a-local-admin-password"}' \
+  | python3 -c 'import json,sys; print(json.load(sys.stdin)["access_token"])')
 ```
 
-## Configuration Initiale
+Remplacez les valeurs d'exemple par celles de votre `.env`. Le token est un bearer token valable 3 600 secondes.
 
-### 1. Configurer les clés API
-
-Éditez le fichier `.env`:
-
-```env
-# LLM Providers
-OPENAI_API_KEY=sk-...
-ANTHROPIC_API_KEY=sk-ant-...
-
-# Agent OS
-AGENT_OS_SECRET_KEY=votre-cle-secrete
-AGENT_OS_PORT=8080
-```
-
-### 2. Créer votre premier agent
+## 3. Créer et consulter un agent
 
 ```bash
-# Via l'API
-curl -X POST http://localhost:8080/api/v1/agents \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "mon-premier-agent",
-    "model": "gpt-4",
-    "capabilities": ["text-generation", "code-analysis"]
-  }'
+AGENT_ID=$(curl -fsS -X POST "$API_URL/api/v1/agents/" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"mon-agent","model":"provider/model","capabilities":["text-generation"]}' \
+  | python3 -c 'import json,sys; print(json.load(sys.stdin)["id"])')
+
+curl -fsS "$API_URL/api/v1/agents/$AGENT_ID" \
+  -H "Authorization: Bearer $TOKEN"
 ```
 
-### 3. Exécuter une tâche
+Les identifiants d'agents sont des UUID. Le champ `model` est une valeur de profil ; la configuration d'un fournisseur LLM et l'exécution réelle ne sont pas encore garanties par ce parcours.
+
+## 4. Créer un run et suivre son état
 
 ```bash
-# Envoyer une requête à l'agent
-curl -X POST http://localhost:8080/api/v1/agents/mon-premier-agent/run \
-  -H "Content-Type: application/json" \
-  -d '{
-    "prompt": "Analyse ce code et suggère des améliorations",
-    "context": {
-      "code": "def hello(): print(\"Hello World\")"
-    }
-  }'
+RUN_ID=$(curl -fsS -X POST "$API_URL/api/v1/runs/$AGENT_ID/run" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H 'Content-Type: application/json' \
+  -d '{"prompt":"Présente l’état de cet agent","context":{},"options":{"stream":false,"timeout":30}}' \
+  | python3 -c 'import json,sys; print(json.load(sys.stdin)["id"])')
+
+curl -fsS "$API_URL/api/v1/runs/$RUN_ID" \
+  -H "Authorization: Bearer $TOKEN"
 ```
 
-## Concepts Clés
+La création retourne HTTP 202 et un run généralement `pending`. Les routes de streaming SSE, de dispatch fournisseur et de workflow Temporal ne sont pas exposées par l'implémentation actuelle ; ne présentez donc pas ce parcours comme une exécution terminée.
 
-### Agents
-Les agents sont des entités autonomes qui peuvent exécuter des tâches. Chaque agent a:
-- Un **modèle** LLM sous-jacent
-- Des **capacités** (outils disponibles)
-- Des **politiques** de sécurité et d'autonomie
+## 5. Parcours mémoire minimal
 
-### Control Plane
-Le Control Plane orchestre les agents et gère:
-- Le **routing** des requêtes
-- La **mémoire** partagée
-- Les **politiques** de sécurité
-- La **facturation** et les coûts
+```bash
+curl -fsS -X POST "$API_URL/api/v1/memory/" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H 'Content-Type: application/json' \
+  -d '{"key":"demo","content":"Mémoire de démonstration","type":"knowledge","source":"getting-started"}'
 
-### Mémoire
-Agent OS gère plusieurs niveaux de mémoire:
-- **Court terme**: Contexte de session
-- **Long terme**: Persistance entre sessions
-- **Partagée**: Entre agents
+curl -fsS "$API_URL/api/v1/memory/search?q=demo&limit=10" \
+  -H "Authorization: Bearer $TOKEN"
+```
 
-## Prochaines Étapes
+## Limites actuelles
 
-1. [Installation Détaillée](./guides/INSTALLATION.md)
-2. [Référence API](./API-REFERENCE.md)
-3. [Créer un Agent Personnalisé](./tutorials/CREATING-YOUR-FIRST-AGENT.md)
-4. [Configurer la Sécurité](./guides/SECURITY-SETUP.md)
+- l'authentification est limitée au compte administrateur configuré dans l'environnement ;
+- les outils sont exposés par un registre en mémoire et leur exécution retourne un résultat MVP ;
+- les runs sont persistés mais aucun résultat LLM complet n'est produit par ce parcours ;
+- les adaptateurs, plugins dynamiques et validation visuelle automatisée restent des capacités à implémenter.
 
-## Assistance
-
-- Consultez la [FAQ](./FAQ.md)
-- Ouvrez un [GitHub Issue](https://github.com/raillersing/agent-os/issues)
-- Rejoignez la [Discord Community](https://discord.gg/agent-os)
+Pour la liste complète des routes et schémas, consultez la [référence API](./API-REFERENCE.md).

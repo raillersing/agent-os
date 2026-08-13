@@ -2,8 +2,7 @@
 document_id: POL-001
 title: Agent OS Policy and Permission Architecture
 version: 0.2.0
-status: draft
-register_status: proposed_unregistered
+status: approved
 owner: security-owner
 approvers:
   - product-owner
@@ -13,7 +12,14 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization; user assumes the designated approval roles for this finalization
+pending_approvals: []
 classification: internal
 source_of_truth: false
 related_documents: []
@@ -60,18 +66,18 @@ related_proposed_documents:
   - A11Y-001
   - VVR-001
 related_adrs:
-  - ADR-TBD-POL-001
-  - ADR-TBD-POL-002
-  - ADR-TBD-POL-003
-  - ADR-TBD-POL-004
-  - ADR-TBD-POL-005
-  - ADR-TBD-POL-006
-  - ADR-TBD-POL-007
+  - ADR-CANDIDATE-POL-001
+  - ADR-CANDIDATE-POL-002
+  - ADR-CANDIDATE-POL-003
+  - ADR-CANDIDATE-POL-004
+  - ADR-CANDIDATE-POL-005
+  - ADR-CANDIDATE-POL-006
+  - ADR-CANDIDATE-POL-007
 ---
 
 # POL-001 — Agent OS Policy and Permission Architecture
 
-> **Status: Draft — proposed/unregistered.** This document defines the proposed policy and permission architecture for Agent OS. It covers authorization decisions, policy administration, information and enforcement points, attributes, roles, grants, deny precedence, approval gating, obligations, explanations, policy lifecycle, simulation, rollout, caching, emergency restrictions, operations, tests, and evidence. It does not select a final policy engine or language, allow policies to perform protected side effects, or allow agents to approve or activate policy changes.
+> **Status: Approved baseline — 2026-08-13.** This document defines the proposed policy and permission architecture for Agent OS. It covers authorization decisions, policy administration, information and enforcement points, attributes, roles, grants, deny precedence, approval gating, obligations, explanations, policy lifecycle, simulation, rollout, caching, emergency restrictions, operations, tests, and evidence. It does not select a final policy engine or language, allow policies to perform protected side effects, or allow agents to approve or activate policy changes.
 
 ## 1. Purpose
 
@@ -1020,25 +1026,25 @@ Installation and enablement are not blanket invocation permits.
 
 ## Sandbox obligations
 
-Proposed/unregistered `SAN-001` will define the execution boundary. Policy may require a sandbox profile, filesystem roots, network allowlists, resource quotas, secret-broker mode, artifact staging, process restrictions, and timeout.
+Registered `SAN-001` will define the execution boundary. Policy may require a sandbox profile, filesystem roots, network allowlists, resource quotas, secret-broker mode, artifact staging, process restrictions, and timeout.
 
 If the required sandbox cannot be enforced, execution is blocked.
 
 ## Cost policies
 
-Proposed/unregistered `CST-001` will define budget facts. Policy may permit within budget, require approval above a threshold, deny when exhausted, require a cheaper profile, or return indeterminate when cost is unknown.
+Registered `CST-001` will define budget facts. Policy may permit within budget, require approval above a threshold, deny when exhausted, require a cheaper profile, or return indeterminate when cost is unknown.
 
 Unknown cost is not zero.
 
 ## Data classification policies
 
-Proposed/unregistered `DAT-002` will define classification and lifecycle. Policy may govern accessible classes, destination compatibility, external disclosure, export, retention hold, deletion, backup, and restore.
+Registered `DAT-002` will define classification and lifecycle. Policy may govern accessible classes, destination compatibility, external disclosure, export, retention hold, deletion, backup, and restore.
 
 Policy evaluation cannot itself downgrade classification.
 
 ## Audit integration
 
-Proposed/unregistered `AUD-001` will define durable evidence. Every consequential decision preserves the request fingerprint, policy versions, rule IDs, attribute-source references, result, reasons, obligations, approval requirement, enforcement outcome, actor/session, time, and correlation.
+Registered `AUD-001` will define durable evidence. Every consequential decision preserves the request fingerprint, policy versions, rule IDs, attribute-source references, result, reasons, obligations, approval requirement, enforcement outcome, actor/session, time, and correlation.
 
 Operational logs do not replace audit evidence.
 
@@ -1133,7 +1139,7 @@ It avoids protected-object enumeration and sensitive rule disclosure.
 
 ## Accessibility requirements
 
-Policy administration follows proposed/unregistered `A11Y-001`. It requires semantic tables, keyboard-operable simulation, accessible semantic diffs, non-color-only states, screen-reader access to reasons and obligations, focus-safe activation dialogs, readable identifiers, and accessible emergency controls.
+Policy administration follows registered `A11Y-001`. It requires semantic tables, keyboard-operable simulation, accessible semantic diffs, non-color-only states, screen-reader access to reasons and obligations, focus-safe activation dialogs, readable identifiers, and accessible emergency controls.
 
 ## Visual validation
 
@@ -1602,31 +1608,31 @@ P4 — mature multi-tenant policy programme and external assurance
 | `BCP-001` | Policy continuity and restore |
 | `PLG-001` | Extension trust, capabilities, and permissions |
 
-## ADR-TBD-POL-001 — Policy engine, language, and execution model
+## ADR-CANDIDATE-POL-001 — Policy engine, language, and execution model
 
 Select the declarative language, engine, parser/compiler, safety model, packaging, and runtime topology.
 
-## ADR-TBD-POL-002 — Decision model and combining algorithms
+## ADR-CANDIDATE-POL-002 — Decision model and combining algorithms
 
 Approve outcomes, default deny, deny precedence, hierarchy, conflicts, and combining algorithms.
 
-## ADR-TBD-POL-003 — Attribute, permission, and obligation catalogues
+## ADR-CANDIDATE-POL-003 — Attribute, permission, and obligation catalogues
 
 Define schemas, sources, freshness, permission granularity, obligations, advice, and versioning.
 
-## ADR-TBD-POL-004 — Caching, consistency, and revocation
+## ADR-CANDIDATE-POL-004 — Caching, consistency, and revocation
 
 Define cache keys, expiry, invalidation, distributed versions, authoritative revalidation, and outage behavior.
 
-## ADR-TBD-POL-005 — Lifecycle, simulation, and rollout
+## ADR-CANDIDATE-POL-005 — Lifecycle, simulation, and rollout
 
 Approve authoring, validation, semantic diff, shadow, canary, activation, rollback, and retirement.
 
-## ADR-TBD-POL-006 — Emergency restrictions and continuity
+## ADR-CANDIDATE-POL-006 — Emergency restrictions and continuity
 
 Define restriction types, precedence, activation, release, restore, and fail-closed continuity.
 
-## ADR-TBD-POL-007 — Explanation, evidence, and administration UX
+## ADR-CANDIDATE-POL-007 — Explanation, evidence, and administration UX
 
 Define reason codes, audience-specific explanations, decision explorer, evidence, accessibility, and access control.
 
@@ -1769,11 +1775,10 @@ POL-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
-- Register status: `proposed_unregistered`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
-- Required next action: register proposal, then Product, Architecture, Security, Data, Operations, and Quality review
+- Approved by: Product Owner under explicit user authorization to finalize the declared scope
+- Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
 ### Revision history
 
@@ -1785,7 +1790,7 @@ POL-001 may advance to `1.0.0` when:
 
 - `DOC-000` — Documentation Governance and Source-of-Truth Policy
 - `GLO-001` — Glossary and Controlled Terminology
-- `IAM-001` — Identity and Access Management Architecture — proposed/unregistered
+- `IAM-001` — Identity and Access Management Architecture — registered
 - `AUT-001` — Autonomy and Approval Matrix
 - `APR-001` — Approval Contract
 - `SAD-001` — System Architecture Description

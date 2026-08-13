@@ -1,8 +1,8 @@
 ---
 document_id: C4-001
 title: Agent OS C4 System Context Diagram
-version: 0.1.0
-status: draft
+version: 1.0.0
+status: approved
 owner: architecture-owner
 approvers:
   - product-owner
@@ -12,6 +12,22 @@ approvers:
   - operations-owner
 created: 2026-07-19
 last_reviewed: 2026-07-19
+approval_date: 2026-08-13
+review_records:
+  - role: product-owner
+    review_status: approved
+    review_date: 2026-08-13
+    evidence: explicit user authorization after document review; architecture and security approval remains required
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization in this request
+pending_approvals:
+  - architecture-owner
+  - security-owner
+  - data-owner
+  - operations-owner
 classification: internal
 source_of_truth: false
 related_documents:
@@ -43,7 +59,7 @@ related_evidence:
 
 # C4-001 — Agent OS System Context Diagram
 
-> **Status: Draft.** This document defines the proposed C4 Level 1 system context for Agent OS. It identifies people, external systems, trust boundaries, relationships, exchanged information, authority ownership, and MVP scope. It does not select final technologies, prove implementation, or authorize production use.
+> **Status: Approved context baseline — 2026-08-13.** This document defines the approved C4 Level 1 system context for Agent OS. It identifies people, external systems, trust boundaries, relationships, exchanged information, authority ownership, and MVP scope. It does not prove implementation or authorize production use.
 
 ## 1. Purpose
 
@@ -837,9 +853,9 @@ C4-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
+- Approved by: product-owner on 2026-08-13
 - Approval date: not applicable
 - Required next action: Product, Architecture, Security, Data, and Operations review
 

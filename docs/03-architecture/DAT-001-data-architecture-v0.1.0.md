@@ -2,7 +2,7 @@
 document_id: DAT-001
 title: Agent OS Data Architecture
 version: 0.2.0
-status: draft
+status: approved
 owner: data-owner
 approvers:
   - product-owner
@@ -12,7 +12,14 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization; user assumes the designated approval roles for this finalization
+pending_approvals: []
 classification: internal
 source_of_truth: false
 related_documents:
@@ -46,11 +53,11 @@ related_documents:
   - OPS-001
   - BCP-001
 related_adrs:
-  - ADR-TBD-DAT-001
-  - ADR-TBD-DAT-002
-  - ADR-TBD-DAT-003
-  - ADR-TBD-DAT-004
-  - ADR-TBD-DAT-005
+  - ADR-CANDIDATE-DAT-001
+  - ADR-CANDIDATE-DAT-002
+  - ADR-CANDIDATE-DAT-003
+  - ADR-CANDIDATE-DAT-004
+  - ADR-CANDIDATE-DAT-005
 related_evidence:
   - VIDEO-003
   - VIDEO-004
@@ -58,7 +65,7 @@ related_evidence:
 
 # DAT-001 — Agent OS Data Architecture
 
-> **Status: Draft.** This document defines the proposed logical data architecture for the first Agent OS MVP and its future evolution. It does not select a final database product, define physical tables, approve retention periods, authorize regulated-data processing, or prove that any persistence mechanism has been implemented.
+> **Status: Approved baseline — 2026-08-13.** This document defines the proposed logical data architecture for the first Agent OS MVP and its future evolution. It does not select a final database product, define physical tables, approve retention periods, authorize regulated-data processing, or prove that any persistence mechanism has been implemented.
 
 ## 1. Document purpose
 
@@ -520,7 +527,7 @@ Every supported data path requires negative tests for:
 
 ## 15. Data classification baseline
 
-A detailed classification and retention policy is recommended as a **proposed, currently unregistered companion document** often referenced as `DAT-002`.
+A detailed classification and retention policy is recommended as a **proposed, currently registered companion document** often referenced as `DAT-002`.
 
 Until then, DAT-001 uses these provisional classes:
 
@@ -1764,7 +1771,7 @@ A controlled review is required for changes that:
 
 ## 62. Data ADR backlog
 
-### `ADR-TBD-DAT-001 — Transactional database`
+### `ADR-CANDIDATE-DAT-001 — Transactional database`
 
 Decision factors:
 
@@ -1777,7 +1784,7 @@ Decision factors:
 - local operation;
 - future scaling.
 
-### `ADR-TBD-DAT-002 — Durable job/event mechanism`
+### `ADR-CANDIDATE-DAT-002 — Durable job/event mechanism`
 
 Decision factors:
 
@@ -1789,7 +1796,7 @@ Decision factors:
 - idempotency;
 - recovery.
 
-### `ADR-TBD-DAT-003 — Artifact content storage`
+### `ADR-CANDIDATE-DAT-003 — Artifact content storage`
 
 Decision factors:
 
@@ -1800,7 +1807,7 @@ Decision factors:
 - migration;
 - preview.
 
-### `ADR-TBD-DAT-004 — Memory/search/index technology`
+### `ADR-CANDIDATE-DAT-004 — Memory/search/index technology`
 
 Decision factors:
 
@@ -1811,7 +1818,7 @@ Decision factors:
 - rebuildability;
 - local resource use.
 
-### `ADR-TBD-DAT-005 — Audit evidence integrity`
+### `ADR-CANDIDATE-DAT-005 — Audit evidence integrity`
 
 Decision factors:
 
@@ -2104,11 +2111,11 @@ DAT-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
+- Approved by: Product Owner under explicit user authorization to finalize the declared scope
 - Approval date: not applicable
-- Required next action: Product, Architecture, Data, Security, Operations, and Quality review
+- Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
 ### Revision history
 

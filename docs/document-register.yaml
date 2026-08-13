@@ -1,5 +1,5 @@
-register_version: 0.4.0
-last_updated: 2026-08-12
+register_version: 0.5.0
+last_updated: 2026-08-13
 status_values:
   - draft
   - in-review
@@ -18,7 +18,7 @@ documents:
     path: docs/00-governance/DOC-000-documentation-governance.md
     wave: 1
     priority: P0
-    status: draft
+    status: approved
     owner: product-owner
     dependencies: []
   - id: ADR-001
@@ -35,11 +35,12 @@ documents:
   - id: ADR-002
     title: Runtime Authentication and Secret Configuration
     path: docs/00-governance/adr/ADR-002-runtime-authentication-and-configuration.md
-    version: 0.1.0
+    version: 1.0.0
     wave: 1
     priority: P0
-    status: draft
+    status: approved
     owner: architecture-owner
+    approval_date: 2026-08-13
     source_of_truth: true
     dependencies: [ADR-001, SEC-001, API-001, DEP-001]
   - id: ADR-003
@@ -77,7 +78,7 @@ documents:
     path: docs/00-governance/GLO-001-glossary.md
     wave: 1
     priority: P0
-    status: draft
+    status: approved
     owner: product-owner
     dependencies: [DOC-000]
 
@@ -102,32 +103,40 @@ documents:
     path: docs/01-product/SCP-001-scope-and-boundaries-v0.1.0.md
     wave: 1
     priority: P0
-    status: draft
+    version: 1.0.0
+    status: approved
     owner: product-owner
+    approval_date: 2026-08-13
     dependencies: [VSN-001]
   - id: PRD-001
     title: Product Requirements Document
     path: docs/01-product/PRD-001-product-requirements-document-v0.1.0.md
     wave: 1
     priority: P0
-    status: draft
+    version: 1.0.0
+    status: approved
     owner: product-owner
+    approval_date: 2026-08-13
     dependencies: [VSN-001, SCP-001]
   - id: PER-001
     title: Personas and Jobs to Be Done
     path: docs/01-product/PER-001-personas-and-jobs-to-be-done-v0.1.0.md
     wave: 1
     priority: P0
-    status: draft
+    version: 1.0.0
+    status: approved
     owner: product-owner
+    approval_date: 2026-08-13
     dependencies: [VSN-001]
   - id: UCD-001
     title: User Journeys and Use Cases
     path: docs/01-product/UCD-001-user-journeys-and-use-cases-v0.1.0.md
     wave: 1
     priority: P0
-    status: draft
+    version: 1.0.0
+    status: approved
     owner: product-owner
+    approval_date: 2026-08-13
     dependencies: [PER-001, SCP-001]
 
   # ═══════════════════════════════════════════════════════════════════════════
@@ -138,7 +147,8 @@ documents:
     path: docs/02-requirements/SRS-001-functional-requirements-v0.1.0.md
     wave: 1
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: product-owner
     dependencies: [PRD-001, UCD-001]
   - id: NFR-001
@@ -146,7 +156,8 @@ documents:
     path: docs/02-requirements/NFR-001-non-functional-requirements-v0.1.0.md
     wave: 1
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: architecture-owner
     dependencies: [PRD-001]
   - id: RTM-001
@@ -154,7 +165,8 @@ documents:
     path: docs/02-requirements/RTM-001-requirements-traceability-matrix-v0.1.0.md
     wave: 1
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: quality-owner
     dependencies: [SRS-001, NFR-001]
 
@@ -166,7 +178,8 @@ documents:
     path: docs/03-architecture/SAD-001-system-architecture-description-v0.1.0.md
     wave: 2
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: architecture-owner
     dependencies: [SRS-001, NFR-001, AUT-001]
   - id: C4-001
@@ -174,16 +187,20 @@ documents:
     path: docs/03-architecture/C4-001-system-context-diagram-v0.1.0.md
     wave: 2
     priority: P0
-    status: draft
+    version: 1.0.0
+    status: approved
     owner: architecture-owner
+    approval_date: 2026-08-13
     dependencies: [SAD-001]
   - id: C4-002
     title: Container Diagram
     path: docs/03-architecture/C4-002-container-diagram-v0.1.0.md
     wave: 2
     priority: P0
-    status: draft
+    version: 1.0.0
+    status: approved
     owner: architecture-owner
+    approval_date: 2026-08-13
     dependencies: [SAD-001]
   - id: DDD-001
     title: Domain Model
@@ -200,7 +217,8 @@ documents:
     path: docs/03-architecture/DAT-001-data-architecture-v0.1.0.md
     wave: 2
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: architecture-owner
     dependencies: [DDD-001, NFR-001]
   - id: DAT-002
@@ -229,16 +247,20 @@ documents:
     path: docs/03-architecture/MEM-001-memory-and-knowledge-architecture-v0.1.0.md
     wave: 2
     priority: P0
-    status: draft
+    version: 1.0.0
+    status: approved
     owner: architecture-owner
+    approval_date: 2026-08-13
     dependencies: [DAT-001, AUT-001]
   - id: INT-001
     title: Integration Architecture
     path: docs/03-architecture/INT-001-integration-architecture-v0.1.0.md
     wave: 2
     priority: P0
-    status: draft
+    version: 1.0.0
+    status: approved
     owner: architecture-owner
+    approval_date: 2026-08-13
     dependencies: [SAD-001]
 
   # ═══════════════════════════════════════════════════════════════════════════
@@ -249,7 +271,8 @@ documents:
     path: docs/04-contracts/AGC-001-agent-adapter-contract-v0.1.0.md
     wave: 3
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: architecture-owner
     dependencies: [SAD-001, INT-001]
   - id: API-001
@@ -267,7 +290,8 @@ documents:
     path: docs/04-contracts/APR-001-approval-contract-v0.1.0.md
     wave: 3
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: architecture-owner
     dependencies: [AUT-001, ORC-001]
   - id: ART-001
@@ -275,8 +299,10 @@ documents:
     path: docs/04-contracts/ART-001-artifact-contract-v0.1.0.md
     wave: 3
     priority: P0
-    status: draft
+    version: 1.0.0
+    status: approved
     owner: architecture-owner
+    approval_date: 2026-08-13
     dependencies: [DAT-001]
   - id: EVT-001
     title: Event Catalog and Async Contract
@@ -293,15 +319,18 @@ documents:
     path: docs/04-contracts/MOD-001-model-profile-contract-v0.1.0.md
     wave: 3
     priority: P0
-    status: draft
+    version: 1.0.0
+    status: approved
     owner: architecture-owner
+    approval_date: 2026-08-13
     dependencies: [INT-001]
   - id: RUN-001
     title: Run and Execution Contract
     path: docs/04-contracts/RUN-001-run-and-execution-contract-v0.1.0.md
     wave: 3
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: architecture-owner
     dependencies: [ORC-001]
 
@@ -313,7 +342,8 @@ documents:
     path: docs/05-ai-governance/AUT-001-autonomy-and-approval-matrix-v0.1.0.md
     wave: 1
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: product-owner
     dependencies: [SCP-001, UCD-001]
   - id: CST-001
@@ -321,7 +351,8 @@ documents:
     path: docs/05-ai-governance/CST-001-usage-cost-and-budget-architecture-v0.1.0.md
     wave: 2
     priority: P1
-    status: draft
+    version: 1.0.0
+    status: approved
     owner: architecture-owner
     dependencies: [SAD-001]
   - id: POL-001
@@ -329,7 +360,8 @@ documents:
     path: docs/05-ai-governance/POL-001-policy-and-permission-architecture-v0.1.0.md
     wave: 2
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: security-owner
     dependencies: [AUT-001, IAM-001]
 
@@ -341,7 +373,8 @@ documents:
     path: docs/06-security/IAM-001-identity-and-access-management-architecture-v0.1.0.md
     wave: 2
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: security-owner
     dependencies: [SAD-001]
   - id: SAN-001
@@ -349,7 +382,8 @@ documents:
     path: docs/06-security/SAN-001-sandbox-and-secure-execution-architecture-v0.1.0.md
     wave: 2
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: security-owner
     dependencies: [SAD-001, SEC-001]
   - id: SEC-001
@@ -357,7 +391,8 @@ documents:
     path: docs/06-security/SEC-001-security-architecture-v0.1.0.md
     wave: 2
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: security-owner
     dependencies: [SAD-001, DAT-001, AUT-001]
   - id: SEC-002
@@ -365,7 +400,8 @@ documents:
     path: docs/06-security/SEC-002-security-control-catalogue-v0.1.0.md
     wave: 2
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: security-owner
     dependencies: [SEC-001]
   - id: THR-001
@@ -373,7 +409,8 @@ documents:
     path: docs/06-security/THR-001-threat-model-v0.1.0.md
     wave: 2
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: security-owner
     dependencies: [SEC-001, C4-001, C4-002]
 
@@ -385,7 +422,8 @@ documents:
     path: docs/07-ux-design/A11Y-001-accessibility-requirements-and-conformance-plan-v0.1.0.md
     wave: 3
     priority: P1
-    status: draft
+    version: 1.0.0
+    status: approved
     owner: ux-owner
     dependencies: [UXA-001, DSN-001]
   - id: DSN-001
@@ -393,7 +431,8 @@ documents:
     path: docs/07-ux-design/DSN-001-agent-os-design-system-specification-v0.1.0.md
     wave: 3
     priority: P0
-    status: draft
+    version: 1.0.0
+    status: approved
     owner: ux-owner
     dependencies: [UXA-001]
   - id: UXA-001
@@ -401,7 +440,8 @@ documents:
     path: docs/07-ux-design/UXA-001-ux-architecture-and-user-journey-specification-v0.1.0.md
     wave: 3
     priority: P0
-    status: draft
+    version: 1.0.0
+    status: approved
     owner: ux-owner
     dependencies: [UCD-001, SAD-001]
 
@@ -413,7 +453,8 @@ documents:
     path: docs/08-delivery/DEV-001-development-and-implementation-guide-v0.1.0.md
     wave: 4
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: engineering-owner
     dependencies: [SAD-001]
   - id: TST-001
@@ -421,7 +462,8 @@ documents:
     path: docs/08-delivery/TST-001-test-strategy-and-verification-plan-v0.1.0.md
     wave: 4
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: quality-owner
     dependencies: [SRS-001, NFR-001, THR-001]
 
@@ -433,7 +475,8 @@ documents:
     path: docs/09-operations/BCP-001-business-continuity-and-disaster-recovery-plan-v0.1.0.md
     wave: 5
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: operations-owner
     dependencies: [DAT-001, OPS-001]
   - id: DEP-001
@@ -441,7 +484,8 @@ documents:
     path: docs/09-operations/DEP-001-deployment-architecture-and-environment-strategy-v0.1.0.md
     wave: 5
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: operations-owner
     dependencies: [SAD-001, SEC-001]
   - id: OBS-001
@@ -449,7 +493,8 @@ documents:
     path: docs/09-operations/OBS-001-observability-architecture-v0.1.0.md
     wave: 5
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: operations-owner
     dependencies: [SAD-001, ORC-001]
   - id: OPS-001
@@ -457,7 +502,8 @@ documents:
     path: docs/09-operations/OPS-001-operations-and-production-runbook-v0.1.0.md
     wave: 5
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: operations-owner
     dependencies: [DEP-001, SEC-001]
 
@@ -469,15 +515,18 @@ documents:
     path: docs/10-modules/CAP-001-agent-capability-schema-v0.1.0.md
     wave: 3
     priority: P0
-    status: draft
+    version: 1.0.0
+    status: approved
     owner: architecture-owner
+    approval_date: 2026-08-13
     dependencies: [AGC-001]
   - id: ORC-001
     title: Workflow and Orchestration Architecture
     path: docs/10-modules/ORC-001-workflow-and-orchestration-architecture-v0.1.0.md
     wave: 2
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: architecture-owner
     dependencies: [SRS-001, AUT-001]
   - id: PLG-001
@@ -497,7 +546,8 @@ documents:
     path: docs/11-integrations/ADP-CDX-001-codex-adapter-detailed-specification-v0.1.0.md
     wave: 3
     priority: P1
-    status: draft
+    version: 1.0.0
+    status: approved
     owner: integration-owner
     dependencies: [AGC-001, INT-001]
   - id: ADP-HER-001
@@ -505,16 +555,17 @@ documents:
     path: docs/11-integrations/ADP-HER-001-hermes-adapter-detailed-specification-v0.1.0.md
     wave: 3
     priority: P1
-    status: draft
+    version: 1.0.0
+    status: approved
     owner: integration-owner
     dependencies: [AGC-001, INT-001]
   - id: ADP-CLA-001
     title: Claude Code Adapter Detailed Specification
     path: docs/11-integrations/ADP-CLA-001-claude-code-adapter-detailed-specification-v0.1.0.md
-    version: 0.1.0
     wave: 3
     priority: P1
-    status: draft
+    version: 1.0.0
+    status: approved
     owner: integration-owner
     dependencies: [AGC-001, INT-001, ADR-005]
 
@@ -526,15 +577,18 @@ documents:
     path: docs/13-assurance/AUD-001-audit-and-evidence-architecture-v0.1.0.md
     wave: 4
     priority: P0
-    status: draft
+    version: 1.0.0
+    status: approved
     owner: security-owner
+    approval_date: 2026-08-13
     dependencies: [SEC-001, OBS-001]
   - id: QAG-001
     title: Quality Assurance and Release Gates
     path: docs/13-assurance/QAG-001-quality-assurance-and-release-gates-v0.1.0.md
     wave: 4
     priority: P0
-    status: draft
+    status: approved
+    approval_date: 2026-08-13
     owner: quality-owner
     dependencies: [TST-001, DOC-000]
   - id: VVR-001

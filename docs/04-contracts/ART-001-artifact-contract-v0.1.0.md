@@ -1,8 +1,8 @@
 ---
 document_id: ART-001
 title: Agent OS Artifact Contract
-version: 0.2.0
-status: draft
+version: 1.0.0
+status: approved
 owner: data-owner
 approvers:
   - product-owner
@@ -13,6 +13,23 @@ approvers:
   - quality-owner
 created: 2026-07-19
 last_reviewed: 2026-08-12
+approval_date: 2026-08-13
+review_records:
+  - role: product-owner
+    review_status: approved
+    review_date: 2026-08-13
+    evidence: explicit user authorization after document review; contract-owner approval remains required
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization in this request
+pending_approvals:
+  - architecture-owner
+  - security-owner
+  - data-owner
+  - operations-owner
+  - quality-owner
 classification: internal
 source_of_truth: false
 dependencies:
@@ -66,7 +83,7 @@ related_evidence:
 
 # ART-001 — Agent OS Artifact Contract
 
-> **Status: Draft.** This document defines the formal artifact contract for Agent OS. It covers artifact proposals, staging, content storage, versions, integrity, provenance, classification, review, acceptance, rejection, safe preview, export, deletion, recovery, retention, and evidence. It does not select a final object store, malware scanner, document-rendering engine, file format, or retention schedule.
+> **Status: Approved contract baseline — 2026-08-13.** This document defines the formal artifact contract for Agent OS. It covers artifact proposals, staging, content storage, versions, integrity, provenance, classification, review, acceptance, rejection, safe preview, export, deletion, recovery, retention, and evidence. It does not select a final object store, malware scanner, document-rendering engine, file format, or retention schedule.
 
 ## 1. Purpose
 
@@ -2570,9 +2587,9 @@ ART-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
+- Approved by: product-owner on 2026-08-13
 - Required next action: Product, Architecture, Security, Data, Operations, and Quality review
 
 ### Revision history

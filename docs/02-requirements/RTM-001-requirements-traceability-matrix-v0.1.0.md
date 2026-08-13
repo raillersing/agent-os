@@ -2,7 +2,7 @@
 document_id: RTM-001
 title: Agent OS Requirements Traceability Matrix
 version: 0.1.0
-status: draft
+status: approved
 owner: quality-owner
 approvers:
   - product-owner
@@ -10,7 +10,14 @@ approvers:
   - security-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-07-19
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization; user assumes the designated approval roles for this finalization
+pending_approvals: []
 classification: internal
 source_of_truth: false
 related_documents:
@@ -39,7 +46,7 @@ related_evidence:
 
 # RTM-001 — Agent OS Requirements Traceability Matrix
 
-> **Status: Draft.** This matrix records the current documentation-level traceability baseline. Architecture, implementation, tests, evidence, release, and acceptance links remain incomplete because those artifacts have not yet been generated.
+> **Status: Approved baseline — 2026-08-13.** This matrix records the current documentation-level traceability baseline. Architecture, implementation, tests, evidence, release, and acceptance links remain incomplete because those artifacts have not yet been generated.
 
 ## 1. Purpose
 
@@ -813,9 +820,9 @@ RTM-001 may advance to version `1.0.0` when:
 
 ## 21. Revision and approval history
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
+- Approved by: Product Owner under explicit user authorization to finalize the declared scope
 - Approval date: not applicable
 
 | Version | Date | Status | Summary | Authority |

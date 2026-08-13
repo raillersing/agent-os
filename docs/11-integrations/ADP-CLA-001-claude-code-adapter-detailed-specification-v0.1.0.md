@@ -1,8 +1,8 @@
 ---
 document_id: ADP-CLA-001
 title: Claude Code Adapter Detailed Specification
-version: 0.1.0
-status: draft
+version: 1.0.0
+status: approved
 owner: architecture-owner
 approvers:
   - product-owner
@@ -11,7 +11,33 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-08-12
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: integration-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: architecture-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: security-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: operations-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: quality-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
 classification: internal
 source_of_truth: false
 related_documents:
@@ -33,7 +59,7 @@ related_evidence: []
 
 # ADP-CLA-001 — Claude Code Adapter Detailed Specification
 
-> **Status: Draft.** This profile defines the required conformance boundary for Claude Code. It does not claim that Claude Code is connected, validated, or production-ready in Agent OS.
+> **Status: Approved adapter specification — 2026-08-13.** This profile defines the required conformance boundary for Claude Code. It does not claim that Claude Code is connected, validated, or production-ready in Agent OS.
 
 ## 1. Purpose
 

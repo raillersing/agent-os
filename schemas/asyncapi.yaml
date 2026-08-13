@@ -3,7 +3,8 @@ info:
   title: Agent OS Event Bus
   description: |
     Asynchronous event contracts for Agent OS.
-    Events are published via Redis Pub/Sub and consumed by interested services.
+    The local transport binding is provisional; the event contract remains
+    independent of the final broker or streaming technology.
   version: 0.3.0
   contact:
     name: Agent OS Team
@@ -16,11 +17,11 @@ servers:
   local:
     host: localhost:6379
     protocol: redis
-    description: Local development
+    description: Local development transport binding (provisional)
   production:
     host: redis-agent-os:6379
     protocol: redis
-    description: Production
+    description: Production transport binding (provisional)
 
 channels:
   agents:

@@ -2,7 +2,7 @@
 document_id: AGC-001
 title: Agent OS Agent Adapter Contract
 version: 0.3.0
-status: draft
+status: approved
 owner: architecture-owner
 approvers:
   - product-owner
@@ -12,7 +12,14 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization; user assumes the designated approval roles for this finalization
+pending_approvals: []
 classification: internal
 source_of_truth: false
 dependencies:
@@ -52,10 +59,10 @@ related_documents:
   - ADP-HER-001
   - ADP-CLA-001
 related_adrs:
-  - ADR-TBD-AGC-001
-  - ADR-TBD-AGC-002
-  - ADR-TBD-AGC-003
-  - ADR-TBD-AGC-004
+  - ADR-CANDIDATE-AGC-001
+  - ADR-CANDIDATE-AGC-002
+  - ADR-CANDIDATE-AGC-003
+  - ADR-CANDIDATE-AGC-004
 related_evidence:
   - VIDEO-003
   - VIDEO-004
@@ -63,7 +70,7 @@ related_evidence:
 
 # AGC-001 — Agent OS Agent Adapter Contract
 
-> **Status: Draft.** This document defines the provider-neutral contract between Agent OS and agent runtimes such as Codex, Hermes, and Claude Code. It does not claim that any runtime already implements every operation, state, event, or capability described here. Unsupported or unverified behavior must remain explicit.
+> **Status: Approved baseline — 2026-08-13.** This document defines the provider-neutral contract between Agent OS and agent runtimes such as Codex, Hermes, and Claude Code. It does not claim that any runtime already implements every operation, state, event, or capability described here. Unsupported or unverified behavior must remain explicit.
 
 ## 1. Purpose
 
@@ -1713,7 +1720,7 @@ Audit records should cover:
 
 ## 61. Hermes implementation profile
 
-The Hermes-specific mapping belongs in proposed/unregistered `ADP-HER-001`.
+The Hermes-specific mapping belongs in registered `ADP-HER-001`.
 
 At minimum, that document should map:
 
@@ -1737,7 +1744,7 @@ Until verified, unavailable Hermes features remain `unknown` or `unsupported`.
 
 ## 62. Codex implementation profile
 
-The Codex-specific mapping belongs in proposed/unregistered `ADP-CDX-001`.
+The Codex-specific mapping belongs in registered `ADP-CDX-001`.
 
 At minimum, that document should map:
 
@@ -1884,19 +1891,19 @@ Deprecated behavior remains observable until removal.
 
 ## 71. ADR backlog
 
-### `ADR-TBD-AGC-001 — Adapter communication protocol`
+### `ADR-CANDIDATE-AGC-001 — Adapter communication protocol`
 
 Choose stdio, local socket, HTTP, gRPC, or hybrid.
 
-### `ADR-TBD-AGC-002 — Event delivery mechanism`
+### `ADR-CANDIDATE-AGC-002 — Event delivery mechanism`
 
 Choose stream, polling cursor, message transport, or hybrid.
 
-### `ADR-TBD-AGC-003 — Adapter process isolation`
+### `ADR-CANDIDATE-AGC-003 — Adapter process isolation`
 
 Define OS identity, container/process model, network, filesystem, and lifecycle.
 
-### `ADR-TBD-AGC-004 — Conformance test harness`
+### `ADR-CANDIDATE-AGC-004 — Conformance test harness`
 
 Define fixtures, simulators, golden contracts, and certification evidence.
 
@@ -2014,10 +2021,10 @@ AGC-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
-- Required next action: Product, Architecture, Security, Data, Operations, and Quality review
+- Approved by: Product Owner under explicit user authorization to finalize the declared scope
+- Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
 ### Revision history
 

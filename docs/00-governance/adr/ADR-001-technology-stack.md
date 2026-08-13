@@ -94,7 +94,7 @@ We will use the following technology stack:
 
 | Component | Technology | Version | Justification |
 |-----------|------------|---------|---------------|
-| **LLM Provider** | Claude API | - | Primary thinking engine |
+| **Model access** | Provider-neutral Model Gateway | Contract-defined | Keeps providers replaceable; concrete bindings are governed by `MOD-001` |
 | **Agent Framework** | Custom Python | - | Agent OS native |
 | **MCP** | Model Context Protocol | - | Tool integration standard |
 | **Memory** | ChromaDB + PostgreSQL | - | Semantic + structured |
@@ -129,7 +129,7 @@ We will use the following technology stack:
 
 ### Positive
 
-1. **Python ecosystem** — Excellent AI/ML libraries, Claude API support
+1. **Python ecosystem** — Excellent AI/ML libraries and provider-neutral integration support
 2. **FastAPI performance** — Async support for concurrent agent operations
 3. **PostgreSQL reliability** — ACID compliance for durable state
 4. **Next.js DX** — Fast development, good TypeScript support

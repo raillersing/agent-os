@@ -2,8 +2,7 @@
 document_id: DEP-001
 title: Agent OS Deployment Architecture and Environment Strategy
 version: 0.2.0
-status: draft
-register_status: pending_confirmation
+status: approved
 owner: operations-owner
 approvers:
   - product-owner
@@ -13,7 +12,14 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization; user assumes the designated approval roles for this finalization
+pending_approvals: []
 classification: internal
 source_of_truth: false
 dependencies:
@@ -58,12 +64,12 @@ related_documents:
   - BCP-001
   - PLG-001
 related_adrs:
-  - ADR-TBD-DEP-001
-  - ADR-TBD-DEP-002
-  - ADR-TBD-DEP-003
-  - ADR-TBD-DEP-004
-  - ADR-TBD-DEP-005
-  - ADR-TBD-DEP-006
+  - ADR-CANDIDATE-DEP-001
+  - ADR-CANDIDATE-DEP-002
+  - ADR-CANDIDATE-DEP-003
+  - ADR-CANDIDATE-DEP-004
+  - ADR-CANDIDATE-DEP-005
+  - ADR-CANDIDATE-DEP-006
 related_evidence:
   - VIDEO-003
   - VIDEO-004
@@ -71,7 +77,7 @@ related_evidence:
 
 # DEP-001 — Agent OS Deployment Architecture and Environment Strategy
 
-> **Status: Draft — register confirmation pending.** This document defines the proposed deployment architecture and environment strategy for Agent OS. It covers environment classes, local Linux/WSL deployment, Docker Compose, packaging, configuration, secret references, data volumes, networking, reverse proxy, TLS, build promotion, migrations, release rollout, rollback, maintenance, environment parity, pilot deployment, controlled commercialization, and deployment evidence. It does not select a final cloud provider, container orchestrator, CI/CD platform, secret manager, reverse proxy, operating-system distribution, or production hosting model.
+> **Status: Approved baseline — 2026-08-13.** This document defines the proposed deployment architecture and environment strategy for Agent OS. It covers environment classes, local Linux/WSL deployment, Docker Compose, packaging, configuration, secret references, data volumes, networking, reverse proxy, TLS, build promotion, migrations, release rollout, rollback, maintenance, environment parity, pilot deployment, controlled commercialization, and deployment evidence. It does not select a final cloud provider, container orchestrator, CI/CD platform, secret manager, reverse proxy, operating-system distribution, or production hosting model.
 
 ## 1. Purpose
 
@@ -2926,7 +2932,7 @@ Potential mechanisms:
 - seccomp/AppArmor/SELinux;
 - network namespace.
 
-Final architecture belongs in proposed/unregistered `SAN-001`.
+Final architecture belongs in registered `SAN-001`.
 
 ## 192. Backup utility deployment
 
@@ -3203,27 +3209,27 @@ unknown
 
 ## 205. ADR backlog
 
-### `ADR-TBD-DEP-001 — Deployment packaging and host profiles`
+### `ADR-CANDIDATE-DEP-001 — Deployment packaging and host profiles`
 
 Select supported Linux/WSL distributions, packaging, Compose layout, and installation path.
 
-### `ADR-TBD-DEP-002 — Build, registry, signing, and promotion`
+### `ADR-CANDIDATE-DEP-002 — Build, registry, signing, and promotion`
 
 Select build pipeline, immutable registry, manifest, SBOM, signing, and promotion controls.
 
-### `ADR-TBD-DEP-003 — Configuration and secret management`
+### `ADR-CANDIDATE-DEP-003 — Configuration and secret management`
 
 Select configuration source, precedence, secret store, workload credentials, and rotation.
 
-### `ADR-TBD-DEP-004 — Network, reverse proxy, and TLS`
+### `ADR-CANDIDATE-DEP-004 — Network, reverse proxy, and TLS`
 
 Select exposure profiles, proxy, certificates, service authentication, and LAN/pilot access.
 
-### `ADR-TBD-DEP-005 — Data volumes, artifact storage, and backup destinations`
+### `ADR-CANDIDATE-DEP-005 — Data volumes, artifact storage, and backup destinations`
 
 Select database deployment, local/object store, volume layout, backup targets, and capacity.
 
-### `ADR-TBD-DEP-006 — Deployment rollout, migrations, and rollback`
+### `ADR-CANDIDATE-DEP-006 — Deployment rollout, migrations, and rollback`
 
 Select migration execution, maintenance modes, release rollout, environment locks, and recovery.
 
@@ -3234,7 +3240,7 @@ The supported deployment baseline is:
 - local Windows and Linux operation, with Linux/WSL2 and Docker Compose as the first operational profile;
 - VPS deployment exposed through HTTPS and a reverse proxy with strong authentication;
 - backend, database, orchestration service, workers, and sandboxes are not directly exposed to the public network;
-- Temporal is the proposed durable orchestration service;
+- Temporal is the selected durable orchestration service under `ADR-004`;
 - PostgreSQL is authoritative for Agent OS business data and audit;
 - sensitive data and secrets use encryption and controlled secret access;
 - backup and deletion policies remain explicit per deployment owner.
@@ -3359,11 +3365,10 @@ DEP-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
-- Register status: `pending_confirmation`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
-- Required next action: confirm autonomous registration, then Product, Architecture, Security, Data, Operations, and Quality review
+- Approved by: Product Owner under explicit user authorization to finalize the declared scope
+- Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
 ### Revision history
 

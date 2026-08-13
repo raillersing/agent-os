@@ -2251,7 +2251,6 @@ DAT-002 may advance to `1.0.0` when:
 ### Approval state
 
 - Current status: `approved`
-- Register status: `approved`
 - Current version: `0.2.0`
 - Approved by: Product, Architecture, Security, Data, Operations, and Quality owners under explicit stakeholder authorization communicated by the product owner
 - Required next action: implement and validate the controls; approval does not claim implementation

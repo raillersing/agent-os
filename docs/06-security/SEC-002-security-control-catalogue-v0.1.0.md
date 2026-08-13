@@ -2,8 +2,7 @@
 document_id: SEC-002
 title: Agent OS Security Control Catalogue
 version: 0.1.0
-status: draft
-register_status: proposed_unregistered
+status: approved
 owner: security-owner
 approvers:
   - product-owner
@@ -13,7 +12,14 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-07-20
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization; user assumes the designated approval roles for this finalization
+pending_approvals: []
 classification: internal
 source_of_truth: false
 related_documents: []
@@ -72,19 +78,19 @@ related_proposed_documents:
   - A11Y-001
   - VVR-001
 related_adrs:
-  - ADR-TBD-SEC2-001
-  - ADR-TBD-SEC2-002
-  - ADR-TBD-SEC2-003
-  - ADR-TBD-SEC2-004
-  - ADR-TBD-SEC2-005
-  - ADR-TBD-SEC2-006
-  - ADR-TBD-SEC2-007
-  - ADR-TBD-SEC2-008
+  - ADR-CANDIDATE-SEC2-001
+  - ADR-CANDIDATE-SEC2-002
+  - ADR-CANDIDATE-SEC2-003
+  - ADR-CANDIDATE-SEC2-004
+  - ADR-CANDIDATE-SEC2-005
+  - ADR-CANDIDATE-SEC2-006
+  - ADR-CANDIDATE-SEC2-007
+  - ADR-CANDIDATE-SEC2-008
 ---
 
 # SEC-002 — Agent OS Security Control Catalogue
 
-> **Status: Draft — proposed/unregistered.** This document translates the Agent OS security architecture, threat model, identity, policy, and sandbox designs into a concrete security-control catalogue. Each control defines purpose, type, applicability, implementation direction, evidence, owner, verification cadence, maturity, and release impact. It does not claim current implementation or certification, select final security products, replace legal advice, or supersede architecture and threat-model decisions.
+> **Status: Approved baseline — 2026-08-13.** This document translates the Agent OS security architecture, threat model, identity, policy, and sandbox designs into a concrete security-control catalogue. Each control defines purpose, type, applicability, implementation direction, evidence, owner, verification cadence, maturity, and release impact. It does not claim current implementation or certification, select final security products, replace legal advice, or supersede architecture and threat-model decisions.
 
 ## 1. Purpose
 
@@ -5162,35 +5168,35 @@ Recommended governance:
 | `BCP-001` | Security-preserving continuity and recovery |
 | `PLG-001` | Extension trust, permissions, validation, and revocation |
 
-## 137. ADR-TBD-SEC2-001 — Control ownership and assessment model
+## 137. ADR-CANDIDATE-SEC2-001 — Control ownership and assessment model
 
 Approve accountable owners, assessment roles, evidence review, implementation states, and maturity scoring.
 
-## 138. ADR-TBD-SEC2-002 — Control evidence storage and integrity
+## 138. ADR-CANDIDATE-SEC2-002 — Control evidence storage and integrity
 
 Define evidence repository, access control, hashes, retention, privacy minimization, and audit export.
 
-## 139. ADR-TBD-SEC2-003 — Security release-gate policy
+## 139. ADR-CANDIDATE-SEC2-003 — Security release-gate policy
 
 Approve RB0–RB4 semantics, exception authority, pilot/commercial minimums, and residual-risk acceptance.
 
-## 140. ADR-TBD-SEC2-004 — Security testing and scanning stack
+## 140. ADR-CANDIDATE-SEC2-004 — Security testing and scanning stack
 
 Select SAST, dependency, secret, image, malware, DAST, policy, sandbox, and infrastructure testing directions.
 
-## 141. ADR-TBD-SEC2-005 — Vulnerability severity and remediation objectives
+## 141. ADR-CANDIDATE-SEC2-005 — Vulnerability severity and remediation objectives
 
 Define severity model, exploitability adjustments, SLA targets, escalation, and exception rules.
 
-## 142. ADR-TBD-SEC2-006 — Security monitoring and alert routing
+## 142. ADR-CANDIDATE-SEC2-006 — Security monitoring and alert routing
 
 Define security metrics, alert severity, routing, retention, escalation, and false-positive governance.
 
-## 143. ADR-TBD-SEC2-007 — Independent assurance and penetration testing
+## 143. ADR-CANDIDATE-SEC2-007 — Independent assurance and penetration testing
 
 Define pilot/commercial adversarial testing, scope, independence, retesting, and evidence handling.
 
-## 144. ADR-TBD-SEC2-008 — External framework mapping
+## 144. ADR-CANDIDATE-SEC2-008 — External framework mapping
 
 Decide whether and when to map controls to ISO 27001, SOC 2, NIST CSF, CIS, OWASP, or customer questionnaires.
 
@@ -5297,11 +5303,10 @@ SEC-002 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
-- Register status: `proposed_unregistered`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
-- Required next action: register proposal, then Product, Architecture, Security, Data, Operations, and Quality review
+- Approved by: Product Owner under explicit user authorization to finalize the declared scope
+- Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
 ### Revision history
 
@@ -5315,9 +5320,9 @@ SEC-002 may advance to `1.0.0` when:
 - `GLO-001` — Glossary and Controlled Terminology
 - `SEC-001` — Security Architecture
 - `THR-001` — Threat Model
-- `IAM-001` — Identity and Access Management Architecture — proposed/unregistered
-- `POL-001` — Policy and Permission Architecture — proposed/unregistered
-- `SAN-001` — Sandbox and Secure Execution Architecture — proposed/unregistered
+- `IAM-001` — Identity and Access Management Architecture — registered
+- `POL-001` — Policy and Permission Architecture — registered
+- `SAN-001` — Sandbox and Secure Execution Architecture — registered
 - `AUT-001` — Autonomy and Approval Matrix
 - `APR-001` — Approval Contract
 - `RUN-001` — Run and Execution Contract

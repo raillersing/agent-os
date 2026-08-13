@@ -2,7 +2,7 @@
 document_id: BCP-001
 title: Agent OS Business Continuity and Disaster Recovery Plan
 version: 0.1.0
-status: draft
+status: approved
 owner: operations-owner
 approvers:
   - product-owner
@@ -12,7 +12,14 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-07-20
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization; user assumes the designated approval roles for this finalization
+pending_approvals: []
 classification: internal
 source_of_truth: false
 dependencies:
@@ -54,12 +61,12 @@ related_documents:
   - OPS-001
   - PLG-001
 related_adrs:
-  - ADR-TBD-BCP-001
-  - ADR-TBD-BCP-002
-  - ADR-TBD-BCP-003
-  - ADR-TBD-BCP-004
-  - ADR-TBD-BCP-005
-  - ADR-TBD-BCP-006
+  - ADR-CANDIDATE-BCP-001
+  - ADR-CANDIDATE-BCP-002
+  - ADR-CANDIDATE-BCP-003
+  - ADR-CANDIDATE-BCP-004
+  - ADR-CANDIDATE-BCP-005
+  - ADR-CANDIDATE-BCP-006
 related_evidence:
   - VIDEO-003
   - VIDEO-004
@@ -67,7 +74,7 @@ related_evidence:
 
 # BCP-001 — Agent OS Business Continuity and Disaster Recovery Plan
 
-> **Status: Draft.** This document defines the business continuity and disaster recovery strategy for Agent OS. It covers critical services, business impact, continuity tiers, provisional recovery objectives, backup and restore architecture, degraded operating modes, disaster scenarios, crisis governance, recovery sequencing, data reconciliation, exercises, evidence, communications, and return to normal service. It does not approve final RPO/RTO values, select a final backup product, define legal notification obligations, commit to high availability, or claim multi-site disaster recovery readiness.
+> **Status: Approved baseline — 2026-08-13.** This document defines the business continuity and disaster recovery strategy for Agent OS. It covers critical services, business impact, continuity tiers, provisional recovery objectives, backup and restore architecture, degraded operating modes, disaster scenarios, crisis governance, recovery sequencing, data reconciliation, exercises, evidence, communications, and return to normal service. It does not approve final RPO/RTO values, select a final backup product, define legal notification obligations, commit to high availability, or claim multi-site disaster recovery readiness.
 
 ## 1. Purpose
 
@@ -2805,27 +2812,27 @@ Reviewer:
 
 ## 203. ADR backlog
 
-### `ADR-TBD-BCP-001 — Recovery objectives and continuity tiers`
+### `ADR-CANDIDATE-BCP-001 — Recovery objectives and continuity tiers`
 
 Approve MTPD, RPO, RTO, WRT, tiers, and environment-specific objectives.
 
-### `ADR-TBD-BCP-002 — Backup architecture and consistency model`
+### `ADR-CANDIDATE-BCP-002 — Backup architecture and consistency model`
 
 Select backup methods, consistency groups, schedules, and restore tooling.
 
-### `ADR-TBD-BCP-003 — Backup encryption, keys, and immutable copies`
+### `ADR-CANDIDATE-BCP-003 — Backup encryption, keys, and immutable copies`
 
 Select encryption, key recovery, custodians, offline/immutable strategy, and secure deletion.
 
-### `ADR-TBD-BCP-004 — Recovery environment and replacement-host strategy`
+### `ADR-CANDIDATE-BCP-004 — Recovery environment and replacement-host strategy`
 
 Define isolated restore, clean rebuild, replacement host, and future failover profile.
 
-### `ADR-TBD-BCP-005 — Continuity exercises and readiness evidence`
+### `ADR-CANDIDATE-BCP-005 — Continuity exercises and readiness evidence`
 
 Approve exercise cadence, scenarios, evidence, measured objective acceptance, and blockers.
 
-### `ADR-TBD-BCP-006 — Commercial continuity and disaster-recovery profile`
+### `ADR-CANDIDATE-BCP-006 — Commercial continuity and disaster-recovery profile`
 
 Define commercial RPO/RTO, off-site copies, alternate hosts/sites, support, and contractual commitments.
 
@@ -2946,10 +2953,10 @@ BCP-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
-- Required next action: Product, Architecture, Security, Data, Operations, and Quality review
+- Approved by: Product Owner under explicit user authorization to finalize the declared scope
+- Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
 ### Revision history
 

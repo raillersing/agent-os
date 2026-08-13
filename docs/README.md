@@ -20,3 +20,7 @@ The documentation is organized by responsibility rather than by implementation t
 | `13-assurance` | Acceptance, security, performance, accessibility and release evidence |
 
 The authoritative register is `document-register.yaml`.
+
+Root-level `*-002`/`*-003` files listed in the register are archived legacy
+documents retained for history only. They are not current sources of truth;
+use the registered `*-001` documents and approved ADRs for development.

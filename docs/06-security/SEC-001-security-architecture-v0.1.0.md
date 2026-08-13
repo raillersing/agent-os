@@ -2,7 +2,7 @@
 document_id: SEC-001
 title: Agent OS Security Architecture
 version: 0.2.0
-status: draft
+status: approved
 owner: security-owner
 approvers:
   - product-owner
@@ -12,7 +12,14 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization; user assumes the designated approval roles for this finalization
+pending_approvals: []
 classification: internal
 source_of_truth: false
 related_documents:
@@ -50,13 +57,13 @@ related_documents:
   - OPS-001
   - BCP-001
 related_adrs:
-  - ADR-TBD-SEC-001
-  - ADR-TBD-SEC-002
-  - ADR-TBD-SEC-003
-  - ADR-TBD-SEC-004
-  - ADR-TBD-SEC-005
-  - ADR-TBD-SEC-006
-  - ADR-TBD-SEC-007
+  - ADR-CANDIDATE-SEC-001
+  - ADR-CANDIDATE-SEC-002
+  - ADR-CANDIDATE-SEC-003
+  - ADR-CANDIDATE-SEC-004
+  - ADR-CANDIDATE-SEC-005
+  - ADR-CANDIDATE-SEC-006
+  - ADR-CANDIDATE-SEC-007
 related_evidence:
   - VIDEO-003
   - VIDEO-004
@@ -64,7 +71,7 @@ related_evidence:
 
 # SEC-001 — Agent OS Security Architecture
 
-> **Status: Draft.** This document defines the proposed security architecture for the first Agent OS MVP and its controlled evolution. It does not approve a final identity provider, secret manager, sandbox technology, cryptographic profile, remote-access method, production deployment, or regulated-data use.
+> **Status: Approved baseline — 2026-08-13.** This document defines the proposed security architecture for the first Agent OS MVP and its controlled evolution. It does not approve a final identity provider, secret manager, sandbox technology, cryptographic profile, remote-access method, production deployment, or regulated-data use.
 
 ## 1. Document purpose
 
@@ -373,7 +380,7 @@ Agent OS recognizes separate identity types:
 7. Revoked identities cannot continue through stale sessions or leases.
 8. Identity events are auditable.
 
-A dedicated identity specification commonly referenced as `IAM-001` remains **proposed/unregistered** until the document register is updated.
+A dedicated identity specification commonly referenced as `IAM-001` remains **registered** until the document register is updated.
 
 ## 10. Human authentication
 
@@ -574,7 +581,7 @@ Outputs:
 - `DENY`;
 - `UNKNOWN_BLOCK`.
 
-A detailed policy-enforcement specification commonly referenced as `POL-001` remains **proposed/unregistered**.
+A detailed policy-enforcement specification commonly referenced as `POL-001` remains **registered**.
 
 ## 19. Approval security
 
@@ -679,7 +686,7 @@ They must not store:
 - production credentials;
 - secret values in prompts or memory.
 
-A dedicated secrets specification commonly referenced as `SEC-002` remains **proposed/unregistered**.
+A dedicated secrets specification commonly referenced as `SEC-002` remains **registered**.
 
 ## 23. Secret handling lifecycle
 
@@ -896,7 +903,7 @@ Minimum controls:
 - cancellation;
 - evidence and exit status.
 
-A dedicated sandbox specification commonly referenced as `SAN-001` remains **proposed/unregistered**.
+A dedicated sandbox specification commonly referenced as `SAN-001` remains **registered**.
 
 ## 34. Sandbox trust model
 
@@ -1105,7 +1112,7 @@ Rules:
 - `RESTRICTED` processing is excluded unless separately approved;
 - export, provider use, backup, retention, and preview respect classification.
 
-A dedicated classification/retention document commonly referenced as `DAT-002` remains **proposed/unregistered**.
+A dedicated classification/retention document commonly referenced as `DAT-002` remains **registered**.
 
 ## 45. Data protection at rest
 
@@ -1182,7 +1189,7 @@ Security-relevant events include:
 - security denial;
 - evidence gap.
 
-A detailed audit-event contract commonly referenced as `AUD-001` remains **proposed/unregistered**.
+A detailed audit-event contract commonly referenced as `AUD-001` remains **registered**.
 
 ## 49. Audit protection
 
@@ -1768,46 +1775,46 @@ A security review is mandatory when changing:
 
 ## 70. Security ADR backlog
 
-### `ADR-TBD-SEC-001 — Human identity and session mechanism`
+### `ADR-CANDIDATE-SEC-001 — Human identity and session mechanism`
 
 Compare local identity, OS identity, local OIDC, and alternatives.
 
-### `ADR-TBD-SEC-002 — Workload identity and service authentication`
+### `ADR-CANDIDATE-SEC-002 — Workload identity and service authentication`
 
 Define adapter, worker, gateway, and service identity.
 
-### `ADR-TBD-SEC-003 — Secrets mechanism`
+### `ADR-CANDIDATE-SEC-003 — Secrets mechanism`
 
 Compare OS keyring, encrypted local store, external secret manager, and credential broker.
 
-### `ADR-TBD-SEC-004 — Sandbox technology`
+### `ADR-CANDIDATE-SEC-004 — Sandbox technology`
 
 Compare restricted process, container, VM/microVM, or hybrid.
 
-### `ADR-TBD-SEC-005 — Network egress enforcement`
+### `ADR-CANDIDATE-SEC-005 — Network egress enforcement`
 
 Define host firewall, proxy, namespace, container network, or combined controls.
 
-### `ADR-TBD-SEC-006 — Audit integrity model`
+### `ADR-CANDIDATE-SEC-006 — Audit integrity model`
 
 Define append controls, tamper evidence, and evidence-store design.
 
-### `ADR-TBD-SEC-007 — Encryption and key management profile`
+### `ADR-CANDIDATE-SEC-007 — Encryption and key management profile`
 
 Define transport, at-rest, backup, rotation, and recovery requirements.
 
 ## 71. Proposed companion security documents
 
-The following documents are useful but remain **proposed/unregistered** until the document register is updated:
+The following documents are useful; registered documents are authoritative for their respective domains:
 
 | Proposed ID | Proposed document |
 |---|---|
-| `IAM-001` | Identity and Access Control Architecture |
-| `POL-001` | Policy Enforcement Model |
-| `SAN-001` | Agent Execution Sandboxing Specification |
-| `SEC-002` | Secrets Management Specification |
-| `DAT-002` | Data Classification and Retention Policy |
-| `AUD-001` | Audit Event and Evidence Contract |
+| `IAM-001` | Identity and Access Control Architecture — registered |
+| `POL-001` | Policy Enforcement Model — registered |
+| `SAN-001` | Agent Execution Sandboxing Specification — registered |
+| `SEC-002` | Security Control Catalogue — registered |
+| `DAT-002` | Data Classification and Retention Policy — registered |
+| `AUD-001` | Audit Event and Evidence Contract — registered |
 | `PRI-001` | Privacy and Data Protection Plan |
 | `MCP-001` | MCP Security and Conformance Profile |
 
@@ -1978,11 +1985,11 @@ SEC-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
+- Approved by: Product Owner under explicit user authorization to finalize the declared scope
 - Approval date: not applicable
-- Required next action: Product, Architecture, Security, Data, Operations, and Quality review
+- Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
 ### Revision history
 

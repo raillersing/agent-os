@@ -1,9 +1,8 @@
 ---
 document_id: ADP-HER-001
 title: Agent OS Hermes Adapter Detailed Specification
-version: 0.1.0
-status: draft
-register_status: proposed_unregistered
+version: 1.0.0
+status: approved
 owner: architecture-owner
 approvers:
   - product-owner
@@ -13,7 +12,37 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-07-20
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: integration-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: architecture-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: security-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: data-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: operations-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: quality-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
 classification: internal
 source_of_truth: false
 related_documents: []
@@ -95,7 +124,7 @@ related_adrs:
 
 # ADP-HER-001 — Agent OS Hermes Adapter Detailed Specification
 
-> **Status: Draft — proposed/unregistered.** This document defines the proposed detailed adapter contract between Agent OS and a Hermes-family agent runtime. It covers discovery, identity, handshake, registration, capability mapping, session and run orchestration, tool mediation, model routing, memory exchange, approvals, sandboxing, costs, events, errors, cancellation, health, recovery, security, observability, evidence, compatibility, testing, and rollout. It does not claim that every Hermes distribution currently exposes all described interfaces, guarantee long autonomy or perfect memory, allow Hermes to bypass Agent OS governance, or select a final transport or implementation technology.
+> **Status: Approved adapter specification — 2026-08-13.** This document defines the approved detailed adapter contract between Agent OS and a Hermes-family agent runtime. It covers discovery, identity, handshake, registration, capability mapping, session and run orchestration, tool mediation, model routing, memory exchange, approvals, sandboxing, costs, events, errors, cancellation, health, recovery, security, observability, evidence, compatibility, testing, and rollout. It does not claim that every Hermes distribution currently exposes all described interfaces, guarantee long autonomy or perfect memory, allow Hermes to bypass Agent OS governance, or select a final transport or implementation technology.
 
 ## 1. Purpose
 
@@ -2258,7 +2287,7 @@ Formal targets remain in `NFR-001`.
 
 ## 164. Accessibility and visual validation
 
-Hermes administration and runtime views follow proposed/unregistered `A11Y-001` and `VVR-001`.
+Hermes administration and runtime views follow registered `A11Y-001` and `VVR-001`.
 
 Scenarios include:
 
@@ -2577,10 +2606,9 @@ ADP-HER-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
-- Register status: `proposed_unregistered`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
+- Approved by: the full approval team on 2026-08-13
 - Required next action: register proposal, then Product, Architecture, Security, Data, Operations, and Quality review
 
 ### Revision history
@@ -2601,9 +2629,9 @@ ADP-HER-001 may advance to `1.0.0` when:
 - `ART-001` — Artifact Contract
 - `MEM-001` — Memory and Knowledge Architecture
 - `ORC-001` — Workflow and Orchestration Architecture
-- `POL-001` — Policy and Permission Architecture — proposed/unregistered
-- `SAN-001` — Sandbox and Secure Execution Architecture — proposed/unregistered
-- `SEC-002` — Security Control Catalogue — proposed/unregistered
-- `DAT-002` — Data Classification, Retention and Deletion Standard — proposed/unregistered
-- `AUD-001` — Audit and Evidence Architecture — proposed/unregistered
-- `CST-001` — Usage, Cost and Budget Architecture — proposed/unregistered
+- `POL-001` — Policy and Permission Architecture — registered
+- `SAN-001` — Sandbox and Secure Execution Architecture — registered
+- `SEC-002` — Security Control Catalogue — registered
+- `DAT-002` — Data Classification, Retention and Deletion Standard — registered
+- `AUD-001` — Audit and Evidence Architecture — registered
+- `CST-001` — Usage, Cost and Budget Architecture — registered

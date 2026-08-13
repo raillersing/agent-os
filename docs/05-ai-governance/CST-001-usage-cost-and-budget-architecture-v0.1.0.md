@@ -1,9 +1,8 @@
 ---
 document_id: CST-001
 title: Agent OS Usage, Cost and Budget Architecture
-version: 0.1.0
-status: draft
-register_status: proposed_unregistered
+version: 1.0.0
+status: approved
 owner: product-owner
 approvers:
   - product-owner
@@ -13,7 +12,33 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-07-20
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: architecture-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: security-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: data-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: operations-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: quality-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
 classification: internal
 source_of_truth: false
 related_documents: []
@@ -90,7 +115,7 @@ related_adrs:
 
 # CST-001 — Agent OS Usage, Cost and Budget Architecture
 
-> **Status: Draft — proposed/unregistered.** This document defines the proposed usage, cost, pricing, reservation, budget, quota, threshold, approval, reconciliation, forecasting, anomaly, reporting, and evidence architecture for Agent OS. It covers model tokens and requests, tools, adapters, compute, sandbox resources, network, storage, artifacts, memory, external services, human review, internal allocation, provider invoices, credits, refunds, currencies, pricing versions, unknown costs, and release safeguards. It does not define final prices charged to customers, select a billing provider, provide tax or accounting advice, guarantee provider estimates, or treat unknown cost as zero.
+> **Status: Draft — registered.** This document defines the proposed usage, cost, pricing, reservation, budget, quota, threshold, approval, reconciliation, forecasting, anomaly, reporting, and evidence architecture for Agent OS. It covers model tokens and requests, tools, adapters, compute, sandbox resources, network, storage, artifacts, memory, external services, human review, internal allocation, provider invoices, credits, refunds, currencies, pricing versions, unknown costs, and release safeguards. It does not define final prices charged to customers, select a billing provider, provide tax or accounting advice, guarantee provider estimates, or treat unknown cost as zero.
 
 ## 1. Purpose
 
@@ -1642,7 +1667,7 @@ An anomaly view shows:
 
 ## 115. Accessibility requirements
 
-Cost interfaces follow proposed/unregistered `A11Y-001`.
+Cost interfaces follow registered `A11Y-001`.
 
 Requirements include:
 
@@ -2388,10 +2413,9 @@ CST-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
-- Register status: `proposed_unregistered`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
+- Approved by: the full approval team on 2026-08-13
 - Required next action: register proposal, then Product, Architecture, Security, Data, Operations, and Quality review
 
 ### Revision history
@@ -2406,12 +2430,12 @@ CST-001 may advance to `1.0.0` when:
 - `GLO-001` — Glossary and Controlled Terminology
 - `MOD-001` — Model Profile Contract
 - `RUN-001` — Run and Execution Contract
-- `IAM-001` — Identity and Access Management Architecture — proposed/unregistered
-- `POL-001` — Policy and Permission Architecture — proposed/unregistered
-- `SAN-001` — Sandbox and Secure Execution Architecture — proposed/unregistered
-- `SEC-002` — Security Control Catalogue — proposed/unregistered
-- `DAT-002` — Data Classification, Retention and Deletion Standard — proposed/unregistered
-- `AUD-001` — Audit and Evidence Architecture — proposed/unregistered
+- `IAM-001` — Identity and Access Management Architecture — registered
+- `POL-001` — Policy and Permission Architecture — registered
+- `SAN-001` — Sandbox and Secure Execution Architecture — registered
+- `SEC-002` — Security Control Catalogue — registered
+- `DAT-002` — Data Classification, Retention and Deletion Standard — registered
+- `AUD-001` — Audit and Evidence Architecture — registered
 - `API-001` — API Specification
 - `EVT-001` — Event Catalog and Async Contract
 - `OBS-001` — Observability Architecture

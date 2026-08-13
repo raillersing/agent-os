@@ -1,9 +1,8 @@
 ---
 document_id: A11Y-001
 title: Agent OS Accessibility Requirements and Conformance Plan
-version: 0.1.0
-status: draft
-register_status: proposed_unregistered
+version: 1.0.0
+status: approved
 owner: quality-owner
 approvers:
   - product-owner
@@ -13,7 +12,21 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-07-20
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: ux-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: quality-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
 classification: internal
 source_of_truth: false
 related_documents: []
@@ -71,7 +84,7 @@ related_evidence:
 
 # A11Y-001 — Agent OS Accessibility Requirements and Conformance Plan
 
-> **Status: Draft — proposed/unregistered.** This document defines the accessibility requirements and conformance plan for Agent OS. It establishes a WCAG 2.2 Level AA direction for the web-based Mission Control, together with keyboard, focus, screen-reader, reflow, contrast, motion, forms, tables, charts, approvals, artifacts, operations, testing, evidence, exception, and release-gate requirements. It does not claim current conformance, approve a legal accessibility statement, select final assistive-technology support commitments, or replace testing by disabled users.
+> **Status: Draft — registered.** This document defines the accessibility requirements and conformance plan for Agent OS. It establishes a WCAG 2.2 Level AA direction for the web-based Mission Control, together with keyboard, focus, screen-reader, reflow, contrast, motion, forms, tables, charts, approvals, artifacts, operations, testing, evidence, exception, and release-gate requirements. It does not claim current conformance, approve a legal accessibility statement, select final assistive-technology support commitments, or replace testing by disabled users.
 
 ## 1. Purpose
 
@@ -3407,10 +3420,9 @@ A11Y-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
-- Register status: `proposed_unregistered`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
+- Approved by: the full approval team on 2026-08-13
 - Required next action: register proposal, then Product, Architecture, Security, Data, Operations, and Quality review
 
 ### Revision history
@@ -3424,8 +3436,8 @@ A11Y-001 may advance to `1.0.0` when:
 - `DOC-000` — Documentation Governance and Source-of-Truth Policy
 - `GLO-001` — Glossary and Controlled Terminology
 - `NFR-001` — Non-Functional Requirements
-- `UXA-001` — UX Architecture and User Journey Specification — proposed/unregistered
-- `DSN-001` — Agent OS Design System Specification — proposed/unregistered
+- `UXA-001` — UX Architecture and User Journey Specification — registered
+- `DSN-001` — Agent OS Design System Specification — registered
 - `RUN-001` — Run and Execution Contract
 - `APR-001` — Approval Contract
 - `ART-001` — Artifact Contract

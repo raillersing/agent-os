@@ -1,8 +1,8 @@
 ---
 document_id: PRD-001
 title: Agent OS Product Requirements Document
-version: 0.2.0
-status: draft
+version: 1.0.0
+status: approved
 owner: product-owner
 approvers:
   - product-owner
@@ -12,6 +12,22 @@ approvers:
   - quality-owner
 created: 2026-07-19
 last_reviewed: 2026-08-12
+approval_date: 2026-08-13
+review_records:
+  - role: product-owner
+    review_status: approved
+    review_date: 2026-08-13
+    evidence: explicit user authorization after document review; cross-functional approval remains required
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization in this request
+pending_approvals:
+  - architecture-owner
+  - security-owner
+  - ux-accessibility-owner
+  - quality-owner
 classification: internal
 source_of_truth: false
 related_documents:
@@ -37,7 +53,7 @@ related_evidence:
 
 # PRD-001 — Agent OS Product Requirements Document
 
-> **Status: Draft.** This Product Requirements Document translates the approved Agent OS vision and the approved working scope into a proposed MVP product baseline. It does not prove implementation, select final technologies, authorize production use, or replace detailed functional, non-functional, architecture, security, contract, and test documents.
+> **Status: Approved baseline — 2026-08-13.** This Product Requirements Document defines the approved MVP product baseline. It does not prove implementation, select final technologies, authorize production use, or replace detailed functional, non-functional, architecture, security, contract, and test documents.
 
 ## 1. Document purpose
 
@@ -1054,9 +1070,9 @@ PRD-001 may advance to version `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
+- Approved by: product-owner on 2026-08-13
 - Approval date: not applicable
 - Required next action: Product, Architecture, Security, UX/accessibility, and Quality review
 

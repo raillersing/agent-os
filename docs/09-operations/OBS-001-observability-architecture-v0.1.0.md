@@ -2,7 +2,7 @@
 document_id: OBS-001
 title: Agent OS Observability Architecture
 version: 0.1.0
-status: draft
+status: approved
 owner: operations-owner
 approvers:
   - product-owner
@@ -12,7 +12,14 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-07-20
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization; user assumes the designated approval roles for this finalization
+pending_approvals: []
 classification: internal
 source_of_truth: false
 dependencies:
@@ -56,11 +63,11 @@ related_documents:
   - BCP-001
   - PLG-001
 related_adrs:
-  - ADR-TBD-OBS-001
-  - ADR-TBD-OBS-002
-  - ADR-TBD-OBS-003
-  - ADR-TBD-OBS-004
-  - ADR-TBD-OBS-005
+  - ADR-CANDIDATE-OBS-001
+  - ADR-CANDIDATE-OBS-002
+  - ADR-CANDIDATE-OBS-003
+  - ADR-CANDIDATE-OBS-004
+  - ADR-CANDIDATE-OBS-005
 related_evidence:
   - VIDEO-003
   - VIDEO-004
@@ -68,7 +75,7 @@ related_evidence:
 
 # OBS-001 — Agent OS Observability Architecture
 
-> **Status: Draft.** This document defines the observability architecture for Agent OS: structured logs, metrics, traces, domain timelines, health and readiness, freshness, dashboards, alerts, diagnostic bundles, evidence, retention, security, privacy, and operational acceptance. It does not select a final telemetry backend, dashboard product, log collector, tracing implementation, or hosted monitoring service.
+> **Status: Approved baseline — 2026-08-13.** This document defines the observability architecture for Agent OS: structured logs, metrics, traces, domain timelines, health and readiness, freshness, dashboards, alerts, diagnostic bundles, evidence, retention, security, privacy, and operational acceptance. It does not select a final telemetry backend, dashboard product, log collector, tracing implementation, or hosted monitoring service.
 
 ## 1. Purpose
 
@@ -3167,23 +3174,23 @@ Includes:
 
 ## 201. ADR backlog
 
-### `ADR-TBD-OBS-001 — Telemetry stack and local-first profile`
+### `ADR-CANDIDATE-OBS-001 — Telemetry stack and local-first profile`
 
 Select log, metrics, trace collection/storage, local deployment, and external export options.
 
-### `ADR-TBD-OBS-002 — Correlation and tracing standard`
+### `ADR-CANDIDATE-OBS-002 — Correlation and tracing standard`
 
 Select trace-context standard, propagation libraries, sampling, and external context handling.
 
-### `ADR-TBD-OBS-003 — Metrics catalogue, SLI model, and cardinality policy`
+### `ADR-CANDIDATE-OBS-003 — Metrics catalogue, SLI model, and cardinality policy`
 
 Define naming, labels, histograms, SLI calculations, and limits.
 
-### `ADR-TBD-OBS-004 — Dashboards, alerting, and notification integration`
+### `ADR-CANDIDATE-OBS-004 — Dashboards, alerting, and notification integration`
 
 Select dashboard/alert engine, routing, acknowledgment, suppression, and runbook integration.
 
-### `ADR-TBD-OBS-005 — Telemetry retention, redaction, and diagnostic bundles`
+### `ADR-CANDIDATE-OBS-005 — Telemetry retention, redaction, and diagnostic bundles`
 
 Define retention classes, redaction, classification, external export, bundle formats, and holds.
 
@@ -3302,10 +3309,10 @@ OBS-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
-- Required next action: Product, Architecture, Security, Data, Operations, and Quality review
+- Approved by: Product Owner under explicit user authorization to finalize the declared scope
+- Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
 ### Revision history
 

@@ -1,9 +1,8 @@
 ---
 document_id: UXA-001
 title: Agent OS UX Architecture and User Journey Specification
-version: 0.1.0
-status: draft
-register_status: proposed_unregistered
+version: 1.0.0
+status: approved
 owner: product-owner
 approvers:
   - product-owner
@@ -13,7 +12,25 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-07-20
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: ux-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: architecture-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: quality-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
 classification: internal
 source_of_truth: false
 related_documents: []
@@ -80,7 +97,7 @@ related_evidence:
 
 # UXA-001 — Agent OS UX Architecture and User Journey Specification
 
-> **Status: Draft — proposed/unregistered.** This document defines the user-experience architecture for Agent OS: audiences, information architecture, navigation, Mission Control, workspaces, tasks, runs, approvals, artifacts, memory, adapters, models, operations, system states, trust cues, responsive behavior, accessibility direction, error recovery, and end-to-end journeys. It does not define the final visual design system, final accessibility acceptance procedure, visual-regression tooling, branding, implementation framework, or production UI technology.
+> **Status: Draft — registered.** This document defines the user-experience architecture for Agent OS: audiences, information architecture, navigation, Mission Control, workspaces, tasks, runs, approvals, artifacts, memory, adapters, models, operations, system states, trust cues, responsive behavior, accessibility direction, error recovery, and end-to-end journeys. It does not define the final visual design system, final accessibility acceptance procedure, visual-regression tooling, branding, implementation framework, or production UI technology.
 
 ## 1. Purpose
 
@@ -2559,7 +2576,7 @@ Shortcuts must:
 
 ## 208. Accessibility architecture
 
-Detailed requirements belong in proposed/unregistered `A11Y-001`.
+Detailed requirements belong in registered `A11Y-001`.
 
 UXA-001 establishes:
 
@@ -3173,7 +3190,7 @@ Avoid excessive cards that fragment a single workflow.
 
 ## 264. Typography direction
 
-Detailed typography belongs in proposed/unregistered `DSN-001`.
+Detailed typography belongs in registered `DSN-001`.
 
 UX direction:
 
@@ -3233,11 +3250,11 @@ UXA requires visual verification for:
 
 ## 269. Design-system dependency
 
-Detailed tokens, components, variants, and implementation contracts belong in proposed/unregistered `DSN-001`.
+Detailed tokens, components, variants, and implementation contracts belong in registered `DSN-001`.
 
 ## 270. Accessibility dependency
 
-Detailed conformance, testing, assistive-technology matrix, and exceptions belong in proposed/unregistered `A11Y-001`.
+Detailed conformance, testing, assistive-technology matrix, and exceptions belong in registered `A11Y-001`.
 
 ## 271. UI-state dependency
 
@@ -3709,10 +3726,9 @@ UXA-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
-- Register status: `proposed_unregistered`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
+- Approved by: the full approval team on 2026-08-13
 - Required next action: register proposal, then Product, Architecture, Security, Data, Operations, and Quality review
 
 ### Revision history

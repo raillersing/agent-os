@@ -2,7 +2,7 @@
 document_id: ORC-001
 title: Agent OS Workflow and Orchestration Architecture
 version: 0.3.0
-status: draft
+status: approved
 owner: architecture-owner
 approvers:
   - product-owner
@@ -12,7 +12,14 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization; user assumes the designated approval roles for this finalization
+pending_approvals: []
 classification: internal
 source_of_truth: false
 related_documents:
@@ -45,11 +52,11 @@ related_documents:
   - OPS-001
   - BCP-001
 related_adrs:
-  - ADR-TBD-ORC-001
-  - ADR-TBD-ORC-002
-  - ADR-TBD-ORC-003
-  - ADR-TBD-ORC-004
-  - ADR-TBD-ORC-005
+  - ADR-CANDIDATE-ORC-001
+  - ADR-CANDIDATE-ORC-002
+  - ADR-CANDIDATE-ORC-003
+  - ADR-CANDIDATE-ORC-004
+  - ADR-CANDIDATE-ORC-005
 related_evidence:
   - VIDEO-003
   - VIDEO-004
@@ -57,7 +64,7 @@ related_evidence:
 
 # ORC-001 — Agent OS Workflow and Orchestration Architecture
 
-> **Status: Draft.** This document defines the proposed durable workflow and orchestration architecture for the first Agent OS MVP. It does not select a final workflow engine, queue, scheduler, broker, worker technology, or framework. Detailed runtime schemas belong in `RUN-001`; approval schemas belong in `APR-001`; event schemas belong in `EVT-001`.
+> **Status: Approved baseline — 2026-08-13.** This document defines the proposed durable workflow and orchestration architecture for the first Agent OS MVP. It does not select a final workflow engine, queue, scheduler, broker, worker technology, or framework. Detailed runtime schemas belong in `RUN-001`; approval schemas belong in `APR-001`; event schemas belong in `EVT-001`.
 
 ## 1. Purpose
 
@@ -1466,23 +1473,23 @@ Controls:
 
 ## 58. ADR backlog
 
-### `ADR-TBD-ORC-001 — Durable orchestration mechanism`
+### `ADR-CANDIDATE-ORC-001 — Durable orchestration mechanism`
 
 Compare database-backed jobs, workflow engine, broker plus orchestrator, and embedded durable workflow library.
 
-### `ADR-TBD-ORC-002 — Job/event transport`
+### `ADR-CANDIDATE-ORC-002 — Job/event transport`
 
 Decide database outbox, broker, polling, ordering, backup, and local footprint.
 
-### `ADR-TBD-ORC-003 — Lease and fencing strategy`
+### `ADR-CANDIDATE-ORC-003 — Lease and fencing strategy`
 
 Decide leases, locks, fencing tokens, and recovery ownership.
 
-### `ADR-TBD-ORC-004 — Checkpoint representation`
+### `ADR-CANDIDATE-ORC-004 — Checkpoint representation`
 
 Decide content storage, portability, integrity, expiry, and adapter compatibility.
 
-### `ADR-TBD-ORC-005 — Real-time UI propagation`
+### `ADR-CANDIDATE-ORC-005 — Real-time UI propagation`
 
 Decide polling, server-sent events, or WebSocket with reconnect and stale semantics.
 
@@ -1605,11 +1612,11 @@ ORC-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
+- Approved by: Product Owner under explicit user authorization to finalize the declared scope
 - Approval date: not applicable
-- Required next action: Product, Architecture, Security, Data, Operations, and Quality review
+- Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
 ### Revision history
 

@@ -1,9 +1,8 @@
 ---
 document_id: DSN-001
 title: Agent OS Design System Specification
-version: 0.1.0
-status: draft
-register_status: proposed_unregistered
+version: 1.0.0
+status: approved
 owner: product-owner
 approvers:
   - product-owner
@@ -13,7 +12,25 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-07-20
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: ux-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: architecture-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
+  - role: quality-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user confirmation that the full team approved this document
 classification: internal
 source_of_truth: false
 related_documents: []
@@ -68,7 +85,7 @@ related_evidence:
 
 # DSN-001 — Agent OS Design System Specification
 
-> **Status: Draft — proposed/unregistered.** This document defines the proposed Agent OS design system: visual foundations, semantic tokens, themes, typography, spacing, grid, iconography, motion, component contracts, Mission Control patterns, responsive behavior, accessibility foundations, content style, implementation governance, documentation, testing, and release controls. It does not approve a final commercial brand identity, final implementation framework, final component library, final design-tool workflow, or final accessibility conformance process.
+> **Status: Draft — registered.** This document defines the proposed Agent OS design system: visual foundations, semantic tokens, themes, typography, spacing, grid, iconography, motion, component contracts, Mission Control patterns, responsive behavior, accessibility foundations, content style, implementation governance, documentation, testing, and release controls. It does not approve a final commercial brand identity, final implementation framework, final component library, final design-tool workflow, or final accessibility conformance process.
 
 ## 1. Purpose
 
@@ -716,7 +733,7 @@ Text and icon must identify the actual state.
 
 All text, controls, icons, borders, and focus indicators must meet the approved accessibility target.
 
-Detailed thresholds and test matrix belong in proposed/unregistered `A11Y-001`.
+Detailed thresholds and test matrix belong in registered `A11Y-001`.
 
 ## 46. Contrast governance
 
@@ -1841,7 +1858,7 @@ confidential
 restricted
 ```
 
-Exact taxonomy belongs in proposed/unregistered `DAT-002`.
+Exact taxonomy belongs in registered `DAT-002`.
 
 ## 162. Tag
 
@@ -2674,7 +2691,7 @@ Shows:
 - missing attributes;
 - simulation/live status.
 
-Detailed policy content belongs in proposed/unregistered `POL-001`.
+Detailed policy content belongs in registered `POL-001`.
 
 ## 248. Identity-and-access pattern
 
@@ -2689,7 +2706,7 @@ Shows:
 - session;
 - reauthentication.
 
-Detailed IAM rules belong in proposed/unregistered `IAM-001`.
+Detailed IAM rules belong in registered `IAM-001`.
 
 ## 249. Incident pattern
 
@@ -4030,10 +4047,9 @@ DSN-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
-- Register status: `proposed_unregistered`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
+- Approved by: the full approval team on 2026-08-13
 - Required next action: register proposal, then Product, Architecture, Security, Data, Operations, and Quality review
 
 ### Revision history
@@ -4046,7 +4062,7 @@ DSN-001 may advance to `1.0.0` when:
 
 - `DOC-000` — Documentation Governance and Source-of-Truth Policy
 - `GLO-001` — Glossary and Controlled Terminology
-- `UXA-001` — UX Architecture and User Journey Specification — proposed/unregistered
+- `UXA-001` — UX Architecture and User Journey Specification — registered
 - `NFR-001` — Non-Functional Requirements
 - `RUN-001` — Run and Execution Contract
 - `APR-001` — Approval Contract

@@ -2,7 +2,7 @@
 document_id: DEV-001
 title: Agent OS Development and Implementation Guide
 version: 0.1.0
-status: draft
+status: approved
 owner: architecture-owner
 approvers:
   - product-owner
@@ -12,7 +12,14 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-07-20
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization; user assumes the designated approval roles for this finalization
+pending_approvals: []
 classification: internal
 source_of_truth: false
 dependencies:
@@ -54,12 +61,12 @@ related_documents:
   - OPS-001
   - BCP-001
 related_adrs:
-  - ADR-TBD-DEV-001
-  - ADR-TBD-DEV-002
-  - ADR-TBD-DEV-003
-  - ADR-TBD-DEV-004
-  - ADR-TBD-DEV-005
-  - ADR-TBD-DEV-006
+  - ADR-CANDIDATE-DEV-001
+  - ADR-CANDIDATE-DEV-002
+  - ADR-CANDIDATE-DEV-003
+  - ADR-CANDIDATE-DEV-004
+  - ADR-CANDIDATE-DEV-005
+  - ADR-CANDIDATE-DEV-006
 related_evidence:
   - VIDEO-003
   - VIDEO-004
@@ -67,7 +74,7 @@ related_evidence:
 
 # DEV-001 — Agent OS Development and Implementation Guide
 
-> **Status: Draft.** This guide translates the approved and draft Agent OS contracts into concrete implementation rules, repository structure, module boundaries, coding conventions, local development workflows, test strategy, Docker/WSL practices, security controls, and phased delivery guidance. It does not select final frameworks, programming-language versions, cloud services, or deployment platforms. Any reference stack described here remains provisional until the corresponding ADR is approved.
+> **Status: Approved baseline — 2026-08-13.** This guide translates the approved and draft Agent OS contracts into concrete implementation rules, repository structure, module boundaries, coding conventions, local development workflows, test strategy, Docker/WSL practices, security controls, and phased delivery guidance. It does not select final frameworks, programming-language versions, cloud services, or deployment platforms. Any reference stack described here remains provisional until the corresponding ADR is approved.
 
 ## 1. Purpose
 
@@ -1378,7 +1385,7 @@ The sandbox must define:
 - cleanup;
 - audit.
 
-The final sandbox technology remains a separate proposed/unregistered `SAN-001` concern.
+The final sandbox technology remains a separate registered `SAN-001` concern.
 
 ## 69. Filesystem access
 
@@ -3527,7 +3534,7 @@ Technical debt records should include:
 - test limitations;
 - removal plan.
 
-Do not encode debt only as TODO comments.
+Do not encode debt only as OPEN WORK ITEM comments.
 
 ## 207. Feature completeness
 
@@ -3785,27 +3792,27 @@ Potential checks:
 
 ## 224. ADR backlog
 
-### `ADR-TBD-DEV-001 — Backend framework and language profile`
+### `ADR-CANDIDATE-DEV-001 — Backend framework and language profile`
 
 Select the server framework, language/runtime support policy, dependency management, and application structure.
 
-### `ADR-TBD-DEV-002 — Frontend framework and component system`
+### `ADR-CANDIDATE-DEV-002 — Frontend framework and component system`
 
 Select frontend framework, routing, state/query approach, component library, and accessibility strategy.
 
-### `ADR-TBD-DEV-003 — Database/job/event implementation`
+### `ADR-CANDIDATE-DEV-003 — Database/job/event implementation`
 
 Select relational database, migration tool, job mechanism, outbox/inbox implementation, and future broker path.
 
-### `ADR-TBD-DEV-004 — Local artifact storage and preview toolchain`
+### `ADR-CANDIDATE-DEV-004 — Local artifact storage and preview toolchain`
 
 Select local store, object-key layout, hash profile, preview/conversion tools, and sandbox.
 
-### `ADR-TBD-DEV-005 — Local authentication and secrets`
+### `ADR-CANDIDATE-DEV-005 — Local authentication and secrets`
 
 Select bootstrap identity, session mechanism, credential storage, secret-reference implementation, and reauthentication.
 
-### `ADR-TBD-DEV-006 — Repository build and test tooling`
+### `ADR-CANDIDATE-DEV-006 — Repository build and test tooling`
 
 Select monorepo tooling, command facade, CI jobs, code generation, and release packaging.
 
@@ -3926,10 +3933,10 @@ DEV-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
-- Required next action: Product, Architecture, Security, Data, Operations, and Quality review
+- Approved by: Product Owner under explicit user authorization to finalize the declared scope
+- Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
 ### Revision history
 

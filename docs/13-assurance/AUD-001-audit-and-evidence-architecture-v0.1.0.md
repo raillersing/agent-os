@@ -1,9 +1,8 @@
 ---
 document_id: AUD-001
 title: Agent OS Audit and Evidence Architecture
-version: 0.2.0
-status: draft
-register_status: proposed_unregistered
+version: 1.0.0
+status: approved
 owner: security-owner
 approvers:
   - product-owner
@@ -14,6 +13,23 @@ approvers:
   - quality-owner
 created: 2026-07-20
 last_reviewed: 2026-08-12
+approval_date: 2026-08-13
+review_records:
+  - role: product-owner
+    review_status: approved
+    review_date: 2026-08-13
+    evidence: explicit user authorization after document review; security, data, operations and quality approval remains required
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization in this request
+pending_approvals:
+  - architecture-owner
+  - security-owner
+  - data-owner
+  - operations-owner
+  - quality-owner
 classification: internal
 source_of_truth: false
 related_documents: []
@@ -91,7 +107,7 @@ related_adrs:
 
 # AUD-001 — Agent OS Audit and Evidence Architecture
 
-> **Status: Draft — proposed/unregistered.** This document defines the proposed audit and evidence architecture for Agent OS. It covers audit events, actor chains, decision and execution evidence, receipts, timelines, integrity, append-only direction, evidence packages, exports, retention, holds, deletion treatment, investigations, incident forensics, recovery validation, access control, APIs, events, operations, tests, and release gates. It does not claim legal non-repudiation, select a final immutable-log or ledger technology, permit raw secrets in audit, or replace operational logs, application data, or legal advice.
+> **Status: Approved assurance baseline — 2026-08-13.** This document defines the audit and evidence architecture for Agent OS. It covers audit events, actor chains, decision and execution evidence, receipts, timelines, integrity, append-only direction, evidence packages, exports, retention, holds, deletion treatment, investigations, incident forensics, recovery validation, access control, APIs, events, operations, tests, and release gates. It does not claim legal non-repudiation, select a final immutable-log or ledger technology, permit raw secrets in audit, or replace operational logs, application data, or legal advice.
 
 ## 1. Purpose
 
@@ -887,7 +903,7 @@ Control status is not marked verified solely because an automated job ran.
 
 ## 66. Cost and budget evidence
 
-Proposed/unregistered `CST-001` should produce evidence for estimates, reservations, usage, pricing versions, attribution, budget decisions, threshold approvals, unknown cost, and reconciliation.
+Registered `CST-001` should produce evidence for estimates, reservations, usage, pricing versions, attribution, budget decisions, threshold approvals, unknown cost, and reconciliation.
 
 ## 67. Deployment evidence
 
@@ -1608,7 +1624,7 @@ Performance optimizations must not weaken integrity or isolation.
 
 ## 118. Accessibility requirements
 
-Audit and evidence interfaces follow proposed/unregistered `A11Y-001`.
+Audit and evidence interfaces follow registered `A11Y-001`.
 
 Critical journeys include:
 
@@ -2039,10 +2055,9 @@ AUD-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
-- Register status: `proposed_unregistered`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
+- Approved by: product-owner on 2026-08-13
 - Required next action: register proposal, then Product, Architecture, Security, Data, Operations, and Quality review
 
 ### Revision history
@@ -2057,11 +2072,11 @@ AUD-001 may advance to `1.0.0` when:
 - `GLO-001` — Glossary and Controlled Terminology
 - `SEC-001` — Security Architecture
 - `THR-001` — Threat Model
-- `IAM-001` — Identity and Access Management Architecture — proposed/unregistered
-- `POL-001` — Policy and Permission Architecture — proposed/unregistered
-- `SAN-001` — Sandbox and Secure Execution Architecture — proposed/unregistered
-- `SEC-002` — Security Control Catalogue — proposed/unregistered
-- `DAT-002` — Data Classification, Retention and Deletion Standard — proposed/unregistered
+- `IAM-001` — Identity and Access Management Architecture — registered
+- `POL-001` — Policy and Permission Architecture — registered
+- `SAN-001` — Sandbox and Secure Execution Architecture — registered
+- `SEC-002` — Security Control Catalogue — registered
+- `DAT-002` — Data Classification, Retention and Deletion Standard — registered
 - `RUN-001` — Run and Execution Contract
 - `APR-001` — Approval Contract
 - `ART-001` — Artifact Contract

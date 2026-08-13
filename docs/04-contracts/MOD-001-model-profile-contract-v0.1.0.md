@@ -1,8 +1,8 @@
 ---
 document_id: MOD-001
 title: Agent OS Model Profile Contract
-version: 0.1.0
-status: draft
+version: 1.0.0
+status: approved
 owner: architecture-owner
 approvers:
   - product-owner
@@ -13,6 +13,23 @@ approvers:
   - quality-owner
 created: 2026-07-19
 last_reviewed: 2026-07-19
+approval_date: 2026-08-13
+review_records:
+  - role: product-owner
+    review_status: approved
+    review_date: 2026-08-13
+    evidence: explicit user authorization after document review; architecture approval remains required
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization in this request
+pending_approvals:
+  - architecture-owner
+  - security-owner
+  - data-owner
+  - operations-owner
+  - quality-owner
 classification: internal
 source_of_truth: false
 dependencies:
@@ -65,7 +82,7 @@ related_evidence:
 
 # MOD-001 — Agent OS Model Profile Contract
 
-> **Status: Draft.** This document defines the provider-neutral model profile, provider binding, routing, fallback, usage, cost, privacy, and actual-model observation contract for Agent OS. It does not approve any provider, model, current price, legal term, retention promise, or production use.
+> **Status: Approved contract baseline — 2026-08-13.** This document defines the provider-neutral model profile, provider binding, routing, fallback, usage, cost, privacy, and actual-model observation contract for Agent OS. It does not approve any provider, model, current price, legal term, retention promise, or production use.
 
 ## 1. Purpose
 
@@ -1795,9 +1812,9 @@ MOD-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
+- Approved by: product-owner on 2026-08-13
 - Required next action: Product, Architecture, Security, Data, Operations, and Quality review
 
 ### Revision history

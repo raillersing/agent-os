@@ -2,7 +2,7 @@
 document_id: QAG-001
 title: Agent OS Quality Assurance and Release Gates
 version: 0.1.0
-status: draft
+status: approved
 owner: quality-owner
 approvers:
   - product-owner
@@ -12,7 +12,14 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-07-20
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization; user assumes the designated approval roles for this finalization
+pending_approvals: []
 classification: internal
 source_of_truth: false
 dependencies:
@@ -55,11 +62,11 @@ related_documents:
   - BCP-001
   - PLG-001
 related_adrs:
-  - ADR-TBD-QAG-001
-  - ADR-TBD-QAG-002
-  - ADR-TBD-QAG-003
-  - ADR-TBD-QAG-004
-  - ADR-TBD-QAG-005
+  - ADR-CANDIDATE-QAG-001
+  - ADR-CANDIDATE-QAG-002
+  - ADR-CANDIDATE-QAG-003
+  - ADR-CANDIDATE-QAG-004
+  - ADR-CANDIDATE-QAG-005
 related_evidence:
   - VIDEO-003
   - VIDEO-004
@@ -67,7 +74,7 @@ related_evidence:
 
 # QAG-001 — Agent OS Quality Assurance and Release Gates
 
-> **Status: Draft.** This document defines the quality governance model, formal release gates, mandatory evidence, blockers, waivers, sign-off responsibilities, stage-transition criteria, release decision records, and post-release obligations for Agent OS. It does not select the final CI/CD platform, deployment technology, test framework, or commercial certification scheme.
+> **Status: Approved baseline — 2026-08-13.** This document defines the quality governance model, formal release gates, mandatory evidence, blockers, waivers, sign-off responsibilities, stage-transition criteria, release decision records, and post-release obligations for Agent OS. It does not select the final CI/CD platform, deployment technology, test framework, or commercial certification scheme.
 
 ## 1. Purpose
 
@@ -2995,23 +3002,23 @@ A stale projection cannot satisfy a current-state gate.
 
 ## 192. ADR backlog
 
-### `ADR-TBD-QAG-001 — Quality gate automation and evidence format`
+### `ADR-CANDIDATE-QAG-001 — Quality gate automation and evidence format`
 
 Select gate runner, result formats, evidence manifest, and storage.
 
-### `ADR-TBD-QAG-002 — Release stages and sign-off workflow`
+### `ADR-CANDIDATE-QAG-002 — Release stages and sign-off workflow`
 
 Confirm stage definitions, required approvers, and decision process.
 
-### `ADR-TBD-QAG-003 — Severity, blockers, and exception policy`
+### `ADR-CANDIDATE-QAG-003 — Severity, blockers, and exception policy`
 
 Confirm severity mapping, non-waivable controls, exception duration, and approvals.
 
-### `ADR-TBD-QAG-004 — Quality dashboard and finding management`
+### `ADR-CANDIDATE-QAG-004 — Quality dashboard and finding management`
 
 Select dashboard, defect/exception tracking, expiry alerts, and reporting.
 
-### `ADR-TBD-QAG-005 — Release packaging and promotion evidence`
+### `ADR-CANDIDATE-QAG-005 — Release packaging and promotion evidence`
 
 Define build identity, artifact manifests, environment promotion, and integrity checks.
 
@@ -3128,10 +3135,10 @@ QAG-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
-- Required next action: Product, Architecture, Security, Data, Operations, and Quality review
+- Approved by: Product Owner under explicit user authorization to finalize the declared scope
+- Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
 ### Revision history
 

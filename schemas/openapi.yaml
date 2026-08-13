@@ -3,7 +3,10 @@ info:
   title: Agent OS Control Plane API
   description: |
     API for the Agent OS Control Plane — vendor-neutral orchestration,
-    governance, and observability for AI agents.
+    governance, and observability for AI agents. This checked-in contract
+    describes the routes currently mounted by backend/app/main.py. Provider
+    execution, streaming, metrics, policy, and plugin routes are not included
+    until they are implemented and tested.
   version: 0.3.0
   contact:
     name: Agent OS Team
@@ -13,10 +16,8 @@ info:
     url: https://agent-os.dev/license
 
 servers:
-  - url: http://localhost:8080/api/v1
+  - url: http://localhost:8080
     description: Local development
-  - url: https://api.agent-os.dev/v1
-    description: Production
 
 security:
   - bearerAuth: []
@@ -36,7 +37,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/HealthResponse'
 
-  /auth/token:
+  /api/v1/auth/token:
     post:
       operationId: createToken
       summary: Create authentication token
@@ -58,7 +59,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 
-  /agents:
+  /api/v1/agents/:
     get:
       operationId: listAgents
       summary: List all agents
@@ -77,7 +78,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AgentList'
+                type: array
+                items: { $ref: '#/components/schemas/Agent' }
     post:
       operationId: createAgent
       summary: Create a new agent
@@ -98,7 +100,7 @@ paths:
         '400':
           $ref: '#/components/responses/BadRequest'
 
-  /agents/{agent_id}:
+  /api/v1/agents/{agent_id}:
     get:
       operationId: getAgent
       summary: Get agent by ID
@@ -147,7 +149,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /agents/{agent_id}/run:
+  /api/v1/runs/{agent_id}/run:
     post:
       operationId: createRun
       summary: Create and start a run
@@ -172,7 +174,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /runs:
+  /api/v1/runs/:
     get:
       operationId: listRuns
       summary: List all runs
@@ -195,9 +197,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RunList'
+                type: array
+                items: { $ref: '#/components/schemas/Run' }
 
-  /runs/{run_id}:
+  /api/v1/runs/{run_id}:
     get:
       operationId: getRun
       summary: Get run by ID
@@ -218,7 +221,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /runs/{run_id}/cancel:
+  /api/v1/runs/{run_id}/cancel:
     post:
       operationId: cancelRun
       summary: Cancel a running run
@@ -239,7 +242,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /memory:
+  /api/v1/memory/:
     post:
       operationId: createMemory
       summary: Add to memory
@@ -257,6 +260,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Memory'
+  /api/v1/memory/search:
     get:
       operationId: searchMemory
       summary: Search memory
@@ -265,18 +269,16 @@ paths:
         - name: q
           in: query
           required: true
-          schema:
-            type: string
+          schema: { type: string }
         - $ref: '#/components/parameters/LimitParam'
       responses:
         '200':
           description: Memory results
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/MemorySearchResults'
+              schema: { $ref: '#/components/schemas/MemorySearchResults' }
 
-  /memory/{key}:
+  /api/v1/memory/{key}:
     get:
       operationId: getMemory
       summary: Get memory by key
@@ -312,7 +314,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /tools:
+  /api/v1/tools/:
     get:
       operationId: listTools
       summary: List available tools
@@ -325,7 +327,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ToolList'
 
-  /tools/{tool_id}/execute:
+  /api/v1/tools/{tool_id}/execute:
     post:
       operationId: executeTool
       summary: Execute a tool
@@ -350,7 +352,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ToolResult'
 
-  /workspaces:
+  /api/v1/workspaces:
     get:
       operationId: listWorkspaces
       summary: List persisted workspaces
@@ -379,7 +381,7 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/Workspace' }
 
-  /missions:
+  /api/v1/missions:
     get:
       operationId: listMissions
       summary: List persisted missions
@@ -413,7 +415,32 @@ paths:
               schema: { $ref: '#/components/schemas/Mission' }
         '404': { $ref: '#/components/responses/NotFound' }
 
-  /automations:
+  /api/v1/missions/{mission_id}/status:
+    patch:
+      operationId: updateMissionStatus
+      summary: Update mission status and progress
+      tags: [Control Plane]
+      parameters:
+        - name: mission_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: status
+          in: query
+          required: true
+          schema: { type: string }
+        - name: progress
+          in: query
+          schema: { type: integer, minimum: 0, maximum: 100, default: 0 }
+      responses:
+        '200':
+          description: Mission updated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Mission' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /api/v1/automations:
     get:
       operationId: listAutomations
       summary: List persisted automations
@@ -442,7 +469,7 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/Automation' }
 
-  /approvals:
+  /api/v1/approvals:
     get:
       operationId: listApprovals
       summary: List approval records
@@ -471,7 +498,7 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/Approval' }
 
-  /approvals/{approval_id}/decision:
+  /api/v1/approvals/{approval_id}/decision:
     post:
       operationId: decideApproval
       summary: Record an approval decision once
@@ -495,7 +522,7 @@ paths:
         '409':
           description: Approval was already decided
 
-  /audit-events:
+  /api/v1/audit-events:
     get:
       operationId: listAuditEvents
       summary: List append-only workspace audit evidence
@@ -517,229 +544,24 @@ paths:
                 type: array
                 items: { $ref: '#/components/schemas/AuditEvent' }
 
-  /workspaces/{workspace_id}/projects:
+  /:
     get:
-      operationId: listProjects
-      summary: List projects visible in a workspace
-      tags: [Projects]
-      parameters:
-        - name: workspace_id
-          in: path
-          required: true
-          schema: { type: string, format: uuid }
+      operationId: root
+      summary: Service metadata
+      tags: [System]
+      security: []
       responses:
         '200':
-          description: Projects listed
+          description: Service metadata
           content:
             application/json:
-              schema: { type: array, items: { $ref: '#/components/schemas/Project' } }
-    post:
-      operationId: createProject
-      summary: Create a project
-      tags: [Projects]
-      parameters:
-        - name: workspace_id
-          in: path
-          required: true
-          schema: { type: string, format: uuid }
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/ProjectCreate' }
-      responses:
-        '201':
-          description: Project created
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Project' }
-
-  /projects/{project_id}:
-    get:
-      operationId: getProject
-      summary: Get a project
-      tags: [Projects]
-      parameters:
-        - name: project_id
-          in: path
-          required: true
-          schema: { type: string, format: uuid }
-      responses:
-        '200':
-          description: Project returned
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Project' }
-    patch:
-      operationId: updateProject
-      summary: Update a project with expected-version concurrency
-      tags: [Projects]
-      parameters:
-        - name: project_id
-          in: path
-          required: true
-          schema: { type: string, format: uuid }
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/ProjectUpdate' }
-      responses:
-        '200':
-          description: Project updated
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Project' }
-
-  /workspaces/{workspace_id}/tasks:
-    get:
-      operationId: listTasks
-      summary: List tasks visible in a workspace
-      tags: [Tasks]
-      parameters:
-        - name: workspace_id
-          in: path
-          required: true
-          schema: { type: string, format: uuid }
-      responses:
-        '200':
-          description: Tasks listed
-          content:
-            application/json:
-              schema: { type: array, items: { $ref: '#/components/schemas/Task' } }
-    post:
-      operationId: createTask
-      summary: Create a task without starting execution
-      tags: [Tasks]
-      parameters:
-        - name: workspace_id
-          in: path
-          required: true
-          schema: { type: string, format: uuid }
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/TaskCreate' }
-      responses:
-        '201':
-          description: Task created
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Task' }
-
-  /tasks/{task_id}:
-    get:
-      operationId: getTask
-      summary: Get a task
-      tags: [Tasks]
-      parameters:
-        - name: task_id
-          in: path
-          required: true
-          schema: { type: string, format: uuid }
-      responses:
-        '200':
-          description: Task returned
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Task' }
-    patch:
-      operationId: updateTask
-      summary: Update a task with expected-version concurrency
-      tags: [Tasks]
-      parameters:
-        - name: task_id
-          in: path
-          required: true
-          schema: { type: string, format: uuid }
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/TaskUpdate' }
-      responses:
-        '200':
-          description: Task updated
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Task' }
-
-  /workspaces/{workspace_id}/conversations:
-    get:
-      operationId: listConversations
-      summary: List authorized conversations
-      tags: [Conversations]
-      parameters:
-        - name: workspace_id
-          in: path
-          required: true
-          schema: { type: string, format: uuid }
-      responses:
-        '200':
-          description: Conversations listed
-          content:
-            application/json:
-              schema: { type: array, items: { $ref: '#/components/schemas/Conversation' } }
-    post:
-      operationId: createConversation
-      summary: Create a private conversation
-      tags: [Conversations]
-      parameters:
-        - name: workspace_id
-          in: path
-          required: true
-          schema: { type: string, format: uuid }
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/ConversationCreate' }
-      responses:
-        '201':
-          description: Conversation created
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Conversation' }
-
-  /conversations/{conversation_id}:
-    get:
-      operationId: getConversation
-      summary: Get an authorized conversation
-      tags: [Conversations]
-      parameters:
-        - name: conversation_id
-          in: path
-          required: true
-          schema: { type: string, format: uuid }
-      responses:
-        '200':
-          description: Conversation returned
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Conversation' }
-
-  /conversations/{conversation_id}/messages:
-    post:
-      operationId: recordMessage
-      summary: Record one message with provenance
-      tags: [Conversations]
-      parameters:
-        - name: conversation_id
-          in: path
-          required: true
-          schema: { type: string, format: uuid }
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/MessageCreate' }
-      responses:
-        '201':
-          description: Message recorded
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Message' }
+              schema:
+                type: object
+                required: [name, version, docs]
+                properties:
+                  name: { type: string }
+                  version: { type: string }
+                  docs: { type: string }
 
 components:
   securitySchemes:
@@ -770,6 +592,7 @@ components:
       required: true
       schema:
         type: string
+        format: uuid
 
   responses:
     BadRequest:
@@ -1071,20 +894,6 @@ components:
         policies:
           type: object
 
-    AgentList:
-      type: object
-      properties:
-        agents:
-          type: array
-          items:
-            $ref: '#/components/schemas/Agent'
-        total:
-          type: integer
-        limit:
-          type: integer
-        offset:
-          type: integer
-
     Run:
       type: object
       properties:
@@ -1125,20 +934,6 @@ components:
             timeout:
               type: integer
               default: 30
-
-    RunList:
-      type: object
-      properties:
-        runs:
-          type: array
-          items:
-            $ref: '#/components/schemas/Run'
-        total:
-          type: integer
-        limit:
-          type: integer
-        offset:
-          type: integer
 
     Memory:
       type: object

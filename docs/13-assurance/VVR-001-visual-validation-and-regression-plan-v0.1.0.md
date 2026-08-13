@@ -1,9 +1,8 @@
 ---
 document_id: VVR-001
 title: Agent OS Visual Validation and Regression Plan
-version: 0.1.0
+version: 0.2.0
 status: draft
-register_status: proposed_unregistered
 owner: quality-owner
 approvers: [product-owner, architecture-owner, security-owner, operations-owner, quality-owner]
 created: 2026-07-20
@@ -18,7 +17,9 @@ related_adrs: [ADR-TBD-VVR-001, ADR-TBD-VVR-002, ADR-TBD-VVR-003, ADR-TBD-VVR-00
 
 # VVR-001 — Agent OS Visual Validation and Regression Plan
 
-> **Status: Draft — proposed/unregistered.** This document defines how Agent OS validates the actual rendered interface, governs visual baselines, detects regressions, reviews responsive and accessibility-visible states, preserves evidence, and blocks unsafe integration or release. It does not select final tooling and does not replace functional, accessibility, security, or usability testing.
+> **Status: Draft — registered.** This document defines how Agent OS validates the actual rendered interface, governs visual baselines, detects regressions, reviews responsive and accessibility-visible states, preserves evidence, and blocks unsafe integration or release. It does not select final tooling and does not replace functional, accessibility, security, or usability testing.
+
+> **Implementation boundary (2026-08-13).** The frontend currently exposes only Next.js development/build/lint scripts; no Playwright, Cypress, browser pin, visual snapshot directory, baseline store, deterministic fixture runner, or CI capture job is present. The requirements and workflow below are therefore the validation target, not evidence that visual regression automation already exists.
 
 ## 1. Purpose
 
@@ -43,6 +44,10 @@ Visual similarity does not prove functional correctness. This plan does not repl
 ## 4. Principle — Current runtime first
 
 A capture is valid only when build, environment, route, fixture, browser, viewport, theme, and data state are known.
+
+## 4.1 — MVP adoption path
+
+When visual automation is implemented, the recommended first controlled stack is Playwright with a pinned Chromium version, repository-managed scenario fixtures, trace/screenshot artifacts, and explicit human baseline review. This is a proposal, not an installed dependency or an approved architecture decision. The initial implementation must add the tool, scripts, fixture reset, CI job, artifact retention, and reviewer workflow together; a screenshot copied manually into the repository is not a valid baseline process.
 
 ## 5. Principle — Function before pixels
 
@@ -1091,7 +1096,6 @@ VVR-001 may advance to `1.0.0` when it is registered; Product accepts route and 
 ## 165. Revision and approval history
 
 - Current status: `draft`
-- Register status: `proposed_unregistered`
 - Current version: `0.1.0`
 - Approved by: no one
 
@@ -1103,9 +1107,9 @@ VVR-001 may advance to `1.0.0` when it is registered; Product accepts route and 
 
 - `DOC-000` — Documentation Governance and Source-of-Truth Policy
 - `GLO-001` — Glossary and Controlled Terminology
-- `UXA-001` — UX Architecture and User Journey Specification — proposed/unregistered
-- `DSN-001` — Agent OS Design System Specification — proposed/unregistered
-- `A11Y-001` — Accessibility Requirements and Conformance Plan — proposed/unregistered
+- `UXA-001` — UX Architecture and User Journey Specification — registered
+- `DSN-001` — Agent OS Design System Specification — registered
+- `A11Y-001` — Accessibility Requirements and Conformance Plan — registered
 - `TST-001` — Test Strategy and Verification Plan
 - `QAG-001` — Quality Assurance and Release Gates
 - `RUN-001` — Run and Execution Contract

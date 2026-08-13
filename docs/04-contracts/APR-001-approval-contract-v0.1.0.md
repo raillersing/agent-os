@@ -2,7 +2,7 @@
 document_id: APR-001
 title: Agent OS Approval Contract
 version: 0.2.0
-status: draft
+status: approved
 owner: product-owner
 approvers:
   - product-owner
@@ -12,7 +12,14 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization; user assumes the designated approval roles for this finalization
+pending_approvals: []
 classification: internal
 source_of_truth: false
 dependencies:
@@ -54,11 +61,11 @@ related_documents:
   - OPS-001
   - BCP-001
 related_adrs:
-  - ADR-TBD-APR-001
-  - ADR-TBD-APR-002
-  - ADR-TBD-APR-003
-  - ADR-TBD-APR-004
-  - ADR-TBD-APR-005
+  - ADR-CANDIDATE-APR-001
+  - ADR-CANDIDATE-APR-002
+  - ADR-CANDIDATE-APR-003
+  - ADR-CANDIDATE-APR-004
+  - ADR-CANDIDATE-APR-005
 related_evidence:
   - VIDEO-003
   - VIDEO-004
@@ -66,7 +73,7 @@ related_evidence:
 
 # APR-001 — Agent OS Approval Contract
 
-> **Status: Draft.** This document defines the formal approval contract for consequential actions in Agent OS. It specifies approval requests, review evidence, human decisions, authority checks, independence rules, expiration, invalidation, one-time consumption, standing grants, denial, revision, emergency behavior, audit, API, events, and verification. It does not authorize any production, financial, public, or otherwise prohibited capability.
+> **Status: Approved baseline — 2026-08-13.** This document defines the formal approval contract for consequential actions in Agent OS. It specifies approval requests, review evidence, human decisions, authority checks, independence rules, expiration, invalidation, one-time consumption, standing grants, denial, revision, emergency behavior, audit, API, events, and verification. It does not authorize any production, financial, public, or otherwise prohibited capability.
 
 ## 1. Purpose
 
@@ -2127,23 +2134,23 @@ Before MVP acceptance:
 
 ## 103. ADR backlog
 
-### `ADR-TBD-APR-001 — Fingerprint canonicalization`
+### `ADR-CANDIDATE-APR-001 — Fingerprint canonicalization`
 
 Select canonical serialization, hash algorithm/profile, and migration behavior.
 
-### `ADR-TBD-APR-002 — Approval expiry defaults`
+### `ADR-CANDIDATE-APR-002 — Approval expiry defaults`
 
 Define default validity by action and risk.
 
-### `ADR-TBD-APR-003 — Standing approval grants`
+### `ADR-CANDIDATE-APR-003 — Standing approval grants`
 
 Decide whether standing grants are included in MVP and for which actions.
 
-### `ADR-TBD-APR-004 — Multi-approver workflows`
+### `ADR-CANDIDATE-APR-004 — Multi-approver workflows`
 
 Define sequential, parallel, threshold, and domain-split semantics.
 
-### `ADR-TBD-APR-005 — Approval rebind after pre-dispatch failure`
+### `ADR-CANDIDATE-APR-005 — Approval rebind after pre-dispatch failure`
 
 Define when a consumed approval may or may not be rebound after provable no-effect failure.
 
@@ -2267,10 +2274,10 @@ APR-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
-- Required next action: Product, Architecture, Security, Data, Operations, and Quality review
+- Approved by: Product Owner under explicit user authorization to finalize the declared scope
+- Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
 ### Revision history
 

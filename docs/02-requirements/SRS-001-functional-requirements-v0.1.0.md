@@ -2,7 +2,7 @@
 document_id: SRS-001
 title: Agent OS Functional Requirements Specification
 version: 0.2.0
-status: draft
+status: approved
 owner: product-owner
 approvers:
   - product-owner
@@ -10,7 +10,14 @@ approvers:
   - security-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization; user assumes the designated approval roles for this finalization
+pending_approvals: []
 classification: internal
 source_of_truth: false
 related_documents:
@@ -36,7 +43,7 @@ related_evidence:
 
 # SRS-001 — Agent OS Functional Requirements Specification
 
-> **Status: Draft.** This document defines proposed, testable functional requirements for the first Agent OS MVP. It does not prove implementation, choose final technologies, authorize production use, or replace non-functional, architecture, security, contract, and test specifications.
+> **Status: Approved baseline — 2026-08-13.** This document defines proposed, testable functional requirements for the first Agent OS MVP. It does not prove implementation, choose final technologies, authorize production use, or replace non-functional, architecture, security, contract, and test specifications.
 
 ## 1. Document purpose
 
@@ -2614,11 +2621,11 @@ SRS-001 may advance to version `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
+- Approved by: Product Owner under explicit user authorization to finalize the declared scope
 - Approval date: not applicable
-- Required next action: Product, Architecture, Security, and Quality review
+- Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
 ### Revision history
 

@@ -2,7 +2,7 @@
 document_id: AUT-001
 title: Agent OS Autonomy and Approval Matrix
 version: 0.2.0
-status: draft
+status: approved
 owner: product-owner
 approvers:
   - product-owner
@@ -10,7 +10,14 @@ approvers:
   - architecture-owner
   - operations-owner
 created: 2026-07-19
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization; user assumes the designated approval roles for this finalization
+pending_approvals: []
 classification: internal
 source_of_truth: false
 related_documents:
@@ -40,7 +47,7 @@ related_evidence:
 
 # AUT-001 — Agent OS Autonomy and Approval Matrix
 
-> **Status: Draft.** This document defines the proposed autonomy and approval policy baseline for the first Agent OS MVP. It does not grant real permissions, prove that controls exist, authorize production or financial actions, or replace identity, security, sandbox, approval-contract, or incident-response design.
+> **Status: Approved baseline — 2026-08-13.** This document defines the proposed autonomy and approval policy baseline for the first Agent OS MVP. It does not grant real permissions, prove that controls exist, authorize production or financial actions, or replace identity, security, sandbox, approval-contract, or incident-response design.
 
 ## 1. Document purpose
 
@@ -1693,11 +1700,11 @@ AUT-001 may advance to version `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
+- Approved by: Product Owner under explicit user authorization to finalize the declared scope
 - Approval date: not applicable
-- Required next action: Product, Security, Architecture, and Operations review
+- Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
 ### Revision history
 

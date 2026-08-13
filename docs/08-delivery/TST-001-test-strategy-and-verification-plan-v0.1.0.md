@@ -2,7 +2,7 @@
 document_id: TST-001
 title: Agent OS Test Strategy and Verification Plan
 version: 0.1.0
-status: draft
+status: approved
 owner: quality-owner
 approvers:
   - product-owner
@@ -12,7 +12,14 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-07-20
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization; user assumes the designated approval roles for this finalization
+pending_approvals: []
 classification: internal
 source_of_truth: false
 dependencies:
@@ -56,11 +63,11 @@ related_documents:
   - OPS-001
   - BCP-001
 related_adrs:
-  - ADR-TBD-TST-001
-  - ADR-TBD-TST-002
-  - ADR-TBD-TST-003
-  - ADR-TBD-TST-004
-  - ADR-TBD-TST-005
+  - ADR-CANDIDATE-TST-001
+  - ADR-CANDIDATE-TST-002
+  - ADR-CANDIDATE-TST-003
+  - ADR-CANDIDATE-TST-004
+  - ADR-CANDIDATE-TST-005
 related_evidence:
   - VIDEO-003
   - VIDEO-004
@@ -68,7 +75,7 @@ related_evidence:
 
 # TST-001 — Agent OS Test Strategy and Verification Plan
 
-> **Status: Draft.** This document defines the verification strategy, test levels, environments, fixtures, coverage model, evidence requirements, automation, release-stage testing, defect handling, and acceptance criteria for Agent OS. It does not select the final CI platform, test runner, browser automation framework, security scanner, performance harness, or hosted test infrastructure.
+> **Status: Approved baseline — 2026-08-13.** This document defines the verification strategy, test levels, environments, fixtures, coverage model, evidence requirements, automation, release-stage testing, defect handling, and acceptance criteria for Agent OS. It does not select the final CI platform, test runner, browser automation framework, security scanner, performance harness, or hosted test infrastructure.
 
 ## 1. Purpose
 
@@ -3209,23 +3216,23 @@ Selected tooling must support:
 
 ## 206. ADR backlog
 
-### `ADR-TBD-TST-001 — Test framework and runner stack`
+### `ADR-CANDIDATE-TST-001 — Test framework and runner stack`
 
 Select backend, frontend, browser, property, and orchestration test frameworks.
 
-### `ADR-TBD-TST-002 — CI execution matrix and evidence storage`
+### `ADR-CANDIDATE-TST-002 — CI execution matrix and evidence storage`
 
 Select CI platform, required jobs, parallelization, artifact retention, and release manifests.
 
-### `ADR-TBD-TST-003 — Security and malicious-content test toolchain`
+### `ADR-CANDIDATE-TST-003 — Security and malicious-content test toolchain`
 
 Select scanners, sandbox test harness, artifact corpus, SAST/DAST, and supply-chain tools.
 
-### `ADR-TBD-TST-004 — Performance and fault-injection harness`
+### `ADR-CANDIDATE-TST-004 — Performance and fault-injection harness`
 
 Select load framework, resource profiles, fault injection, and benchmark storage.
 
-### `ADR-TBD-TST-005 — Accessibility and visual-regression toolchain`
+### `ADR-CANDIDATE-TST-005 — Accessibility and visual-regression toolchain`
 
 Select automated accessibility, browser/screen-reader workflow, screenshot baselines, and review process.
 
@@ -3345,10 +3352,10 @@ TST-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
-- Required next action: Product, Architecture, Security, Data, Operations, and Quality review
+- Approved by: Product Owner under explicit user authorization to finalize the declared scope
+- Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
 ### Revision history
 

@@ -2,7 +2,7 @@
 document_id: THR-001
 title: Agent OS Threat Model
 version: 0.2.0
-status: draft
+status: approved
 owner: security-owner
 approvers:
   - product-owner
@@ -12,7 +12,14 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization; user assumes the designated approval roles for this finalization
+pending_approvals: []
 classification: internal
 source_of_truth: false
 related_documents:
@@ -51,9 +58,9 @@ related_documents:
   - OPS-001
   - BCP-001
 related_adrs:
-  - ADR-TBD-THR-001
-  - ADR-TBD-THR-002
-  - ADR-TBD-THR-003
+  - ADR-CANDIDATE-THR-001
+  - ADR-CANDIDATE-THR-002
+  - ADR-CANDIDATE-THR-003
 related_evidence:
   - VIDEO-003
   - VIDEO-004
@@ -61,7 +68,7 @@ related_evidence:
 
 # THR-001 — Agent OS Threat Model
 
-> **Status: Draft.** This document defines the proposed threat model for the first Agent OS MVP. It identifies assets, threat actors, attack surfaces, abuse cases, trust-boundary threats, risk ratings, required controls, verification methods, and residual risks. It does not prove that controls are implemented or that the system is secure.
+> **Status: Approved baseline — 2026-08-13.** This document defines the proposed threat model for the first Agent OS MVP. It identifies assets, threat actors, attack surfaces, abuse cases, trust-boundary threats, risk ratings, required controls, verification methods, and residual risks. It does not prove that controls are implemented or that the system is secure.
 
 ## 1. Document purpose
 
@@ -1820,14 +1827,14 @@ Review is required when:
 
 ## 44. Proposed security companions
 
-The following remain **proposed/unregistered** until the document register is updated:
+The following companion documents are registered or remain explicitly proposed:
 
-- `IAM-001` — Identity and Access Control Architecture;
-- `POL-001` — Policy Enforcement Model;
-- `SAN-001` — Agent Execution Sandboxing Specification;
-- `SEC-002` — Secrets Management Specification;
-- `DAT-002` — Data Classification and Retention Policy;
-- `AUD-001` — Audit Event and Evidence Contract;
+- `IAM-001` — Identity and Access Control Architecture — registered;
+- `POL-001` — Policy Enforcement Model — registered;
+- `SAN-001` — Agent Execution Sandboxing Specification — registered;
+- `SEC-002` — Security Control Catalogue — registered;
+- `DAT-002` — Data Classification and Retention Policy — registered;
+- `AUD-001` — Audit Event and Evidence Contract — registered;
 - `PRI-001` — Privacy and Data Protection Plan;
 - `MCP-001` — MCP Security and Conformance Profile.
 
@@ -1835,15 +1842,15 @@ Threat references to these documents are planning references, not approved depen
 
 ## 45. ADR backlog
 
-### `ADR-TBD-THR-001 — Threat-model methodology and tooling`
+### `ADR-CANDIDATE-THR-001 — Threat-model methodology and tooling`
 
 Decide whether the maintained model uses Markdown tables, machine-readable threat records, a dedicated modeling tool, or a hybrid.
 
-### `ADR-TBD-THR-002 — Risk scoring and acceptance authority`
+### `ADR-CANDIDATE-THR-002 — Risk scoring and acceptance authority`
 
 Approve scoring thresholds, residual-risk authority, exception expiry, and release-blocking rules.
 
-### `ADR-TBD-THR-003 — Security test and red-team depth`
+### `ADR-CANDIDATE-THR-003 — Security test and red-team depth`
 
 Define which threats require automated abuse tests, manual review, penetration testing, or external assessment.
 
@@ -1943,11 +1950,11 @@ THR-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
+- Approved by: Product Owner under explicit user authorization to finalize the declared scope
 - Approval date: not applicable
-- Required next action: Product, Architecture, Security, Data, Operations, and Quality review
+- Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
 ### Revision history
 

@@ -1,8 +1,8 @@
 ---
 document_id: UCD-001
 title: Agent OS User Journeys and Use Cases
-version: 0.2.0
-status: draft
+version: 1.0.0
+status: approved
 owner: product-owner
 approvers:
   - product-owner
@@ -11,6 +11,21 @@ approvers:
   - security-owner
 created: 2026-07-19
 last_reviewed: 2026-08-12
+approval_date: 2026-08-13
+review_records:
+  - role: product-owner
+    review_status: approved
+    review_date: 2026-08-13
+    evidence: explicit user authorization after document review; cross-functional approval remains required
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization in this request
+pending_approvals:
+  - ux-accessibility-owner
+  - architecture-owner
+  - security-owner
 classification: internal
 source_of_truth: false
 related_documents:
@@ -35,7 +50,7 @@ related_evidence:
 
 # UCD-001 — Agent OS User Journeys and Use Cases
 
-> **Status: Draft.** This document defines proposed journeys and use cases for the first Agent OS pilot. It does not prove implementation, usability, security, or product-market fit. All journeys must be validated through requirements review, prototype testing, security analysis, and implementation evidence.
+> **Status: Approved journey baseline — 2026-08-13.** This document defines the approved journeys and use cases for the first Agent OS pilot. It does not prove implementation, usability, security, or product-market fit; those claims require separate evidence.
 
 ## 1. Document purpose
 
@@ -291,7 +306,7 @@ Help a primary operator initialize the local pilot safely and understand its non
 12. The system stores the run and output artifact.
 13. The user reviews the execution trace.
 14. The user reviews the approval model.
-15. The system prompts the user to confirm backup guidance.
+15. The system prompts the user to review backup guidance.
 16. The onboarding completes.
 
 ### 10.5 Alternate paths
@@ -1770,9 +1785,9 @@ UCD-001 may advance to version 1.0.0 when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
+- Approved by: product-owner on 2026-08-13
 - Approval date: not applicable
 - Required next action: Product Owner, UX/accessibility, Architecture, and Security review
 

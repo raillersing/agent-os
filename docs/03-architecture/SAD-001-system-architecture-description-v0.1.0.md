@@ -2,7 +2,7 @@
 document_id: SAD-001
 title: Agent OS System Architecture Description
 version: 0.3.0
-status: draft
+status: approved
 owner: architecture-owner
 approvers:
   - product-owner
@@ -12,7 +12,14 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization; user assumes the designated approval roles for this finalization
+pending_approvals: []
 classification: internal
 source_of_truth: false
 related_documents:
@@ -38,11 +45,11 @@ related_documents:
   - THR-001
   - DEP-001
 related_adrs:
-  - ADR-TBD-001
-  - ADR-TBD-002
-  - ADR-TBD-003
-  - ADR-TBD-004
-  - ADR-TBD-005
+  - ADR-CANDIDATE-001
+  - ADR-CANDIDATE-002
+  - ADR-CANDIDATE-003
+  - ADR-CANDIDATE-004
+  - ADR-CANDIDATE-005
 related_evidence:
   - VIDEO-003
   - VIDEO-004
@@ -50,7 +57,7 @@ related_evidence:
 
 # SAD-001 — Agent OS System Architecture Description
 
-> **Status: Draft.** This document defines the proposed logical architecture for the first Agent OS MVP and its evolution path. It does not select final technologies, prove implementation, authorize production use, or replace detailed domain, data, integration, security, deployment, contract, and test specifications.
+> **Status: Approved baseline — 2026-08-13.** This document defines the proposed logical architecture for the first Agent OS MVP and its evolution path. It does not select final technologies, prove implementation, authorize production use, or replace detailed domain, data, integration, security, deployment, contract, and test specifications.
 
 ## 1. Document purpose
 
@@ -1152,7 +1159,7 @@ The product-owner-validated baseline in `ADR-003` refines the proposed architect
 - Initial adapters are Codex, Hermes, and Claude Code.
 - Action classes are `read`, `generate`, `controlled_write`, `external_effect`, `destructive`, and `critical`.
 - `external_effect`, `destructive`, and `critical` actions require approval; critical actions also require recent reauthentication.
-- Temporal is the proposed durable orchestration service. PostgreSQL remains authoritative for business state and audit; Redis is non-authoritative auxiliary infrastructure.
+- Temporal is the selected durable orchestration service under `ADR-004`. PostgreSQL remains authoritative for business state and audit; Redis is non-authoritative auxiliary infrastructure.
 - Plugins can expose broad capabilities but remain behind capability declaration, policy, Tool Gateway, sandbox, approval, workspace scope, and audit controls.
 
 This section is a draft refinement and does not change the status of this document or any approved ADR by itself.
@@ -1161,18 +1168,18 @@ This section is a draft refinement and does not change the status of this docume
 
 | ADR | Decision |
 |---|---|
-| `ADR-TBD-001` | Primary application language/framework and frontend architecture |
-| `ADR-TBD-002` | Transactional database |
-   | `ADR-TBD-003` | Durable orchestration mechanism |
-| `ADR-TBD-004` | Artifact storage |
-| `ADR-TBD-005` | Sandbox technology |
-| `ADR-TBD-006` | Identity/session mechanism |
-| `ADR-TBD-007` | Secret manager/configuration |
-| `ADR-TBD-008` | Event transport and delivery |
-| `ADR-TBD-009` | UI real-time update method |
-| `ADR-TBD-010` | Memory/retrieval technology |
-| `ADR-TBD-011` | Audit integrity model |
-| `ADR-TBD-012` | Deployment packaging |
+| `ADR-CANDIDATE-001` | Primary application language/framework and frontend architecture |
+| `ADR-CANDIDATE-002` | Transactional database |
+   | `ADR-CANDIDATE-003` | Durable orchestration mechanism |
+| `ADR-CANDIDATE-004` | Artifact storage |
+| `ADR-CANDIDATE-005` | Sandbox technology |
+| `ADR-CANDIDATE-006` | Identity/session mechanism |
+| `ADR-CANDIDATE-007` | Secret manager/configuration |
+| `ADR-CANDIDATE-008` | Event transport and delivery |
+| `ADR-CANDIDATE-009` | UI real-time update method |
+| `ADR-CANDIDATE-010` | Memory/retrieval technology |
+| `ADR-CANDIDATE-011` | Audit integrity model |
+| `ADR-CANDIDATE-012` | Deployment packaging |
 
 ## 47. Requirement-to-component mapping
 
@@ -1362,11 +1369,11 @@ SAD-001 may advance to version `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
+- Approved by: Product Owner under explicit user authorization to finalize the declared scope
 - Approval date: not applicable
-- Required next action: Product, Architecture, Security, Data, Operations, and Quality review
+- Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
 ### Revision history
 

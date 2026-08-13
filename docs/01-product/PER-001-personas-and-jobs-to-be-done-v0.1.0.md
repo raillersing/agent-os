@@ -1,14 +1,27 @@
 ---
 document_id: PER-001
 title: Agent OS Personas and Jobs to Be Done
-version: 0.1.0
-status: draft
+version: 1.0.0
+status: approved
 owner: product-owner
 approvers:
   - product-owner
   - ux-accessibility-owner
 created: 2026-07-19
 last_reviewed: 2026-07-19
+approval_date: 2026-08-13
+review_records:
+  - role: product-owner
+    review_status: approved
+    review_date: 2026-08-13
+    evidence: explicit user authorization after document review; research validation remains separate
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization in this request
+pending_approvals:
+  - ux-accessibility-owner
 classification: internal
 source_of_truth: false
 related_documents:
@@ -30,7 +43,7 @@ related_evidence:
 
 # PER-001 — Agent OS Personas and Jobs to Be Done
 
-> **Status: Draft.** The personas and jobs in this document are evidence-informed hypotheses for the first Agent OS pilot. They have not yet been validated through direct user research. They must not be represented as confirmed market segments, measured behavior, or proof of product-market fit.
+> **Status: Approved product hypothesis baseline — 2026-08-13.** The personas and jobs in this document are approved evidence-informed hypotheses for the first Agent OS pilot. They are not confirmed market segments, measured behavior, or proof of product-market fit.
 
 ## 1. Document purpose
 
@@ -975,9 +988,9 @@ PER-001 may advance to version 1.0.0 when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
+- Approved by: product-owner on 2026-08-13
 - Approval date: not applicable
 - Required next action: Product Owner and UX/accessibility review
 

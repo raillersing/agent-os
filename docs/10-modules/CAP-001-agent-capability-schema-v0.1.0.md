@@ -1,8 +1,8 @@
 ---
 document_id: CAP-001
 title: Agent OS Agent Capability Schema
-version: 0.1.0
-status: draft
+version: 1.0.0
+status: approved
 owner: architecture-owner
 approvers:
   - product-owner
@@ -13,6 +13,23 @@ approvers:
   - quality-owner
 created: 2026-07-19
 last_reviewed: 2026-07-19
+approval_date: 2026-08-13
+review_records:
+  - role: product-owner
+    review_status: approved
+    review_date: 2026-08-13
+    evidence: explicit user authorization after document review; architecture approval remains required
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization in this request
+pending_approvals:
+  - architecture-owner
+  - security-owner
+  - data-owner
+  - operations-owner
+  - quality-owner
 classification: internal
 source_of_truth: false
 dependencies:
@@ -62,7 +79,7 @@ related_evidence:
 
 # CAP-001 — Agent OS Agent Capability Schema
 
-> **Status: Draft.** This document defines the proposed machine-readable schema through which Hermes, Codex, and future adapters declare what they can do, under which limits, with which evidence, and with which security implications. It does not claim that any capability is implemented, validated, safe, or enabled merely because it is declared.
+> **Status: Approved schema baseline — 2026-08-13.** This document defines the machine-readable schema through which Hermes, Codex, and future adapters declare what they can do, under which limits, with which evidence, and with which security implications. It does not claim that any capability is implemented, validated, safe, or enabled merely because it is declared.
 
 ## 1. Purpose
 
@@ -1208,7 +1225,7 @@ business.write
 
 ## 46. Hermes profile expectations
 
-A future **proposed/unregistered** `ADP-HER-001` should map Hermes to:
+A future **registered** `ADP-HER-001` should map Hermes to:
 
 - required core capabilities;
 - actual event support;
@@ -1228,7 +1245,7 @@ No unsupported Hermes feature should be inferred from general product claims.
 
 ## 47. Codex profile expectations
 
-A future **proposed/unregistered** `ADP-CDX-001` should map Codex to:
+A future **registered** `ADP-CDX-001` should map Codex to:
 
 - repository/worktree capabilities;
 - file read/patch/write;
@@ -1747,7 +1764,7 @@ Define startup comparison, periodic validation, hash/version rules, and blocking
 - no autonomous merge;
 - no model/provider claim without evidence;
 - no accepted mock validation;
-- adapter-specific documents remain proposed/unregistered until register update;
+- adapter-specific documents are registered; their runtime conformance remains separately unverified until implementation evidence exists;
 - Git versioning remains deferred until drafting and consistency review are complete.
 
 ## 75. Acceptance criteria
@@ -1791,9 +1808,9 @@ CAP-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
+- Approved by: product-owner on 2026-08-13
 - Required next action: Product, Architecture, Security, Data, Operations, and Quality review
 
 ### Revision history

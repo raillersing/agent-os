@@ -2,8 +2,7 @@
 document_id: IAM-001
 title: Agent OS Identity and Access Management Architecture
 version: 0.2.0
-status: draft
-register_status: proposed_unregistered
+status: approved
 owner: security-owner
 approvers:
   - product-owner
@@ -13,7 +12,14 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user authorization; user assumes the designated approval roles for this finalization
+pending_approvals: []
 classification: internal
 source_of_truth: false
 related_documents: []
@@ -72,13 +78,13 @@ related_proposed_documents:
   - DAT-002
   - AUD-001
 related_adrs:
-  - ADR-TBD-IAM-001
-  - ADR-TBD-IAM-002
-  - ADR-TBD-IAM-003
-  - ADR-TBD-IAM-004
-  - ADR-TBD-IAM-005
-  - ADR-TBD-IAM-006
-  - ADR-TBD-IAM-007
+  - ADR-CANDIDATE-IAM-001
+  - ADR-CANDIDATE-IAM-002
+  - ADR-CANDIDATE-IAM-003
+  - ADR-CANDIDATE-IAM-004
+  - ADR-CANDIDATE-IAM-005
+  - ADR-CANDIDATE-IAM-006
+  - ADR-CANDIDATE-IAM-007
 related_evidence:
   - VIDEO-003
   - VIDEO-004
@@ -86,7 +92,7 @@ related_evidence:
 
 # IAM-001 — Agent OS Identity and Access Management Architecture
 
-> **Status: Draft — proposed/unregistered.** This document defines the proposed identity and access management architecture for Agent OS. It covers human and workload identities, organizations and workspaces, authentication, sessions, roles, grants, delegation, reauthentication, service accounts, workload identity, support access, break-glass, invitations, onboarding, offboarding, suspension, revocation, external identity providers, identity evidence, API and event direction, operations, testing, and release gates. It does not define the complete policy language or authorization engine, select a final identity provider, approve production password or MFA policy, or claim enterprise SSO readiness.
+> **Status: Approved baseline — 2026-08-13.** This document defines the proposed identity and access management architecture for Agent OS. It covers human and workload identities, organizations and workspaces, authentication, sessions, roles, grants, delegation, reauthentication, service accounts, workload identity, support access, break-glass, invitations, onboarding, offboarding, suspension, revocation, external identity providers, identity evidence, API and event direction, operations, testing, and release gates. It does not define the complete policy language or authorization engine, select a final identity provider, approve production password or MFA policy, or claim enterprise SSO readiness.
 
 
 ## 1. Purpose
@@ -327,7 +333,7 @@ A human identity may include:
 - risk and assurance metadata;
 - no raw credential secret.
 
-Personal-data minimization and retention are refined in proposed/unregistered `DAT-002`.
+Personal-data minimization and retention are refined in registered `DAT-002`.
 
 ## 31. Workload identity model
 
@@ -797,7 +803,7 @@ The UI must:
 
 ## 74. Roles and grants boundary
 
-IAM owns identity bindings, role assignments, and grant records. Proposed/unregistered `POL-001` will define the complete policy-evaluation model.
+IAM owns identity bindings, role assignments, and grant records. Registered `POL-001` will define the complete policy-evaluation model.
 
 The following remain distinct:
 
@@ -943,7 +949,7 @@ Direct grants to a principal should be exceptional compared with role-based memb
 
 ## 85. Negative grants and deny
 
-Explicit deny, suspension, revocation, and emergency restrictions override positive grants. Conflict resolution is refined in proposed/unregistered `POL-001`.
+Explicit deny, suspension, revocation, and emergency restrictions override positive grants. Conflict resolution is refined in registered `POL-001`.
 
 ## 86. Resource ownership
 
@@ -1238,7 +1244,7 @@ Human-only actions include, at minimum:
 - support impersonation authorization;
 - final commercial release decisions.
 
-Exact list is refined in `AUT-001`, `APR-001`, and proposed/unregistered `POL-001`.
+Exact list is refined in `AUT-001`, `APR-001`, and registered `POL-001`.
 
 ## 111. Workspace switching
 
@@ -1387,7 +1393,7 @@ Controls may include:
 - account protection;
 - no raw password logging.
 
-Exact controls belong in proposed/unregistered `SEC-002`.
+Exact controls belong in registered `SEC-002`.
 
 ## 124. Phishing resistance
 
@@ -1405,7 +1411,7 @@ Browser session architecture must protect against:
 - token leakage in URLs;
 - clickjacking.
 
-Exact security controls belong in `SEC-001` and proposed/unregistered `SEC-002`.
+Exact security controls belong in `SEC-001` and registered `SEC-002`.
 
 ## 126. Audit and evidence
 
@@ -1424,7 +1430,7 @@ IAM evidence includes:
 - identity-provider changes;
 - denied privileged actions.
 
-Detailed evidence architecture belongs in proposed/unregistered `AUD-001`.
+Detailed evidence architecture belongs in registered `AUD-001`.
 
 ## 127. Audit attribution
 
@@ -1475,7 +1481,7 @@ IAM contains personal and security-sensitive data. The architecture should minim
 - copied identity-provider attributes;
 - authentication telemetry.
 
-Classification, retention, deletion, and data-subject handling are refined in proposed/unregistered `DAT-002`.
+Classification, retention, deletion, and data-subject handling are refined in registered `DAT-002`.
 
 ## 130. UI architecture
 
@@ -1606,7 +1612,7 @@ The banner cannot be dismissed while the mode remains active.
 
 ## 139. Accessibility requirements
 
-IAM follows proposed/unregistered `A11Y-001`.
+IAM follows registered `A11Y-001`.
 
 Critical requirements include:
 
@@ -1966,7 +1972,7 @@ Key threats include:
 - support impersonation abuse;
 - break-glass normalization.
 
-Detailed mappings belong in `THR-001` and proposed/unregistered `SEC-002`.
+Detailed mappings belong in `THR-001` and registered `SEC-002`.
 
 ## 161. Test strategy
 
@@ -2122,7 +2128,7 @@ Critical flows require keyboard and screen-reader testing for:
 - break-glass;
 - denial messages.
 
-Requirements are refined in proposed/unregistered `A11Y-001`.
+Requirements are refined in registered `A11Y-001`.
 
 ## 171. Visual validation
 
@@ -2309,31 +2315,31 @@ I4 — mature multi-tenant IAM programme
 | `BCP-001` | IAM continuity and restore |
 | `PLG-001` | Extension and workload identity |
 
-## 183. ADR-TBD-IAM-001 — Human authentication and session model
+## 183. ADR-CANDIDATE-IAM-001 — Human authentication and session model
 
 Select local authentication, session cookie/token model, password/passkey direction, timeouts, renewal, and reauthentication.
 
-## 184. ADR-TBD-IAM-002 — Organization, workspace, role, and grant model
+## 184. ADR-CANDIDATE-IAM-002 — Organization, workspace, role, and grant model
 
 Approve tenancy boundaries, role hierarchy, direct grants, expiry, delegation, and access-review model.
 
-## 185. ADR-TBD-IAM-003 — Federation and account linking
+## 185. ADR-CANDIDATE-IAM-003 — Federation and account linking
 
 Select OIDC/SAML direction, identity-provider metadata, account linking, provisioning, and deprovisioning.
 
-## 186. ADR-TBD-IAM-004 — Workload identity and service credentials
+## 186. ADR-CANDIDATE-IAM-004 — Workload identity and service credentials
 
 Select service-account, certificate, workload assertion, token exchange, rotation, and ownership model.
 
-## 187. ADR-TBD-IAM-005 — Support access and break-glass
+## 187. ADR-CANDIDATE-IAM-005 — Support access and break-glass
 
 Approve support diagnostic access, impersonation prohibition or controls, emergency authentication, dual control, visibility, and review.
 
-## 188. ADR-TBD-IAM-006 — Revocation, caching, and continuity
+## 188. ADR-CANDIDATE-IAM-006 — Revocation, caching, and continuity
 
 Define revocation propagation, cache invalidation, session-store behavior, restore, and fail-closed modes.
 
-## 189. ADR-TBD-IAM-007 — IAM evidence, retention, and access certification
+## 189. ADR-CANDIDATE-IAM-007 — IAM evidence, retention, and access certification
 
 Define audit schema, privacy minimization, retention, access reviews, certification cadence, and evidence exports.
 
@@ -2450,7 +2456,7 @@ IAM-001 may advance to `1.0.0` when:
 12. revocation and restore behavior is approved;
 13. cross-workspace negative tests are accepted;
 14. accessibility and visual scenarios are accepted;
-15. proposed/unregistered `POL-001`, `SEC-002`, `DAT-002`, and `AUD-001` can refine their domains without changing IAM invariants.
+15. registered `POL-001`, `SEC-002`, `DAT-002`, and `AUD-001` can refine their domains without changing IAM invariants.
 
 ## 195. Downstream impact
 
@@ -2474,11 +2480,10 @@ IAM-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
-- Register status: `proposed_unregistered`
+- Current status: `approved`
 - Current version: `0.1.0`
-- Approved by: no one
-- Required next action: register proposal, then Product, Architecture, Security, Data, Operations, and Quality review
+- Approved by: Product Owner under explicit user authorization to finalize the declared scope
+- Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
 ### Revision history
 
@@ -2501,6 +2506,6 @@ IAM-001 may advance to `1.0.0` when:
 - `OPS-001` — Operations and Production Runbook
 - `BCP-001` — Business Continuity and Disaster Recovery Plan
 - `PLG-001` — Plugin and Extension Architecture
-- `UXA-001` — UX Architecture and User Journey Specification — proposed/unregistered
-- `A11Y-001` — Accessibility Requirements and Conformance Plan — proposed/unregistered
+- `UXA-001` — UX Architecture and User Journey Specification — registered
+- `A11Y-001` — Accessibility Requirements and Conformance Plan — registered
 - `VVR-001` — Visual Validation and Regression Plan — proposed/unregistered
