@@ -14,7 +14,7 @@ approvers:
 created: 2026-08-13
 last_reviewed: 2026-08-13
 classification: internal
-source_of_truth: true
+source_of_truth: false
 related_documents:
   - DOC-000
   - DEP-001
