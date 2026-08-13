@@ -32,11 +32,31 @@ class Workspace(Base):
     )
 
 
+class Project(Base):
+    """Durable body of work inside one workspace."""
+
+    __tablename__ = "projects"
+
+    project_id = Column("id", Uuid, primary_key=True, default=uuid.uuid4)
+    workspace_id = Column(Uuid, ForeignKey("workspaces.id"), nullable=False, index=True)
+    name = Column(String(255), nullable=False)
+    purpose = Column(Text, nullable=False)
+    state = Column(String(32), default="active", nullable=False, index=True)
+    created_by = Column(Uuid, nullable=False, index=True)
+    version = Column(Integer, default=1, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = Column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
+
+
 class Mission(Base):
     __tablename__ = "missions"
 
     id = Column(Uuid, primary_key=True, default=uuid.uuid4)
     workspace_id = Column(Uuid, ForeignKey("workspaces.id"), nullable=False, index=True)
+    # Nullable only for rows created before D0. New API writes require a project.
+    project_id = Column(Uuid, ForeignKey("projects.id"), nullable=True, index=True)
     title = Column(String(255), nullable=False)
     objective = Column(Text, nullable=False)
     status = Column(String(32), default="draft", nullable=False, index=True)

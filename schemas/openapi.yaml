@@ -59,7 +59,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 
-  /api/v1/agents/:
+  /api/v1/agents:
     get:
       operationId: listAgents
       summary: List all agents
@@ -174,7 +174,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /api/v1/runs/:
+  /api/v1/runs:
     get:
       operationId: listRuns
       summary: List all runs
@@ -242,7 +242,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /api/v1/memory/:
+  /api/v1/memory:
     post:
       operationId: createMemory
       summary: Add to memory
@@ -314,7 +314,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /api/v1/tools/:
+  /api/v1/tools:
     get:
       operationId: listTools
       summary: List available tools
@@ -414,6 +414,81 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/Mission' }
         '404': { $ref: '#/components/responses/NotFound' }
+
+  /api/v1/projects:
+    get:
+      operationId: listProjects
+      summary: List workspace-scoped projects
+      tags: [Control Plane]
+      parameters:
+        - name: workspace_id
+          in: query
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Projects listed
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Project' }
+    post:
+      operationId: createProject
+      summary: Create a first-class project in a workspace
+      tags: [Control Plane]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProjectCreate' }
+      responses:
+        '201':
+          description: Project created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Project' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /api/v1/projects/{project_id}:
+    get:
+      operationId: getProject
+      summary: Get a persisted project
+      tags: [Control Plane]
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Project found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Project' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    patch:
+      operationId: updateProject
+      summary: Update a persisted project with optimistic concurrency
+      tags: [Control Plane]
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProjectUpdate' }
+      responses:
+        '200':
+          description: Project updated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Project' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
 
   /api/v1/missions/{mission_id}/status:
     patch:
@@ -613,12 +688,19 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    Conflict:
+      description: Conflicting state or stale resource version
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
 
   schemas:
     ProjectCreate:
       type: object
-      required: [name, purpose]
+      required: [workspace_id, name, purpose]
       properties:
+        workspace_id: { type: string, format: uuid }
         name: { type: string, minLength: 1 }
         purpose: { type: string, minLength: 1 }
     ProjectUpdate:
@@ -633,14 +715,14 @@ components:
       allOf:
         - $ref: '#/components/schemas/ProjectCreate'
         - type: object
-          required: [project_id, workspace_id, state, created_at, created_by, version]
+          required: [project_id, state, created_at, created_by, version, updated_at]
           properties:
             project_id: { type: string, format: uuid }
-            workspace_id: { type: string, format: uuid }
             state: { type: string, enum: [active, paused, archived] }
             created_at: { type: string, format: date-time }
             created_by: { type: string, format: uuid }
             version: { type: integer, minimum: 1 }
+            updated_at: { type: string, format: date-time }
     TaskCreate:
       type: object
       required: [project_id, title, desired_outcome]
@@ -729,9 +811,10 @@ components:
             updated_at: { type: string, format: date-time }
     MissionCreate:
       type: object
-      required: [workspace_id, title, objective]
+      required: [workspace_id, project_id, title, objective]
       properties:
         workspace_id: { type: string, format: uuid }
+        project_id: { type: string, format: uuid }
         title: { type: string }
         objective: { type: string }
         plan: { type: array, items: { type: object } }

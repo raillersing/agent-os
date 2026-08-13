@@ -48,7 +48,7 @@ def test_root():
 def test_create_agent():
     """Test agent creation."""
     response = client.post(
-        "/api/v1/agents/",
+        "/api/v1/agents",
         json={
             "name": "test-agent",
             "model": "gpt-4",
@@ -65,7 +65,7 @@ def test_create_agent():
 
 def test_list_agents():
     """Test agent listing."""
-    response = client.get("/api/v1/agents/")
+    response = client.get("/api/v1/agents")
     assert response.status_code == 200
     data = response.json()
     assert isinstance(data, list)
@@ -75,7 +75,7 @@ def test_get_agent():
     """Test get agent by ID."""
     # First create an agent
     create_response = client.post(
-        "/api/v1/agents/",
+        "/api/v1/agents",
         json={"name": "test-agent", "model": "gpt-4"},
     )
     agent_id = create_response.json()["id"]
@@ -89,7 +89,7 @@ def test_get_agent():
 
 def test_list_tools():
     """Test tool listing."""
-    response = client.get("/api/v1/tools/")
+    response = client.get("/api/v1/tools")
     assert response.status_code == 200
     data = response.json()
     assert isinstance(data, list)

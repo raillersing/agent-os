@@ -43,7 +43,7 @@ tools_db: dict[str, Tool] = {
 }
 
 
-@router.get("/", response_model=List[Tool])
+@router.get("", response_model=List[Tool])
 async def list_tools():
     """List available tools."""
     return list(tools_db.values())

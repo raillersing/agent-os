@@ -19,7 +19,7 @@ from ..schemas.run import RunCreate
 router = APIRouter()
 
 
-@router.get("/", response_model=List[RunSchema])
+@router.get("", response_model=List[RunSchema])
 async def list_runs(
     limit: int = 20,
     offset: int = 0,

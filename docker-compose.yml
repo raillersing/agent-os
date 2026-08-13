@@ -4,7 +4,6 @@ services:
   # PostgreSQL Database
   postgres:
     image: postgres:16-alpine
-    container_name: agent-os-postgres
     environment:
       POSTGRES_DB: ${POSTGRES_DB:?Set POSTGRES_DB in .env}
       POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in .env}
@@ -22,7 +21,6 @@ services:
   # Redis
   redis:
     image: redis:7-alpine
-    container_name: agent-os-redis
     ports:
       - "6381:6379"
     volumes:
@@ -33,15 +31,35 @@ services:
       timeout: 5s
       retries: 5
 
+  # Temporal is the authoritative durable orchestration service for D0.
+  temporal:
+    image: temporalio/auto-setup:1.29.7
+    environment:
+      DB: postgres12
+      DB_PORT: 5432
+      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in .env}
+      POSTGRES_PWD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_SEEDS: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "temporal operator cluster health --address \"$(hostname -i):7233\""]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
   # Backend API
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: agent-os-backend
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER:?Set POSTGRES_USER in .env}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:?Set POSTGRES_DB in .env}
       - REDIS_URL=redis://redis:6379/0
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_NAMESPACE=${TEMPORAL_NAMESPACE:-default}
+      - TEMPORAL_TASK_QUEUE=${TEMPORAL_TASK_QUEUE:-agent-os-d0}
       - SECRET_KEY=${SECRET_KEY:?Set SECRET_KEY in .env}
       - ADMIN_EMAIL=${ADMIN_EMAIL:?Set ADMIN_EMAIL in .env}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in .env}
@@ -62,12 +80,29 @@ services:
       timeout: 5s
       retries: 5
 
+  # No provider or external tool is connected in D0. This worker only hosts
+  # deterministic workflows and is intentionally separate from the API.
+  temporal-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_NAMESPACE=${TEMPORAL_NAMESPACE:-default}
+      - TEMPORAL_TASK_QUEUE=${TEMPORAL_TASK_QUEUE:-agent-os-d0}
+      - SECRET_KEY=${SECRET_KEY:?Set SECRET_KEY in .env}
+    depends_on:
+      temporal:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    command: python -m app.temporal.worker
+
   # Frontend (Next.js)
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: agent-os-frontend
     environment:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8080}
     ports:

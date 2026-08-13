@@ -9,11 +9,12 @@ python-multipart==0.0.9
 sqlalchemy[asyncio]==2.0.27
 alembic==1.13.1
 asyncpg==0.29.0
+psycopg2-binary==2.9.12
 aiosqlite==0.20.0
 
 # Redis
 redis==5.0.1
-celery==5.3.6
+temporalio[grpc]==1.31.0
 
 # Security
 python-jose[cryptography]==3.3.0
@@ -28,7 +29,7 @@ PyYAML==6.0.1
 # HTTP client
 httpx==0.26.0
 
-# LLM providers
+# LLM providers (installed but not enabled or invoked by D0)
 anthropic==0.18.1
 openai==1.12.0
 
