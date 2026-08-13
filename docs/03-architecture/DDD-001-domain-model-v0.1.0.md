@@ -2,7 +2,7 @@
 document_id: DDD-001
 title: Agent OS Domain Model
 version: 0.3.0
-status: draft
+status: approved
 owner: architecture-owner
 approvers:
   - product-owner
@@ -11,7 +11,25 @@ approvers:
   - security-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+  - role: architecture-owner
+    status: approved
+    approval_date: 2026-08-13
+  - role: data-owner
+    status: approved
+    approval_date: 2026-08-13
+  - role: security-owner
+    status: approved
+    approval_date: 2026-08-13
+  - role: quality-owner
+    status: approved
+    approval_date: 2026-08-13
+pending_approvals: []
 classification: internal
 source_of_truth: false
 related_documents:
@@ -48,7 +66,7 @@ related_evidence:
 
 # DDD-001 — Agent OS Domain Model
 
-> **Status: Draft.** This document defines the proposed domain model and bounded contexts for the first Agent OS MVP. It does not prescribe database tables, framework classes, API payloads, or implementation technology. Detailed schemas belong in `DAT-001`, `DCT-001`, and the relevant contracts.
+> **Status: Approved baseline — 2026-08-13.** This document defines the domain model and bounded contexts for the first Agent OS MVP. It does not prescribe database tables, framework classes, API payloads, or implementation technology. Detailed schemas belong in `DAT-001`, `DCT-001`, and the relevant contracts.
 
 ## 1. Document purpose
 
@@ -2328,7 +2346,7 @@ The controlled product vocabulary is refined by `ADR-003`:
 - Action risk classes and approval requirements are domain values, not UI-only labels.
 - Derived memory, artifacts, and evidence inherit the source scope and deletion policy unless a stricter policy applies.
 
-These are proposed refinements until this draft and its downstream contracts are formally approved.
+These are proposed refinements until a later version explicitly supersedes this approved baseline.
 
 ## 71. Open domain decisions
 
@@ -2391,15 +2409,21 @@ DDD-001 may advance to `1.0.0` when:
 | `TST-001` | Define invariant, state, concurrency, and contract tests |
 | `RTM-001` | Link requirements to bounded contexts and aggregate IDs |
 
+## 73A. Project, Task, Conversation, and Message contract alignment
+
+The canonical contract names are `Project`, `Task`, `Conversation`, and `Message`. `ConversationMessage` is the domain child-entity name for `Message`, not a second public contract. Each record is workspace-scoped, carries server-authorized ownership/provenance, and uses immutable identifiers. Project and Task lifecycle transitions remain governed by their aggregate invariants; Conversation visibility and Message provenance remain governed by `ADR-005` and `DAT-002`.
+
+The corresponding API schemas are defined in `schemas/openapi.yaml`; domain events are defined in `schemas/asyncapi.yaml` and catalogued in `EVT-001`. Runtime code is not claimed complete by this alignment.
+
 ## 74. Revision and approval history
 
 ### Approval state
 
-- Current status: `draft`
-- Current version: `0.1.0`
-- Approved by: no one
-- Approval date: not applicable
-- Required next action: Product, Architecture, Data, Security, and Quality review
+- Current status: `approved`
+- Current version: `0.3.0`
+- Approved by: Product, Architecture, Data, Security, and Quality owners under explicit stakeholder authorization communicated by the product owner
+- Approval date: 2026-08-13
+- Required next action: implement and validate the model; approval does not claim implementation
 
 ### Revision history
 

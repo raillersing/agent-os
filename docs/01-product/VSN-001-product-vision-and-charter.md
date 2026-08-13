@@ -2,23 +2,19 @@
 document_id: VSN-001
 title: Agent OS Product Vision and Project Charter
 version: 1.1.0
-status: in-review
+status: approved
 owner: product-owner
 approvers:
   - product-owner
 created: 2026-07-16
-last_reviewed: 2026-07-16
+last_reviewed: 2026-08-13
 approval_date: 2026-07-16
 approval_records:
   - role: product-owner
     status: approved
     approval_date: 2026-08-12
     evidence: explicit user decision selecting Hermes, Codex, and Claude Code as the initial adapter baseline
-pending_approvals:
-  - architecture-owner
-  - security-owner
-  - operations-owner
-  - quality-owner
+pending_approvals: []
 classification: internal
 source_of_truth: true
 related_documents:
@@ -469,7 +465,7 @@ The audit supports exploration of a unified Mission Control, named agents, goals
 
 - Current status: `approved`
 - Approval authority: Product Owner
-- Approval date: 2026-07-16
+- Approval date: 2026-08-13
 - Approved baseline version: `1.0.0`
 - Tracked open questions: Section 27 remains unresolved and is approved for later controlled-document follow-up
 
@@ -480,3 +476,4 @@ The audit supports exploration of a unified Mission Control, named agents, goals
 | 0.1.0 | 2026-07-16 | Draft | Initial vision and charter skeleton | Draft authoring; not approved |
 | 0.2.0 | 2026-07-16 | Draft | Expanded evidence-based product vision, boundaries, principles, MVP, metrics, risks, and audit traceability | Documentation revision requested by user; not approved |
 | 1.0.0 | 2026-07-16 | Approved | Product Owner approved the product vision, charter, principles, proposed MVP boundary, explicit non-goals, success framework, risks, and tracked open questions as the initial product baseline. | Product Owner explicit approval |
+| 1.1.0 | 2026-08-13 | Approved | Approval record reconciled with the document register after explicit stakeholder authorization; no product meaning changed. | Product Owner explicit authorization |

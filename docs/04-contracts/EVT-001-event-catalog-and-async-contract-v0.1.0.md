@@ -2,7 +2,7 @@
 document_id: EVT-001
 title: Agent OS Event Catalog and Async Contract
 version: 0.3.0
-status: draft
+status: approved
 owner: architecture-owner
 approvers:
   - product-owner
@@ -12,7 +12,28 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+  - role: architecture-owner
+    status: approved
+    approval_date: 2026-08-13
+  - role: security-owner
+    status: approved
+    approval_date: 2026-08-13
+  - role: data-owner
+    status: approved
+    approval_date: 2026-08-13
+  - role: operations-owner
+    status: approved
+    approval_date: 2026-08-13
+  - role: quality-owner
+    status: approved
+    approval_date: 2026-08-13
+pending_approvals: []
 classification: internal
 source_of_truth: false
 dependencies:
@@ -54,11 +75,11 @@ related_documents:
   - OPS-001
   - BCP-001
 related_adrs:
-  - ADR-TBD-EVT-001
-  - ADR-TBD-EVT-002
-  - ADR-TBD-EVT-003
-  - ADR-TBD-EVT-004
-  - ADR-TBD-EVT-005
+  - ADR-CANDIDATE-EVT-001
+  - ADR-CANDIDATE-EVT-002
+  - ADR-CANDIDATE-EVT-003
+  - ADR-CANDIDATE-EVT-004
+  - ADR-CANDIDATE-EVT-005
 related_evidence:
   - VIDEO-003
   - VIDEO-004
@@ -66,7 +87,7 @@ related_evidence:
 
 # EVT-001 — Agent OS Event Catalog and Async Contract
 
-> **Status: Draft.** This document defines the proposed event model and asynchronous integration contract for Agent OS. It covers event classes, envelopes, identity, workspace scope, ordering, delivery, duplication, idempotency, outbox/inbox patterns, cursors, replay, retention, dead letters, security, privacy, schemas, domain catalogues, API access, projections, observability, and tests. It does not select a final broker, workflow engine, queue, streaming technology, or public webhook platform.
+> **Status: Approved baseline — 2026-08-13.** This document defines the event model and asynchronous integration contract for Agent OS. It covers event classes, envelopes, identity, workspace scope, ordering, delivery, duplication, idempotency, outbox/inbox patterns, cursors, replay, retention, dead letters, security, privacy, schemas, domain catalogues, API access, projections, observability, and tests. It does not select a final broker, workflow engine, queue, streaming technology, or public webhook platform.
 
 ## 1. Purpose
 
@@ -2701,23 +2722,23 @@ Before MVP acceptance:
 
 ## 149. ADR backlog
 
-### `ADR-TBD-EVT-001 — Event transport and durable source`
+### `ADR-CANDIDATE-EVT-001 — Event transport and durable source`
 
 Choose database outbox/polling, broker, stream platform, workflow engine integration, or hybrid.
 
-### `ADR-TBD-EVT-002 — Event schema registry and machine-readable contract`
+### `ADR-CANDIDATE-EVT-002 — Event schema registry and machine-readable contract`
 
 Choose AsyncAPI or equivalent, schema technology, publication, and compatibility tooling.
 
-### `ADR-TBD-EVT-003 — Partitioning, ordering, and cursor model`
+### `ADR-CANDIDATE-EVT-003 — Partitioning, ordering, and cursor model`
 
 Define aggregate/stream keys, ordering guarantees, cursor encoding, and retention epochs.
 
-### `ADR-TBD-EVT-004 — Replay and projection rebuild`
+### `ADR-CANDIDATE-EVT-004 — Replay and projection rebuild`
 
 Define replay authorization, side-effect suppression, checkpoints, shadow rebuilds, and cutover.
 
-### `ADR-TBD-EVT-005 — Event retention, privacy, and deletion`
+### `ADR-CANDIDATE-EVT-005 — Event retention, privacy, and deletion`
 
 Define retention classes, payload references, redaction/tombstones, holds, and backup behavior.
 
@@ -2739,6 +2760,18 @@ The event catalog must include versioned conversation events:
 | `conversation.deleted` | conversation ID, deletion result, derived-index result, audit reference |
 
 Consumers must authorize before projecting, indexing, notifying, exporting, or replaying conversation events. A private conversation event must never be projected into a broader visibility read model.
+
+## 149C. Project, Task, and Message event profile
+
+Project and Task events use the aggregate identifier as the event subject and always include `workspace_id`, `correlation_id`, `causation_id`, actor chain, aggregate version, and retention/classification metadata. Message events additionally include `conversation_id` and `message_id`; message content is represented by a protected reference, never an unbounded raw payload.
+
+| Event family | Required events |
+|---|---|
+| Project | `project.created`, `project.updated`, `project.paused`, `project.archived` |
+| Task | `task.created`, `task.updated`, `task.ready`, `task.blocked`, `task.completed`, `task.cancelled`, `task.archived`, `task.snapshot_created` |
+| Message | `conversation.message_recorded` |
+
+Events are versioned, published after the domain change is durable through the outbox boundary, and consumed at least once. Consumers must be idempotent, enforce workspace/visibility authorization before projection, and retain explicit unknown values rather than substituting empty values.
 
 ## 150. Open decisions
 
@@ -2856,10 +2889,11 @@ EVT-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
-- Current version: `0.1.0`
-- Approved by: no one
-- Required next action: Product, Architecture, Security, Data, Operations, and Quality review
+- Current status: `approved`
+- Current version: `0.3.0`
+- Approved by: Product, Architecture, Security, Data, Operations, and Quality owners under explicit stakeholder authorization communicated by the product owner
+- Approval date: 2026-08-13
+- Required next action: implement and validate publishers/consumers; approval does not claim implementation
 
 ### Revision history
 

@@ -2,7 +2,7 @@
 document_id: API-001
 title: Agent OS API Specification
 version: 0.3.0
-status: draft
+status: approved
 owner: architecture-owner
 approvers:
   - product-owner
@@ -12,7 +12,28 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+  - role: architecture-owner
+    status: approved
+    approval_date: 2026-08-13
+  - role: security-owner
+    status: approved
+    approval_date: 2026-08-13
+  - role: data-owner
+    status: approved
+    approval_date: 2026-08-13
+  - role: operations-owner
+    status: approved
+    approval_date: 2026-08-13
+  - role: quality-owner
+    status: approved
+    approval_date: 2026-08-13
+pending_approvals: []
 classification: internal
 source_of_truth: false
 dependencies:
@@ -55,11 +76,11 @@ related_documents:
   - OPS-001
   - BCP-001
 related_adrs:
-  - ADR-TBD-API-001
-  - ADR-TBD-API-002
-  - ADR-TBD-API-003
-  - ADR-TBD-API-004
-  - ADR-TBD-API-005
+  - ADR-CANDIDATE-API-001
+  - ADR-CANDIDATE-API-002
+  - ADR-CANDIDATE-API-003
+  - ADR-CANDIDATE-API-004
+  - ADR-CANDIDATE-API-005
 related_evidence:
   - VIDEO-003
   - VIDEO-004
@@ -67,7 +88,7 @@ related_evidence:
 
 # API-001 — Agent OS API Specification
 
-> **Status: Draft.** This document defines the proposed control-plane API contract for Agent OS. It describes resources, operations, request and response envelopes, authentication, authorization, workspace scoping, idempotency, optimistic concurrency, pagination, filtering, errors, long-running operations, event access, security, observability, compatibility, and tests. It does not select a final web framework, API gateway, serialization library, transport stack, or public SaaS exposure model.
+> **Status: Approved baseline — 2026-08-13.** This document defines the control-plane API contract for Agent OS. It describes resources, operations, request and response envelopes, authentication, authorization, workspace scoping, idempotency, optimistic concurrency, pagination, filtering, errors, long-running operations, event access, security, observability, compatibility, and tests. It does not select a final web framework, API gateway, serialization library, transport stack, or public SaaS exposure model.
 
 ## 1. Purpose
 
@@ -2474,23 +2495,23 @@ Before an API version is released:
 
 ## 142. ADR backlog
 
-### `ADR-TBD-API-001 — Primary API style and framework`
+### `ADR-CANDIDATE-API-001 — Primary API style and framework`
 
 Choose resource-oriented HTTP, RPC, GraphQL, gRPC, or hybrid and implementation framework.
 
-### `ADR-TBD-API-002 — Versioning strategy`
+### `ADR-CANDIDATE-API-002 — Versioning strategy`
 
 Choose path, media type, header, schema versioning, and deprecation profile.
 
-### `ADR-TBD-API-003 — Authentication and session profile`
+### `ADR-CANDIDATE-API-003 — Authentication and session profile`
 
 Choose local identity, external IdP, cookie/bearer/workload credentials, session storage, and reauthentication.
 
-### `ADR-TBD-API-004 — Long-running operation and event access`
+### `ADR-CANDIDATE-API-004 — Long-running operation and event access`
 
 Choose operation resources, polling, SSE, WebSocket, and cursor behavior.
 
-### `ADR-TBD-API-005 — Machine-readable specification and SDK generation`
+### `ADR-CANDIDATE-API-005 — Machine-readable specification and SDK generation`
 
 Choose OpenAPI or equivalent, code generation, contract testing, and publication process.
 
@@ -2513,6 +2534,19 @@ The conversation API is governed by `ADR-005` and must expose explicit scope and
 | Archive/delete | `POST /conversations/{conversation_id}/archive` and delete command | Applies retention, hold, backup, and derived-index rules |
 
 Conversation responses must not expose messages, attachments, derived memory, artifacts, or run evidence outside the authorized visibility scope. Search and notification endpoints apply the same authorization predicate.
+
+## 142C. Canonical Project, Task, Conversation, and Message contract
+
+The following names and identifiers are stable across HTTP, events, persistence, and projections:
+
+| Contract | Required identity/scope | Lifecycle or invariants |
+|---|---|---|
+| `Project` | `project_id`, `workspace_id`, `name`, `purpose`, `state`, `created_at`, `created_by`, `version` | `active`, `paused`, `archived`; cannot move workspace; archived projects reject new tasks |
+| `Task` | `task_id`, `workspace_id`, `project_id`, `title`, `desired_outcome`, `state`, `current_snapshot_id`, `created_by`, `created_at`, `version` | `draft`, `ready`, `active`, `blocked`, `completed`, `cancelled`, `archived`; execution uses an immutable snapshot |
+| `Conversation` | `conversation_id`, `workspace_id`, `owner_identity_id`, `visibility`, `capture_boundary`, `retention_profile`, `classification` | Defaults to `private`; sharing is explicit, revocable, and audited; access never crosses workspace scope |
+| `Message` | `message_id`, `conversation_id`, `workspace_id`, `actor_chain`, `role`, `content_reference`, `provider_reference`, `created_at`, `correlation_id` | Immutable identity; inherits conversation visibility/retention; duplicate recording is idempotent |
+
+`ConversationMessage` is the domain alias for `Message`. All create/mutate operations require server-side authorization, expected-version or idempotency handling where applicable, UTC timestamps, and a correlation ID. A successful response is not evidence that the corresponding runtime feature is implemented until route and persistence tests pass.
 
 ## 143. Open decisions
 
@@ -2629,10 +2663,11 @@ API-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
-- Current version: `0.1.0`
-- Approved by: no one
-- Required next action: Product, Architecture, Security, Data, Operations, and Quality review
+- Current status: `approved`
+- Current version: `0.3.0`
+- Approved by: Product, Architecture, Security, Data, Operations, and Quality owners under explicit stakeholder authorization communicated by the product owner
+- Approval date: 2026-08-13
+- Required next action: implement and validate the API; approval does not claim implementation
 
 ### Revision history
 

@@ -4,7 +4,7 @@ info:
   description: |
     API for the Agent OS Control Plane — vendor-neutral orchestration,
     governance, and observability for AI agents.
-  version: 0.1.0
+  version: 0.3.0
   contact:
     name: Agent OS Team
     email: api@agent-os.dev
@@ -517,6 +517,230 @@ paths:
                 type: array
                 items: { $ref: '#/components/schemas/AuditEvent' }
 
+  /workspaces/{workspace_id}/projects:
+    get:
+      operationId: listProjects
+      summary: List projects visible in a workspace
+      tags: [Projects]
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Projects listed
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/Project' } }
+    post:
+      operationId: createProject
+      summary: Create a project
+      tags: [Projects]
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProjectCreate' }
+      responses:
+        '201':
+          description: Project created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Project' }
+
+  /projects/{project_id}:
+    get:
+      operationId: getProject
+      summary: Get a project
+      tags: [Projects]
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Project returned
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Project' }
+    patch:
+      operationId: updateProject
+      summary: Update a project with expected-version concurrency
+      tags: [Projects]
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProjectUpdate' }
+      responses:
+        '200':
+          description: Project updated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Project' }
+
+  /workspaces/{workspace_id}/tasks:
+    get:
+      operationId: listTasks
+      summary: List tasks visible in a workspace
+      tags: [Tasks]
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Tasks listed
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/Task' } }
+    post:
+      operationId: createTask
+      summary: Create a task without starting execution
+      tags: [Tasks]
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TaskCreate' }
+      responses:
+        '201':
+          description: Task created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+
+  /tasks/{task_id}:
+    get:
+      operationId: getTask
+      summary: Get a task
+      tags: [Tasks]
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Task returned
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+    patch:
+      operationId: updateTask
+      summary: Update a task with expected-version concurrency
+      tags: [Tasks]
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TaskUpdate' }
+      responses:
+        '200':
+          description: Task updated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+
+  /workspaces/{workspace_id}/conversations:
+    get:
+      operationId: listConversations
+      summary: List authorized conversations
+      tags: [Conversations]
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Conversations listed
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/Conversation' } }
+    post:
+      operationId: createConversation
+      summary: Create a private conversation
+      tags: [Conversations]
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ConversationCreate' }
+      responses:
+        '201':
+          description: Conversation created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Conversation' }
+
+  /conversations/{conversation_id}:
+    get:
+      operationId: getConversation
+      summary: Get an authorized conversation
+      tags: [Conversations]
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Conversation returned
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Conversation' }
+
+  /conversations/{conversation_id}/messages:
+    post:
+      operationId: recordMessage
+      summary: Record one message with provenance
+      tags: [Conversations]
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/MessageCreate' }
+      responses:
+        '201':
+          description: Message recorded
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Message' }
+
 components:
   securitySchemes:
     bearerAuth:
@@ -568,6 +792,101 @@ components:
             $ref: '#/components/schemas/Error'
 
   schemas:
+    ProjectCreate:
+      type: object
+      required: [name, purpose]
+      properties:
+        name: { type: string, minLength: 1 }
+        purpose: { type: string, minLength: 1 }
+    ProjectUpdate:
+      type: object
+      required: [expected_version]
+      properties:
+        name: { type: string, minLength: 1 }
+        purpose: { type: string, minLength: 1 }
+        state: { type: string, enum: [active, paused, archived] }
+        expected_version: { type: integer, minimum: 1 }
+    Project:
+      allOf:
+        - $ref: '#/components/schemas/ProjectCreate'
+        - type: object
+          required: [project_id, workspace_id, state, created_at, created_by, version]
+          properties:
+            project_id: { type: string, format: uuid }
+            workspace_id: { type: string, format: uuid }
+            state: { type: string, enum: [active, paused, archived] }
+            created_at: { type: string, format: date-time }
+            created_by: { type: string, format: uuid }
+            version: { type: integer, minimum: 1 }
+    TaskCreate:
+      type: object
+      required: [project_id, title, desired_outcome]
+      properties:
+        project_id: { type: string, format: uuid }
+        title: { type: string, minLength: 1 }
+        desired_outcome: { type: string, minLength: 1 }
+    TaskUpdate:
+      type: object
+      required: [expected_version]
+      properties:
+        title: { type: string, minLength: 1 }
+        desired_outcome: { type: string, minLength: 1 }
+        state: { type: string, enum: [draft, ready, active, blocked, completed, cancelled, archived] }
+        expected_version: { type: integer, minimum: 1 }
+    Task:
+      allOf:
+        - $ref: '#/components/schemas/TaskCreate'
+        - type: object
+          required: [task_id, workspace_id, state, current_snapshot_id, created_by, created_at, version]
+          properties:
+            task_id: { type: string, format: uuid }
+            workspace_id: { type: string, format: uuid }
+            state: { type: string, enum: [draft, ready, active, blocked, completed, cancelled, archived] }
+            current_snapshot_id: { type: [string, 'null'], format: uuid }
+            created_by: { type: string, format: uuid }
+            created_at: { type: string, format: date-time }
+            version: { type: integer, minimum: 1 }
+    ConversationCreate:
+      type: object
+      properties:
+        project_id: { type: [string, 'null'], format: uuid }
+        task_id: { type: [string, 'null'], format: uuid }
+        visibility: { type: string, enum: [private, project, workspace], default: private }
+        capture_boundary: { type: string }
+        retention_profile: { type: string, pattern: '^R[0-6]$' }
+        classification: { type: string }
+    Conversation:
+      allOf:
+        - $ref: '#/components/schemas/ConversationCreate'
+        - type: object
+          required: [conversation_id, workspace_id, owner_identity_id, visibility, capture_boundary, retention_profile, classification]
+          properties:
+            conversation_id: { type: string, format: uuid }
+            workspace_id: { type: string, format: uuid }
+            owner_identity_id: { type: string, format: uuid }
+            deleted_at: { type: [string, 'null'], format: date-time }
+    MessageCreate:
+      type: object
+      required: [message_id, actor_chain, role, content_reference, provider_reference, correlation_id]
+      properties:
+        message_id: { type: string, format: uuid }
+        actor_chain: { type: array, items: { type: object } }
+        role: { type: string, enum: [user, assistant, system, tool, event] }
+        content_reference: { type: object }
+        provider_reference: { type: [object, 'null'] }
+        correlation_id: { type: string, format: uuid }
+        classification: { type: string }
+    Message:
+      allOf:
+        - $ref: '#/components/schemas/MessageCreate'
+        - type: object
+          required: [conversation_id, workspace_id, created_at, retention_profile]
+          properties:
+            conversation_id: { type: string, format: uuid }
+            workspace_id: { type: string, format: uuid }
+            created_at: { type: string, format: date-time }
+            retention_profile: { type: string, pattern: '^R[0-6]$' }
+            deleted_at: { type: [string, 'null'], format: date-time }
     WorkspaceCreate:
       type: object
       required: [name]

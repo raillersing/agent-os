@@ -2,7 +2,7 @@
 document_id: DAT-002
 title: Agent OS Data Classification, Retention and Deletion Standard
 version: 0.2.0
-status: in-review
+status: approved
 owner: data-owner
 approvers:
   - product-owner
@@ -12,7 +12,34 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit stakeholder authorization communicated by the product owner
+  - role: architecture-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit stakeholder authorization communicated by the product owner
+  - role: security-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit stakeholder authorization communicated by the product owner
+  - role: data-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit stakeholder authorization communicated by the product owner
+  - role: operations-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit stakeholder authorization communicated by the product owner
+  - role: quality-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit stakeholder authorization communicated by the product owner
+pending_approvals: []
 classification: internal
 source_of_truth: true
 related_documents:
@@ -84,19 +111,19 @@ related_proposed_documents:
   - A11Y-001
   - VVR-001
 related_adrs:
-  - ADR-TBD-DAT2-001
-  - ADR-TBD-DAT2-002
-  - ADR-TBD-DAT2-003
-  - ADR-TBD-DAT2-004
-  - ADR-TBD-DAT2-005
-  - ADR-TBD-DAT2-006
-  - ADR-TBD-DAT2-007
-  - ADR-TBD-DAT2-008
+  - ADR-CANDIDATE-DAT2-001
+  - ADR-CANDIDATE-DAT2-002
+  - ADR-CANDIDATE-DAT2-003
+  - ADR-CANDIDATE-DAT2-004
+  - ADR-CANDIDATE-DAT2-005
+  - ADR-CANDIDATE-DAT2-006
+  - ADR-CANDIDATE-DAT2-007
+  - ADR-CANDIDATE-DAT2-008
 ---
 
 # DAT-002 — Agent OS Data Classification, Retention and Deletion Standard
 
-> **Status: In review — registered baseline.** This document defines the proposed data classification, handling, retention, hold, deletion, backup, export, and evidence standard for Agent OS. It covers human identity data, organization and workspace data, tasks, runs, prompts, model inputs and outputs, artifacts, memory, embeddings, logs, telemetry, audit evidence, approvals, secrets, support data, incidents, backups, caches, indexes, sandbox data, adapter/provider data, and deletion propagation. It does not provide legal advice, authorize silent deletion of audit evidence, or claim compliance with any privacy regime.
+> **Status: Approved baseline — 2026-08-13.** This document defines the data classification, handling, retention, hold, deletion, backup, export, and evidence standard for Agent OS. It covers human identity data, organization and workspace data, tasks, runs, prompts, model inputs and outputs, artifacts, memory, embeddings, logs, telemetry, audit evidence, approvals, secrets, support data, incidents, backups, caches, indexes, sandbox data, adapter/provider data, and deletion propagation. It does not provide legal advice, authorize silent deletion of audit evidence, or claim compliance with any privacy regime.
 
 ## 1. Purpose
 
@@ -2057,35 +2084,35 @@ D4 — mature multi-jurisdiction data-governance programme
 | `BCP-001` | Backup, restore, recovery, and negative-fact reapplication |
 | `PLG-001` | Extension/provider data declarations and lifecycle |
 
-## 189. ADR-TBD-DAT2-001 — Classification taxonomy and inheritance
+## 189. ADR-CANDIDATE-DAT2-001 — Classification taxonomy and inheritance
 
 Approve C0–C4, privacy/integrity/availability dimensions, aggregation, unknown handling, and downgrade authority.
 
-## 190. ADR-TBD-DAT2-002 — Data inventory, lineage, and category ownership
+## 190. ADR-CANDIDATE-DAT2-002 — Data inventory, lineage, and category ownership
 
 Define inventory technology, lineage coverage, owners, provider mapping, and orphan detection.
 
-## 191. ADR-TBD-DAT2-003 — Retention profiles and schedules
+## 191. ADR-CANDIDATE-DAT2-003 — Retention profiles and schedules
 
 Approve R0–R6, trigger events, candidate periods, review cadence, and contractual/legal override process.
 
-## 192. ADR-TBD-DAT2-004 — Deletion architecture and evidence
+## 192. ADR-CANDIDATE-DAT2-004 — Deletion architecture and evidence
 
 Define tombstones, deletion graph, idempotent jobs, receipts, completion criteria, failures, and cryptographic erasure.
 
-## 193. ADR-TBD-DAT2-005 — Holds and high-risk lifecycle governance
+## 193. ADR-CANDIDATE-DAT2-005 — Holds and high-risk lifecycle governance
 
 Define hold authorities, review, release, deletion conflicts, workspace deletion, and organization deletion.
 
-## 194. ADR-TBD-DAT2-006 — Backup, restore, and deletion propagation
+## 194. ADR-CANDIDATE-DAT2-006 — Backup, restore, and deletion propagation
 
 Define immutable backup treatment, tombstones, key scope, expiration, restore reconciliation, and residual windows.
 
-## 195. ADR-TBD-DAT2-007 — External provider data lifecycle
+## 195. ADR-CANDIDATE-DAT2-007 — External provider data lifecycle
 
 Define provider inventory, allowed classifications, retention/training terms, regions, deletion requests, confirmations, and route suspension.
 
-## 196. ADR-TBD-DAT2-008 — Personal-data, analytics, and commercial governance
+## 196. ADR-CANDIDATE-DAT2-008 — Personal-data, analytics, and commercial governance
 
 Define personal-data minimization, analytics aggregation, data-subject workflows, residency, customer controls, and legal review.
 
@@ -2223,17 +2250,18 @@ DAT-002 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
-- Register status: `proposed_unregistered`
-- Current version: `0.1.0`
-- Approved by: no one
-- Required next action: register proposal, then Product, Architecture, Security, Data, Operations, and Quality review
+- Current status: `approved`
+- Register status: `approved`
+- Current version: `0.2.0`
+- Approved by: Product, Architecture, Security, Data, Operations, and Quality owners under explicit stakeholder authorization communicated by the product owner
+- Required next action: implement and validate the controls; approval does not claim implementation
 
 ### Revision history
 
 | Version | Date | Status | Summary |
 |---|---|---|---|
 | 0.1.0 | 2026-07-20 | Draft | Initial classification, retention, hold, deletion, backup, export, provider, lifecycle evidence, and restore-reconciliation standard covering Agent OS operational, AI, artifact, memory, identity, security, and support data |
+| 0.2.0 | 2026-08-13 | Approved | Stakeholder approval recorded and the registered status reconciled; normative content retained. |
 
 ## 204. References
 
