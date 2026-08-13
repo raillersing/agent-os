@@ -90,9 +90,9 @@ documents:
     version: 1.1.0
     wave: 1
     priority: P0
-    status: in-review
+    status: approved
     owner: product-owner
-    approval_date: 2026-07-16
+    approval_date: 2026-08-13
     source_of_truth: true
     dependencies: [DOC-000, GLO-001]
     research_inputs: [VIDEO-001, VIDEO-002, VIDEO-003, VIDEO-004, VIDEO-EVIDENCE-INDEX]
@@ -190,8 +190,10 @@ documents:
     path: docs/03-architecture/DDD-001-domain-model-v0.1.0.md
     wave: 2
     priority: P0
-    status: draft
+    status: approved
+    version: 0.3.0
     owner: architecture-owner
+    approval_date: 2026-08-13
     dependencies: [SRS-001]
   - id: DAT-001
     title: Data Architecture
@@ -207,8 +209,9 @@ documents:
     version: 0.2.0
     wave: 2
     priority: P1
-    status: in-review
+    status: approved
     owner: data-owner
+    approval_date: 2026-08-13
     source_of_truth: true
     dependencies: [DAT-001]
   - id: DCT-001
@@ -216,8 +219,10 @@ documents:
     path: docs/03-architecture/DCT-001-data-dictionary-v0.1.0.md
     wave: 2
     priority: P1
-    status: draft
+    status: approved
+    version: 0.2.0
     owner: data-owner
+    approval_date: 2026-08-13
     dependencies: [DAT-001]
   - id: MEM-001
     title: Memory and Knowledge Architecture
@@ -252,8 +257,10 @@ documents:
     path: docs/04-contracts/API-001-api-specification-v0.1.0.md
     wave: 3
     priority: P0
-    status: draft
+    status: approved
+    version: 0.3.0
     owner: api-owner
+    approval_date: 2026-08-13
     dependencies: [SAD-001, AGC-001, RUN-001, APR-001]
   - id: APR-001
     title: Approval Contract
@@ -276,8 +283,10 @@ documents:
     path: docs/04-contracts/EVT-001-event-catalog-and-async-contract-v0.1.0.md
     wave: 3
     priority: P0
-    status: draft
+    status: approved
+    version: 0.3.0
     owner: architecture-owner
+    approval_date: 2026-08-13
     dependencies: [ORC-001, RUN-001]
   - id: MOD-001
     title: Model Profile Contract

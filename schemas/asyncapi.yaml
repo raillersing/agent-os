@@ -4,7 +4,7 @@ info:
   description: |
     Asynchronous event contracts for Agent OS.
     Events are published via Redis Pub/Sub and consumed by interested services.
-  version: 0.1.0
+  version: 0.3.0
   contact:
     name: Agent OS Team
     email: events@agent-os.dev
@@ -85,6 +85,36 @@ channels:
       auditEvent:
         $ref: '#/components/messages/AuditEvent'
 
+  projects:
+    description: Project aggregate events
+    messages:
+      projectCreated: { $ref: '#/components/messages/ProjectCreated' }
+      projectUpdated: { $ref: '#/components/messages/ProjectUpdated' }
+      projectPaused: { $ref: '#/components/messages/ProjectPaused' }
+      projectArchived: { $ref: '#/components/messages/ProjectArchived' }
+
+  tasks:
+    description: Task aggregate events
+    messages:
+      taskCreated: { $ref: '#/components/messages/TaskCreated' }
+      taskUpdated: { $ref: '#/components/messages/TaskUpdated' }
+      taskReady: { $ref: '#/components/messages/TaskReady' }
+      taskBlocked: { $ref: '#/components/messages/TaskBlocked' }
+      taskCompleted: { $ref: '#/components/messages/TaskCompleted' }
+      taskCancelled: { $ref: '#/components/messages/TaskCancelled' }
+      taskArchived: { $ref: '#/components/messages/TaskArchived' }
+      taskSnapshotCreated: { $ref: '#/components/messages/TaskSnapshotCreated' }
+
+  conversations:
+    description: Conversation and message events
+    messages:
+      conversationCreated: { $ref: '#/components/messages/ConversationCreated' }
+      conversationMessageRecorded: { $ref: '#/components/messages/ConversationMessageRecorded' }
+      conversationShared: { $ref: '#/components/messages/ConversationShared' }
+      conversationShareRevoked: { $ref: '#/components/messages/ConversationShareRevoked' }
+      conversationDeletionRequested: { $ref: '#/components/messages/ConversationDeletionRequested' }
+      conversationDeleted: { $ref: '#/components/messages/ConversationDeleted' }
+
 operations:
   onAgentCreated:
     action: receive
@@ -123,6 +153,97 @@ operations:
 
 components:
   messages:
+    ProjectCreated:
+      name: ProjectCreated
+      title: Project Created
+      contentType: application/json
+      payload: { $ref: '#/components/schemas/DomainResourceEventPayload' }
+    ProjectUpdated:
+      name: ProjectUpdated
+      title: Project Updated
+      contentType: application/json
+      payload: { $ref: '#/components/schemas/DomainResourceEventPayload' }
+    ProjectPaused:
+      name: ProjectPaused
+      title: Project Paused
+      contentType: application/json
+      payload: { $ref: '#/components/schemas/DomainResourceEventPayload' }
+    ProjectArchived:
+      name: ProjectArchived
+      title: Project Archived
+      contentType: application/json
+      payload: { $ref: '#/components/schemas/DomainResourceEventPayload' }
+    TaskCreated:
+      name: TaskCreated
+      title: Task Created
+      contentType: application/json
+      payload: { $ref: '#/components/schemas/DomainResourceEventPayload' }
+    TaskUpdated:
+      name: TaskUpdated
+      title: Task Updated
+      contentType: application/json
+      payload: { $ref: '#/components/schemas/DomainResourceEventPayload' }
+    TaskReady:
+      name: TaskReady
+      title: Task Ready
+      contentType: application/json
+      payload: { $ref: '#/components/schemas/DomainResourceEventPayload' }
+    TaskBlocked:
+      name: TaskBlocked
+      title: Task Blocked
+      contentType: application/json
+      payload: { $ref: '#/components/schemas/DomainResourceEventPayload' }
+    TaskCompleted:
+      name: TaskCompleted
+      title: Task Completed
+      contentType: application/json
+      payload: { $ref: '#/components/schemas/DomainResourceEventPayload' }
+    TaskCancelled:
+      name: TaskCancelled
+      title: Task Cancelled
+      contentType: application/json
+      payload: { $ref: '#/components/schemas/DomainResourceEventPayload' }
+    TaskArchived:
+      name: TaskArchived
+      title: Task Archived
+      contentType: application/json
+      payload: { $ref: '#/components/schemas/DomainResourceEventPayload' }
+    TaskSnapshotCreated:
+      name: TaskSnapshotCreated
+      title: Task Snapshot Created
+      contentType: application/json
+      payload: { $ref: '#/components/schemas/DomainResourceEventPayload' }
+    ConversationCreated:
+      name: ConversationCreated
+      title: Conversation Created
+      contentType: application/json
+      payload: { $ref: '#/components/schemas/DomainResourceEventPayload' }
+    ConversationMessageRecorded:
+      name: ConversationMessageRecorded
+      title: Conversation Message Recorded
+      contentType: application/json
+      payload: { $ref: '#/components/schemas/MessageRecordedPayload' }
+    ConversationShared:
+      name: ConversationShared
+      title: Conversation Shared
+      contentType: application/json
+      payload: { $ref: '#/components/schemas/DomainResourceEventPayload' }
+    ConversationShareRevoked:
+      name: ConversationShareRevoked
+      title: Conversation Share Revoked
+      contentType: application/json
+      payload: { $ref: '#/components/schemas/DomainResourceEventPayload' }
+    ConversationDeletionRequested:
+      name: ConversationDeletionRequested
+      title: Conversation Deletion Requested
+      contentType: application/json
+      payload: { $ref: '#/components/schemas/DomainResourceEventPayload' }
+    ConversationDeleted:
+      name: ConversationDeleted
+      title: Conversation Deleted
+      contentType: application/json
+      payload: { $ref: '#/components/schemas/DomainResourceEventPayload' }
+
     AgentCreated:
       name: AgentCreated
       title: Agent Created
@@ -276,6 +397,36 @@ components:
         $ref: '#/components/schemas/AuditEventPayload'
 
   schemas:
+    DomainResourceEventPayload:
+      type: object
+      required: [event_id, timestamp, event_type, workspace_id, resource_type, resource_id, aggregate_version, correlation_id, causation_id, actor_chain, retention_profile, classification]
+      properties:
+        event_id: { type: string, format: uuid }
+        timestamp: { type: string, format: date-time }
+        event_type: { type: string }
+        workspace_id: { type: string, format: uuid }
+        resource_type: { type: string, enum: [project, task, conversation] }
+        resource_id: { type: string, format: uuid }
+        aggregate_version: { type: integer, minimum: 1 }
+        correlation_id: { type: string, format: uuid }
+        causation_id: { type: [string, 'null'], format: uuid }
+        actor_chain: { type: array, items: { type: object } }
+        retention_profile: { type: string, pattern: '^R[0-6]$' }
+        classification: { type: string }
+        data: { type: object }
+    MessageRecordedPayload:
+      allOf:
+        - $ref: '#/components/schemas/DomainResourceEventPayload'
+        - type: object
+          required: [conversation_id, message_id, role, content_reference, provider_reference]
+          properties:
+            resource_type: { type: string, enum: [message] }
+            conversation_id: { type: string, format: uuid }
+            message_id: { type: string, format: uuid }
+            role: { type: string, enum: [user, assistant, system, tool, event] }
+            content_reference: { type: object }
+            provider_reference: { type: [object, 'null'] }
+
     AgentCreatedPayload:
       type: object
       required: [event_id, timestamp, agent]

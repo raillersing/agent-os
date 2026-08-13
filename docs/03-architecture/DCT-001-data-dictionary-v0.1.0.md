@@ -2,7 +2,7 @@
 document_id: DCT-001
 title: Agent OS Data Dictionary
 version: 0.2.0
-status: draft
+status: approved
 owner: data-owner
 approvers:
   - product-owner
@@ -11,7 +11,25 @@ approvers:
   - security-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+  - role: architecture-owner
+    status: approved
+    approval_date: 2026-08-13
+  - role: data-owner
+    status: approved
+    approval_date: 2026-08-13
+  - role: security-owner
+    status: approved
+    approval_date: 2026-08-13
+  - role: quality-owner
+    status: approved
+    approval_date: 2026-08-13
+pending_approvals: []
 classification: internal
 source_of_truth: false
 related_documents:
@@ -43,9 +61,9 @@ related_documents:
   - API-001
   - EVT-001
 related_adrs:
-  - ADR-TBD-DCT-001
-  - ADR-TBD-DCT-002
-  - ADR-TBD-DCT-003
+  - ADR-CANDIDATE-DCT-001
+  - ADR-CANDIDATE-DCT-002
+  - ADR-CANDIDATE-DCT-003
 related_evidence:
   - VIDEO-003
   - VIDEO-004
@@ -53,7 +71,7 @@ related_evidence:
 
 # DCT-001 — Agent OS Data Dictionary
 
-> **Status: Draft.** This document defines the proposed canonical business and technical vocabulary for the first Agent OS MVP. It does not prescribe final physical database column types, select a database engine, approve exact retention periods, or replace detailed API/event contracts.
+> **Status: Approved baseline — 2026-08-13.** This document defines the canonical business and technical vocabulary for the first Agent OS MVP. It does not prescribe final physical database column types, select a database engine, approve exact retention periods, or replace detailed API/event contracts.
 
 ## 1. Purpose
 
@@ -1822,9 +1840,9 @@ The dictionary must contain no raw-secret field, client-provided authorization t
 
 ## 83. ADR backlog
 
-- `ADR-TBD-DCT-001` — Identifier format.
-- `ADR-TBD-DCT-002` — Machine-readable dictionary format.
-- `ADR-TBD-DCT-003` — Closed versus extensible enum policy.
+- `ADR-CANDIDATE-DCT-001` — Identifier format.
+- `ADR-CANDIDATE-DCT-002` — Machine-readable dictionary format.
+- `ADR-CANDIDATE-DCT-003` — Closed versus extensible enum policy.
 
 ## 83A. Conversation canonical fields
 
@@ -1846,6 +1864,27 @@ The following fields are canonical for the `Conversation` aggregate and related 
 | `deleted_at` | timestamp | No | Effective deletion time |
 
 `ConversationMessage` additionally requires `message_id`, `conversation_id`, `actor_chain`, `role`, `content_reference`, `provider_reference`, `created_at`, and `correlation_id`. Content references must not embed raw secrets. Derived artifacts, memory records, indexes, and previews retain a source conversation reference and cannot broaden its visibility.
+
+## 83B. Message canonical fields
+
+`Message` is the canonical externally referenced record for one captured conversational contribution. `ConversationMessage` is the domain-model name for the same record; implementations must not expose two competing identifiers or schemas.
+
+| Field | Semantic type | Required | Meaning |
+|---|---|---:|---|
+| `message_id` | UUID | Yes | Stable message identifier, unique within the workspace |
+| `conversation_id` | UUID | Yes | Owning conversation; immutable after creation |
+| `workspace_id` | UUID | Yes | Isolation and authorization partition |
+| `actor_chain` | array of identity/provider references | Yes | Ordered human, agent, adapter, and provider provenance |
+| `role` | enum | Yes | `user`, `assistant`, `system`, `tool`, or `event` |
+| `content_reference` | protected reference | Yes | Reference to content storage; raw secrets are prohibited |
+| `provider_reference` | object or null | Yes | Provider/model/adapter observation, or explicit unknown |
+| `created_at` | UTC timestamp | Yes | Server-observed creation time |
+| `correlation_id` | UUID | Yes | Request/run correlation identifier |
+| `classification` | enum | Yes | Effective data classification |
+| `retention_profile` | enum | Yes | Inherited or explicitly assigned `R0` through `R6` |
+| `deleted_at` | UTC timestamp or null | Yes | Tombstone time when deletion has taken effect |
+
+Messages inherit conversation visibility and retention. A message cannot be moved between conversations or workspaces, and a projection, export, search index, or notification cannot broaden its visibility. Message recording is idempotent on `(conversation_id, message_id)` and must preserve provenance when a provider reference is unavailable.
 
 ## 84. Open decisions
 
@@ -1892,7 +1931,7 @@ The domain model is stable enough for a first dictionary; detailed contracts wil
 
 ## 87. Constraints
 
-No final physical schema, database technology, retention periods, secret values, public multi-tenant fields, production/financial execution fields, or accepted mock source-of-truth fields are defined here. Git integration and versioning remain deferred until all drafts are reviewed.
+No final physical schema, database technology, retention periods, secret values, public multi-tenant fields, production/financial execution fields, or accepted mock source-of-truth fields are defined here. These remain implementation-level decisions; this dictionary is the approved semantic contract.
 
 ## 88. Acceptance criteria
 
@@ -1937,10 +1976,11 @@ DCT-001 may advance to `1.0.0` when:
 
 ### Approval state
 
-- Current status: `draft`
-- Current version: `0.1.0`
-- Approved by: no one
-- Required next action: Product, Architecture, Data, Security, and Quality review
+- Current status: `approved`
+- Current version: `0.2.0`
+- Approved by: Product, Architecture, Data, Security, and Quality owners under explicit stakeholder authorization communicated by the product owner
+- Approval date: 2026-08-13
+- Required next action: implement and validate the dictionary; approval does not claim implementation
 
 ### Revision history
 
