@@ -13,7 +13,7 @@ approvers:
 created: 2026-08-13
 last_reviewed: 2026-08-13
 classification: internal
-source_of_truth: true
+source_of_truth: false
 related_documents:
   - DOC-000
   - AGC-001
@@ -214,4 +214,4 @@ Before Hermes is marked supported:
 
 ## Compatibility note
 
-`ADR-003` remains authoritative for the existence of Hermes, Codex, and Claude Code as the initial adapter target family. This ADR is authoritative for **delivery order and the minimum real-adapter requirement of the MVP** once approved.
+`ADR-003` remains authoritative for the existence of Hermes, Codex, and Claude Code as the initial adapter target family. This ADR becomes authoritative for **delivery order and the minimum real-adapter requirement of the MVP** only after all required approvals are recorded.
