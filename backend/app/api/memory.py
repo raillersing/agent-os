@@ -17,7 +17,7 @@ from ..schemas.memory import MemoryCreate, MemorySearchResults
 router = APIRouter()
 
 
-@router.post("/", response_model=MemorySchema, status_code=201)
+@router.post("", response_model=MemorySchema, status_code=201)
 async def create_memory(memory: MemoryCreate, db: AsyncSession = Depends(get_db)):
     """Add to memory."""
     # Check if key already exists

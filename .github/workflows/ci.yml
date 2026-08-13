@@ -10,10 +10,10 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: '3.12'
 
@@ -23,27 +23,21 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Black
-        run: |
-          cd backend
-          black --check .
+        run: black --check backend
 
       - name: Run isort
-        run: |
-          cd backend
-          isort --check-only .
+        run: isort --check-only backend
 
       - name: Run Flake8
-        run: |
-          cd backend
-          flake8 .
+        run: flake8 backend
 
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: '3.12'
 
@@ -58,14 +52,14 @@ jobs:
           pytest --cov=app --cov-report=xml
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@0f8570b1a125f4937846a11fcfa3bcd548bd8c97 # v4.6.0
         with:
           files: ./backend/coverage.xml
 
   build-backend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Build backend image
         run: |
@@ -74,7 +68,7 @@ jobs:
   build-frontend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Build frontend image
         run: |
@@ -83,8 +77,8 @@ jobs:
   frontend-quality:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '20'
           cache: npm
@@ -99,12 +93,17 @@ jobs:
   validate-schemas:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: '3.12'
+
+      - name: Set up Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '20'
 
       - name: Install backend dependencies
         run: pip install -r backend/requirements.txt
@@ -117,16 +116,16 @@ jobs:
 
       - name: Validate OpenAPI
         run: |
-          npx @redocly/cli lint schemas/openapi.yaml
+          npx --yes @redocly/cli@1.34.0 lint schemas/openapi.yaml
 
       - name: Validate AsyncAPI
         run: |
-          npx @asyncapi/cli validate schemas/asyncapi.yaml
+          npx --yes @asyncapi/cli@2.16.3 validate --fail-severity warn schemas/asyncapi.yaml
 
   compose-config:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Validate development Compose configuration
         env:
           POSTGRES_DB: agent_os

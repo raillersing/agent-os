@@ -25,8 +25,31 @@ class Workspace(WorkspaceCreate, ORMModel):
     updated_at: datetime
 
 
+class ProjectCreate(BaseModel):
+    workspace_id: UUID
+    name: str = Field(min_length=1, max_length=255)
+    purpose: str = Field(min_length=1)
+
+
+class Project(ProjectCreate, ORMModel):
+    project_id: UUID
+    state: str
+    created_by: UUID
+    version: int
+    created_at: datetime
+    updated_at: datetime
+
+
+class ProjectUpdate(BaseModel):
+    name: str | None = Field(default=None, min_length=1, max_length=255)
+    purpose: str | None = Field(default=None, min_length=1)
+    state: str | None = Field(default=None, pattern="^(active|paused|archived)$")
+    expected_version: int = Field(ge=1)
+
+
 class MissionCreate(BaseModel):
     workspace_id: UUID
+    project_id: UUID
     title: str = Field(min_length=1, max_length=255)
     objective: str = Field(min_length=1)
     plan: list[dict[str, Any]] = []

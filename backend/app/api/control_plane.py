@@ -1,17 +1,19 @@
 """Workspace-scoped persistent control-plane endpoints."""
 
 from datetime import datetime
-from uuid import UUID
+from uuid import NAMESPACE_URL, UUID, uuid5
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..core.database import get_db
+from ..core.security import require_authenticated_user
 from ..models.control_plane import Approval as ApprovalModel
 from ..models.control_plane import AuditEvent as AuditEventModel
 from ..models.control_plane import Automation as AutomationModel
 from ..models.control_plane import Mission as MissionModel
+from ..models.control_plane import Project as ProjectModel
 from ..models.control_plane import Workspace as WorkspaceModel
 from ..schemas.control_plane import (
     Approval,
@@ -22,6 +24,9 @@ from ..schemas.control_plane import (
     AutomationCreate,
     Mission,
     MissionCreate,
+    Project,
+    ProjectCreate,
+    ProjectUpdate,
     Workspace,
     WorkspaceCreate,
 )
@@ -84,6 +89,83 @@ async def create_workspace(
     return workspace
 
 
+@router.get("/projects", response_model=list[Project])
+async def list_projects(
+    workspace_id: UUID = Query(...),
+    db: AsyncSession = Depends(get_db),
+):
+    await require_workspace(db, workspace_id)
+    query = (
+        select(ProjectModel)
+        .where(ProjectModel.workspace_id == workspace_id)
+        .order_by(ProjectModel.created_at.desc())
+    )
+    result = await db.execute(query)
+    return result.scalars().all()
+
+
+@router.post("/projects", response_model=Project, status_code=201)
+async def create_project(
+    payload: ProjectCreate,
+    db: AsyncSession = Depends(get_db),
+    current_user: dict = Depends(require_authenticated_user),
+):
+    await require_workspace(db, payload.workspace_id)
+    project = ProjectModel(
+        **payload.model_dump(),
+        created_by=uuid5(NAMESPACE_URL, f"agent-os:{current_user['sub']}"),
+    )
+    db.add(project)
+    await db.flush()
+    record_event(
+        db,
+        project.workspace_id,
+        "project.created",
+        "project",
+        project.project_id,
+        {"name": project.name, "purpose": project.purpose, "version": project.version},
+    )
+    await db.commit()
+    await db.refresh(project)
+    return project
+
+
+@router.get("/projects/{project_id}", response_model=Project)
+async def get_project(project_id: UUID, db: AsyncSession = Depends(get_db)):
+    project = await db.get(ProjectModel, project_id)
+    if project is None:
+        raise HTTPException(status_code=404, detail="Project not found")
+    return project
+
+
+@router.patch("/projects/{project_id}", response_model=Project)
+async def update_project(
+    project_id: UUID, payload: ProjectUpdate, db: AsyncSession = Depends(get_db)
+):
+    project = await db.get(ProjectModel, project_id)
+    if project is None:
+        raise HTTPException(status_code=404, detail="Project not found")
+    if project.version != payload.expected_version:
+        raise HTTPException(status_code=409, detail="Project version is stale")
+    for field, value in payload.model_dump(
+        exclude={"expected_version"}, exclude_none=True
+    ).items():
+        setattr(project, field, value)
+    project.version += 1
+    project.updated_at = datetime.utcnow()
+    record_event(
+        db,
+        project.workspace_id,
+        "project.updated",
+        "project",
+        project.project_id,
+        {"state": project.state, "version": project.version},
+    )
+    await db.commit()
+    await db.refresh(project)
+    return project
+
+
 @router.get("/missions", response_model=list[Mission])
 async def list_missions(
     workspace_id: UUID | None = Query(default=None),
@@ -99,6 +181,13 @@ async def list_missions(
 @router.post("/missions", response_model=Mission, status_code=201)
 async def create_mission(payload: MissionCreate, db: AsyncSession = Depends(get_db)):
     await require_workspace(db, payload.workspace_id)
+    project = await db.get(ProjectModel, payload.project_id)
+    if (
+        project is None
+        or project.workspace_id != payload.workspace_id
+        or project.state == "archived"
+    ):
+        raise HTTPException(status_code=404, detail="Project not found in workspace")
     mission = MissionModel(**payload.model_dump())
     db.add(mission)
     await db.flush()

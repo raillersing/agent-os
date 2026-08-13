@@ -26,6 +26,11 @@ class Settings(BaseSettings):
     # Redis
     REDIS_URL: str = "redis://localhost:6381/0"
 
+    # Temporal is the only durable workflow path in D0.
+    TEMPORAL_ADDRESS: str = "localhost:7233"
+    TEMPORAL_NAMESPACE: str = "default"
+    TEMPORAL_TASK_QUEUE: str = "agent-os-d0"
+
     # Security
     # Secrets and bootstrap credentials must be supplied by the environment.
     SECRET_KEY: str = ""

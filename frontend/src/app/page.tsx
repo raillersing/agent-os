@@ -27,7 +27,9 @@ export default function Home() {
     try {
       let workspaces = await api.listWorkspaces()
       if (!workspaces.length) workspaces = [await api.createWorkspace({ name: 'My workspace', description: 'Default local AgentOS workspace' })]
-      await api.createMission({ workspace_id: workspaces[0].id, title: intent.trim().slice(0, 80), objective: intent.trim(), plan: [{ name: 'Clarify scope', status: 'planned' }, { name: 'Execute bounded work', status: 'planned' }, { name: 'Review evidence', status: 'planned' }] })
+      let projects = await api.listProjects(workspaces[0].id)
+      if (!projects.length) projects = [await api.createProject({ workspace_id: workspaces[0].id, name: intent.trim().slice(0, 80), purpose: intent.trim() })]
+      await api.createMission({ workspace_id: workspaces[0].id, project_id: projects[0].project_id, title: intent.trim().slice(0, 80), objective: intent.trim(), plan: [{ name: 'Clarify scope', status: 'planned' }, { name: 'Execute bounded work', status: 'planned' }, { name: 'Review evidence', status: 'planned' }] })
       setPrepared(true)
     } catch (cause) { setError(cause instanceof Error ? cause.message : 'The mission could not be saved.') }
     finally { setSaving(false) }

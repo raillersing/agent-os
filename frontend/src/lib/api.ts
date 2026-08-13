@@ -93,7 +93,7 @@ class ApiClient {
     if (params?.limit) query.set('limit', params.limit.toString());
     if (params?.offset) query.set('offset', params.offset.toString());
     if (params?.status) query.set('status', params.status);
-    return this.request<any[]>(`/api/v1/agents/?${query.toString()}`);
+    return this.request<any[]>(`/api/v1/agents?${query.toString()}`);
   }
 
   async getAgent(id: string) {
@@ -101,7 +101,7 @@ class ApiClient {
   }
 
   async createAgent(data: any) {
-    return this.request<any>('/api/v1/agents/', {
+    return this.request<any>('/api/v1/agents', {
       method: 'POST',
       body: data,
     });
@@ -127,7 +127,7 @@ class ApiClient {
     if (params?.offset) query.set('offset', params.offset.toString());
     if (params?.agent_id) query.set('agent_id', params.agent_id);
     if (params?.status) query.set('status', params.status);
-    return this.request<any[]>(`/api/v1/runs/?${query.toString()}`);
+    return this.request<any[]>(`/api/v1/runs?${query.toString()}`);
   }
 
   async getRun(id: string) {
@@ -159,7 +159,7 @@ class ApiClient {
   }
 
   async createMemory(data: any) {
-    return this.request<any>('/api/v1/memory/', {
+    return this.request<any>('/api/v1/memory', {
       method: 'POST',
       body: data,
     });
@@ -173,7 +173,7 @@ class ApiClient {
 
   // Tools
   async listTools() {
-    return this.request<any[]>('/api/v1/tools/');
+    return this.request<any[]>('/api/v1/tools');
   }
 
   async executeTool(toolId: string, data: any) {
@@ -196,13 +196,23 @@ class ApiClient {
     return this.request<any>('/api/v1/workspaces', { method: 'POST', body: data });
   }
 
+  async listProjects(workspaceId?: string) {
+    if (!workspaceId) throw new Error('workspaceId is required to list projects');
+    const query = `?workspace_id=${encodeURIComponent(workspaceId)}`;
+    return this.request<Array<{ project_id: string; workspace_id: string; name: string; purpose: string; state: 'active' | 'paused' | 'archived'; created_by: string; version: number }>>(`/api/v1/projects${query}`);
+  }
+
+  async createProject(data: { workspace_id: string; name: string; purpose: string }) {
+    return this.request<{ project_id: string; workspace_id: string; name: string; purpose: string; state: 'active' | 'paused' | 'archived'; created_by: string; version: number }>('/api/v1/projects', { method: 'POST', body: data });
+  }
+
   async listMissions(workspaceId?: string) {
     const query = workspaceId ? `?workspace_id=${encodeURIComponent(workspaceId)}` : '';
     return this.request<any[]>(`/api/v1/missions${query}`);
   }
 
-  async createMission(data: { workspace_id: string; title: string; objective: string; plan?: any[] }) {
-    return this.request<any>('/api/v1/missions', { method: 'POST', body: data });
+  async createMission(data: { workspace_id: string; project_id: string; title: string; objective: string; plan?: Array<Record<string, unknown>> }) {
+    return this.request<{ id: string; workspace_id: string; project_id: string; title: string; objective: string }>('/api/v1/missions', { method: 'POST', body: data });
   }
 
   async listAutomations(workspaceId?: string) {

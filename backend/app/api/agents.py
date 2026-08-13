@@ -18,7 +18,7 @@ from ..schemas.agent import AgentCreate, AgentUpdate
 router = APIRouter()
 
 
-@router.get("/", response_model=List[AgentSchema])
+@router.get("", response_model=List[AgentSchema])
 async def list_agents(
     limit: int = 20,
     offset: int = 0,
@@ -35,7 +35,7 @@ async def list_agents(
     return agents
 
 
-@router.post("/", response_model=AgentSchema, status_code=201)
+@router.post("", response_model=AgentSchema, status_code=201)
 async def create_agent(agent: AgentCreate, db: AsyncSession = Depends(get_db)):
     """Create a new agent."""
     db_agent = AgentModel(
