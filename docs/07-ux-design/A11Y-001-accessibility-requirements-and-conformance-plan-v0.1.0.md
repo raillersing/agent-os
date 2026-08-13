@@ -1,11 +1,12 @@
 ---
 document_id: A11Y-001
 title: Agent OS Accessibility Requirements and Conformance Plan
-version: 1.0.0
-status: approved
+version: 1.0.1
+status: in-review
 owner: quality-owner
 approvers:
   - product-owner
+  - ux-owner
   - architecture-owner
   - security-owner
   - data-owner
@@ -13,20 +14,24 @@ approvers:
   - quality-owner
 created: 2026-07-20
 last_reviewed: 2026-08-13
-approval_date: 2026-08-13
 approval_records:
   - role: product-owner
     status: approved
     approval_date: 2026-08-13
-    evidence: explicit user confirmation that the full team approved this document
+    evidence: explicit user confirmation of the WCAG 2.2 AA and MVP accessibility direction
   - role: ux-owner
     status: approved
     approval_date: 2026-08-13
-    evidence: explicit user confirmation that the full team approved this document
+    evidence: approval record preserved from the prior document baseline
   - role: quality-owner
     status: approved
     approval_date: 2026-08-13
-    evidence: explicit user confirmation that the full team approved this document
+    evidence: approval record preserved from the prior document baseline
+pending_approvals:
+  - architecture-owner
+  - security-owner
+  - data-owner
+  - operations-owner
 classification: internal
 source_of_truth: false
 related_documents: []
@@ -80,7 +85,7 @@ related_adrs:
 
 # A11Y-001 — Agent OS Accessibility Requirements and Conformance Plan
 
-> **Status: Draft — registered.** This document defines the accessibility requirements and conformance plan for Agent OS. It establishes a WCAG 2.2 Level AA direction for the web-based Mission Control, together with keyboard, focus, screen-reader, reflow, contrast, motion, forms, tables, charts, approvals, artifacts, operations, testing, evidence, exception, and release-gate requirements. It does not claim current conformance, approve a legal accessibility statement, select final assistive-technology support commitments, or replace testing by disabled users.
+> **Status: In review — Product, UX, and Quality approvals are recorded; Architecture, Security, Data, and Operations approvals remain pending.** This document defines the accessibility requirements and conformance plan for Agent OS. It establishes **WCAG 2.2 Level AA** as the MVP target direction for the web-based Mission Control, together with keyboard, focus, screen-reader, reflow, contrast, motion, forms, tables, charts, approvals, artifacts, operations, testing, evidence, exception, and release-gate requirements. It does not claim current conformance, approve a legal accessibility statement, select final assistive-technology support commitments, or replace testing by disabled users.
 
 ## 1. Purpose
 
@@ -163,11 +168,13 @@ This document does not:
 
 ## 4. Normative direction
 
-The principal target is:
+The principal target direction is:
 
 ```text
 WCAG 2.2 Level AA
 ```
+
+Product, UX, and Quality have accepted this direction. Full controlled-document approval still requires the pending Architecture, Security, Data, and Operations reviews recorded in the front matter.
 
 Additional guidance may include:
 
@@ -2544,6 +2551,8 @@ Final matrix should cover supported combinations across:
 - Linux where relevant;
 - mobile viewport and touch.
 
+`VVR-001` defines the selected Playwright browser-automation baseline and staged Chromium/Firefox/WebKit coverage; this document governs accessibility semantics and assistive-technology expectations rather than duplicating pixel-baseline rules.
+
 ## 269. Browser support statement
 
 The product must publish an internal and future external support statement tied to tested versions.
@@ -2839,7 +2848,7 @@ Critical journeys require:
 
 ## 294. Visual verification integration
 
-`VVR-001` should require accessibility-relevant captures for:
+`VVR-001` requires accessibility-relevant captures for:
 
 - focus;
 - error;
@@ -3273,7 +3282,7 @@ Before controlled commercial release:
 
 ### `ADR-TBD-A11Y-001 — Accessibility target and supported scope`
 
-Approve WCAG 2.2 AA scope, included surfaces, generated documents, and third-party-content policy.
+WCAG 2.2 AA is the approved Product/UX/Quality target direction. This ADR remains needed to complete Architecture, Security, Data, and Operations agreement on the controlled conformance scope, included surfaces, generated documents, and third-party-content policy.
 
 ### `ADR-TBD-A11Y-002 — Browser and assistive-technology support matrix`
 
@@ -3285,7 +3294,7 @@ Approve keyboard/focus patterns for menus, dialogs, comboboxes, tables, grids, t
 
 ### `ADR-TBD-A11Y-004 — Accessibility test and evidence stack`
 
-Select automated tools, test harnesses, evidence format, reporting, regression integration, and storage.
+Select automated accessibility tools, test harnesses, evidence format, reporting, regression integration, and storage. Browser visual automation itself is governed by `VVR-001`.
 
 ### `ADR-TBD-A11Y-005 — Accessibility exceptions and release governance`
 
@@ -3297,31 +3306,30 @@ Define HTML, PDF, presentation, spreadsheet, email, and export accessibility sco
 
 ## 327. Open decisions
 
-1. Confirm `A11Y-001` registration.
-2. Approve WCAG 2.2 AA as the target.
-3. Define exact conformance scope.
-4. Confirm browser support matrix.
-5. Confirm NVDA browser combinations.
-6. Confirm VoiceOver/Safari support.
-7. Decide whether JAWS enters pilot or commercial testing.
-8. Confirm forced-colors support.
-9. Confirm high-contrast theme requirement.
-10. Confirm required zoom and reflow tests.
-11. Confirm target-size interpretation for compact operations.
-12. Confirm virtualized-table policy.
-13. Confirm accessible diff-viewer implementation.
-14. Confirm chart alternative format.
-15. Confirm PDF/export accessibility scope.
-16. Confirm disabled-user research schedule.
-17. Confirm accessibility defect response targets.
-18. Confirm exception approvers.
-19. Confirm public accessibility-statement timing.
-20. Confirm ACR/VPAT need.
-21. Confirm automated test tools.
-22. Confirm evidence storage.
-23. Confirm extension accessibility validation.
-24. Confirm mobile approval restrictions.
-25. Resolve whether `UIF-001` remains a separate state contract.
+1. Complete Architecture, Security, Data, and Operations approval of `A11Y-001`.
+2. Define exact WCAG 2.2 AA conformance scope before any public conformance claim.
+3. Confirm browser/assistive-technology support matrix.
+4. Confirm NVDA browser combinations.
+5. Confirm VoiceOver/Safari support.
+6. Decide whether JAWS enters pilot or commercial testing.
+7. Confirm forced-colors support.
+8. Confirm high-contrast theme requirement.
+9. Confirm required zoom and reflow tests beyond the baseline already stated.
+10. Confirm target-size interpretation for compact operations.
+11. Confirm virtualized-table policy.
+12. Confirm accessible diff-viewer implementation.
+13. Confirm chart alternative format.
+14. Confirm PDF/export accessibility scope.
+15. Confirm disabled-user research schedule.
+16. Confirm accessibility defect response targets.
+17. Confirm exception approvers.
+18. Confirm public accessibility-statement timing.
+19. Confirm ACR/VPAT need.
+20. Confirm automated accessibility test tools.
+21. Confirm evidence storage.
+22. Confirm extension accessibility validation.
+23. Confirm mobile approval restrictions.
+24. Resolve whether `UIF-001` remains a separate state contract.
 
 ## 328. Risks
 
@@ -3373,28 +3381,27 @@ Define HTML, PDF, presentation, spreadsheet, email, and export accessibility sco
 - no critical status delivered only through toast or sound;
 - no global horizontal scrolling at required reflow widths;
 - no automated-test-only sign-off;
-- no permanent unapproved accessibility exception;
-- no Git commit, push, PR, merge, or release during current documentation drafting.
+- no permanent unapproved accessibility exception.
 
 ## 331. Acceptance criteria
 
-A11Y-001 may advance to `1.0.0` when:
+A11Y-001 may advance from `in-review` to `approved` when:
 
-1. It is formally added to the document register.
-2. Product accepts accessibility scope and user-impact priorities.
-3. Architecture accepts semantic, interaction, dynamic-content, and extension boundaries.
-4. Security accepts authentication, approval, reauthentication, and secret-accessibility controls.
-5. Data accepts accessible metadata, document, export, and retention implications.
-6. Operations accepts accessible alerts, incidents, maintenance, emergency, and recovery.
-7. Quality accepts testing, evidence, severity, exceptions, and release gates.
-8. WCAG target and scope are approved;
-9. browser/assistive-technology matrix is approved;
-10. critical journey test matrix is approved;
-11. approval, run, artifact, and operations requirements are accepted;
-12. automated and manual test responsibilities are assigned;
-13. accessibility evidence format is defined;
-14. exception process is approved;
-15. `VVR-001` can consume these requirements for visual and interaction regression without changing them.
+1. Product, UX, and Quality approvals remain recorded.
+2. Architecture accepts semantic, interaction, dynamic-content, and extension boundaries.
+3. Security accepts authentication, approval, reauthentication, and secret-accessibility controls.
+4. Data accepts accessible metadata, document, export, and retention implications.
+5. Operations accepts accessible alerts, incidents, maintenance, emergency, and recovery.
+6. the WCAG 2.2 AA target scope is explicitly accepted across the required roles;
+7. browser/assistive-technology matrix is approved;
+8. critical journey test matrix is approved;
+9. approval, run, artifact, and operations requirements are accepted;
+10. automated and manual test responsibilities are assigned;
+11. accessibility evidence format is defined;
+12. exception process is approved;
+13. `VVR-001` can consume these requirements for visual and interaction regression without changing them.
+
+Implementation evidence remains separate from document approval; neither this document nor the repository currently claims WCAG conformance.
 
 ## 332. Downstream impact
 
@@ -3410,22 +3417,29 @@ A11Y-001 may advance to `1.0.0` when:
 | `CST-001` | Accessible costs, budgets, charts, and tables |
 | `ADP-HER-001` | Accessible capability/session/tool/model state |
 | `ADP-CDX-001` | Accessible repository, command, test, and diff review |
-| Document register | Add proposed document and dependencies |
+| Document register | Keep status, version, and dependencies synchronized |
 
 ## 333. Revision and approval history
 
 ### Approval state
 
-- Current status: `approved`
-- Current version: `0.1.0`
-- Approved by: the full approval team on 2026-08-13
-- Required next action: register proposal, then Product, Architecture, Security, Data, Operations, and Quality review
+- Current status: `in-review`
+- Current version: `1.0.1`
+- Product Owner: approved 2026-08-13
+- UX Owner: approved 2026-08-13
+- Quality Owner: approved 2026-08-13
+- Architecture Owner: pending
+- Security Owner: pending
+- Data Owner: pending
+- Operations Owner: pending
 
 ### Revision history
 
 | Version | Date | Status | Summary |
 |---|---|---|---|
 | 0.1.0 | 2026-07-20 | Draft | Initial accessibility requirements and conformance plan covering WCAG 2.2 AA direction, semantics, keyboard, focus, names/roles/states, contrast, reflow, forms, authentication, tables, charts, code/diffs, dynamic content, approvals, runs, artifacts, operations, responsive behavior, testing, evidence, exceptions, and release gates |
+| 1.0.0 | 2026-08-13 | Inconsistent approval metadata | Front matter stated approved while the body remained draft and specialist approval records were incomplete |
+| 1.0.1 | 2026-08-13 | In review | Harmonized approval state, preserved Product/UX/Quality approvals, retained WCAG 2.2 AA direction, and recorded pending specialist reviews |
 
 ## References
 
@@ -3444,3 +3458,4 @@ A11Y-001 may advance to `1.0.0` when:
 - `PLG-001` — Plugin and Extension Architecture
 - `TST-001` — Test Strategy and Verification Plan
 - `QAG-001` — Quality Assurance and Release Gates
+- `VVR-001` — Visual Validation and Regression Plan
