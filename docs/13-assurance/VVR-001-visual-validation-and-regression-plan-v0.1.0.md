@@ -1,25 +1,35 @@
 ---
 document_id: VVR-001
 title: Agent OS Visual Validation and Regression Plan
-version: 0.2.0
-status: draft
+version: 0.3.0
+status: in-review
 owner: quality-owner
 approvers: [product-owner, architecture-owner, security-owner, operations-owner, quality-owner]
 created: 2026-07-20
-last_reviewed: 2026-07-20
+last_reviewed: 2026-08-13
 classification: internal
 source_of_truth: false
 related_documents: []
 dependencies: [UXA-001, DSN-001, A11Y-001, TST-001, QAG-001]
 related_proposed_documents: [UXA-001, DSN-001, A11Y-001, UIF-001]
-related_adrs: [ADR-TBD-VVR-001, ADR-TBD-VVR-002, ADR-TBD-VVR-003, ADR-TBD-VVR-004, ADR-TBD-VVR-005, ADR-TBD-VVR-006]
+related_adrs: [ADR-TBD-VVR-002, ADR-TBD-VVR-004, ADR-TBD-VVR-005, ADR-TBD-VVR-006]
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user approval of the Playwright and browser-validation recommendations on 2026-08-13
+pending_approvals:
+  - architecture-owner
+  - security-owner
+  - operations-owner
+  - quality-owner
 ---
 
 # VVR-001 — Agent OS Visual Validation and Regression Plan
 
-> **Status: Draft — registered.** This document defines how Agent OS validates the actual rendered interface, governs visual baselines, detects regressions, reviews responsive and accessibility-visible states, preserves evidence, and blocks unsafe integration or release. It does not select final tooling and does not replace functional, accessibility, security, or usability testing.
+> **Status: In review — Product Owner approved the MVP validation direction on 2026-08-13.** This document defines how Agent OS validates the actual rendered interface, governs visual baselines, detects regressions, reviews responsive and accessibility-visible states, preserves evidence, and blocks unsafe integration or release. Architecture, Security, Operations, and Quality approvals remain pending; this document is therefore not yet a source of truth.
 
-> **Implementation boundary (2026-08-13).** The frontend currently exposes only Next.js development/build/lint scripts; no Playwright, Cypress, browser pin, visual snapshot directory, baseline store, deterministic fixture runner, or CI capture job is present. The requirements and workflow below are therefore the validation target, not evidence that visual regression automation already exists.
+> **Implementation boundary (2026-08-13).** The frontend currently exposes only Next.js development/build/lint scripts; no Playwright dependency, browser pin, visual snapshot directory, baseline store, deterministic fixture runner, or CI capture job is present. The requirements and tool selection below are the approved Product direction, not evidence that visual regression automation is already implemented.
 
 ## 1. Purpose
 
@@ -45,9 +55,19 @@ Visual similarity does not prove functional correctness. This plan does not repl
 
 A capture is valid only when build, environment, route, fixture, browser, viewport, theme, and data state are known.
 
-## 4.1 — MVP adoption path
+## 4.1 — MVP toolchain selection
 
-When visual automation is implemented, the recommended first controlled stack is Playwright with a pinned Chromium version, repository-managed scenario fixtures, trace/screenshot artifacts, and explicit human baseline review. This is a proposal, not an installed dependency or an approved architecture decision. The initial implementation must add the tool, scripts, fixture reset, CI job, artifact retention, and reviewer workflow together; a screenshot copied manually into the repository is not a valid baseline process.
+The MVP visual-automation baseline is **Playwright**. The implementation must use:
+
+- one repository-pinned Chromium build for deterministic pixel baselines on pull requests;
+- Playwright-managed Firefox and WebKit for structural/cross-engine release-candidate and pilot validation;
+- repository-managed deterministic scenario fixtures;
+- trace, screenshot, and diff artifacts linked to the exact build;
+- explicit human baseline review and approval;
+- a documented fixture-reset and scenario-readiness mechanism;
+- CI artifact retention and reviewer workflow.
+
+This is a tooling decision for the implementation baseline, not a claim that Playwright is already installed. The first implementation change must add the dependency, scripts, browser installation/pinning, fixture reset, CI job, evidence retention, and reviewer workflow together. A screenshot copied manually into the repository is not a valid automated baseline process.
 
 ## 5. Principle — Function before pixels
 
@@ -151,7 +171,7 @@ Interactive validation of the current local branch or worktree.
 
 ## 28. Validation environment — VVE-CI
 
-Pinned-browser automated captures with deterministic fixtures.
+Pinned-Chromium automated captures with deterministic fixtures.
 
 ## 29. Validation environment — VVE-INTEGRATION
 
@@ -256,9 +276,23 @@ Wide Mission Control, bounded reading width, comparisons, and high-density opera
 
 Validate 200% zoom, 400% or equivalent reflow, increased text spacing, light and dark themes, system mode, comfortable and compact density, normal and reduced motion, and forced-colors/high-contrast direction where supported.
 
-## 49. Browser and OS direction
+## 49. Browser and OS baseline
 
-Use one pinned Chromium build for pixel baselines. Perform structural review in Firefox and WebKit/Safari-compatible environments. Inspect fonts, focus, controls, sticky layout, tables, scrollbars, SVG/charts, dialogs, file/date inputs, and overflow. OS coverage follows claimed support, including Windows and Linux/WSL, plus macOS when Safari is claimed.
+Browser coverage is stage-specific:
+
+```text
+Pull request / routine visual gate:
+- pinned Chromium (blocking pixel baseline)
+
+Release candidate and controlled pilot:
+- pinned Chromium
+- Playwright Firefox
+- Playwright WebKit
+```
+
+Firefox and WebKit are primarily structural, interaction, responsive, and accessibility-visible validation targets; Agent OS does not claim pixel identity across engines. Real Safari/macOS testing becomes mandatory only when Safari is part of the formally claimed support matrix. OS coverage otherwise follows the supported product profile, including Windows browser access and Linux/WSL development where applicable.
+
+Inspect fonts, focus, controls, sticky layout, tables, scrollbars, SVG/charts, dialogs, file/date inputs, and overflow across the applicable engines.
 
 ## 50. Component state matrix
 
@@ -431,9 +465,9 @@ Memory exposes source, authority, confidence, freshness, conflict, citations, de
 
 Distinguish health from readiness, current from stale data, completed from verified backup, and restore progress from validated recovery. Cover critical alerts, queues, dead letters, disk pressure, adapter outage, maintenance, emergency stop, incidents, backup failure, and recovery-only mode.
 
-## 69. Future IAM and policy scenarios
+## 69. IAM and policy scenarios
 
-`IAM-001` will refine sign-in, session expiry, reauthentication, denial, role assignment, break-glass, suspension, and workspace switching. `POL-001` will refine allow, deny, approval-required, missing attributes, simulation, conflict, stale policy, and prohibited override.
+`IAM-001` refines sign-in, session expiry, reauthentication, denial, role assignment, break-glass, suspension, and workspace switching. `POL-001` refines allow, deny, approval-required, missing attributes, simulation, conflict, stale policy, and prohibited override. Visual scenarios must follow those approved contracts rather than inventing alternative states.
 
 ## 70. Route inventory and criticality
 
@@ -804,9 +838,18 @@ The manifest includes source/build, environment, route and scenario inventories,
 
 Retain release-candidate evidence, critical security/approval changes, major redesign migrations, pilot acceptance, and incident visuals. Prefer synthetic data over redaction; redaction must not obscure the field being validated.
 
-## 136. CI and change-review direction
+## 136. CI and change-review baseline
 
-CI may generate captures, compare, publish diffs, fail on missing baselines, and enforce thresholds. It cannot approve baseline updates. A future change review may attach evidence summaries, candidates, diffs, findings, and rationale. No Git action is authorized during drafting.
+GitHub Actions is the repository CI baseline selected by `ADR-001`. Visual validation integrates into that CI without granting CI authority to approve visual baselines.
+
+The minimum staged behavior is:
+
+- pull requests: blocking pinned-Chromium critical visual scenarios and artifacts;
+- release candidates: Chromium plus Firefox and WebKit cross-engine scenarios;
+- controlled pilot: validation against the actual pilot build and environment;
+- all stages: publish reviewable evidence and fail on missing required baselines or blocking findings.
+
+CI may generate captures, compare, publish diffs, fail on missing baselines, and enforce thresholds. It cannot approve baseline updates.
 
 ## 137. Pilot and deployment smoke
 
@@ -991,17 +1034,17 @@ Last reviewed:
 | `DEP-001` | Environment and deployment identity |
 | `PLG-001` | Extension UI validation |
 
-## 153. ADR-TBD-VVR-001 — Visual capture and regression toolchain
+## 153. Visual capture and regression toolchain — selected MVP baseline
 
-Select browser automation, screenshot engine, component environment, diff engine, and artifact publication.
+**Product decision recorded 2026-08-13:** Playwright is the selected MVP browser automation, screenshot, trace, and cross-engine validation tool. Pixel baselines use pinned Chromium. Firefox and WebKit provide release-candidate/pilot structural validation. Final specialist approval of this document is still required before the selection becomes fully approved under `DOC-000`.
 
 ## 154. ADR-TBD-VVR-002 — Baseline storage and governance
 
 Define storage, versioning, approvals, retention, and release linkage.
 
-## 155. ADR-TBD-VVR-003 — Canonical browser, OS, and font environment
+## 155. Browser environment — product direction resolved, implementation details pending
 
-Approve pixel-baseline environment and cross-browser review.
+Chromium, Firefox, and WebKit scope is defined by section 49. Exact pinned browser revisions, CI image, fonts, and device-pixel ratio are implementation configuration and must be versioned in repository evidence when Playwright is added.
 
 ## 156. ADR-TBD-VVR-004 — Fixture and runtime-readiness architecture
 
@@ -1017,18 +1060,17 @@ Approve widths, zoom, forced colors, themes, density, localization stress, and e
 
 ## 159. Open decisions
 
-1. Confirm registration.
-2. Select capture, component-story, diff, and baseline-storage tooling.
-3. Select canonical browser, OS, fonts, and device-pixel ratio.
-4. Confirm Firefox and WebKit review scope.
-5. Confirm viewport heights and breakpoint-edge checks.
-6. Confirm French and pseudo-localization scope.
-7. Confirm forced-colors and 400% reflow methods.
-8. Confirm fixture loading and scenario-ready markers.
-9. Confirm evidence retention and CI integration.
-10. Confirm independent VC0 review and exception approvers.
-11. Confirm pilot-day device checks and extension UI scope.
-12. Resolve whether `UIF-001` becomes a separate UI-state contract.
+1. Approve VVR-001 through the remaining Architecture, Security, Operations, and Quality roles.
+2. Select baseline artifact storage/retention details.
+3. Pin the exact Playwright/browser/tool versions during implementation.
+4. Confirm viewport heights and breakpoint-edge checks beyond the required width matrix.
+5. Confirm French and pseudo-localization scope.
+6. Confirm forced-colors and 400% reflow methods.
+7. Confirm fixture loading and scenario-ready markers.
+8. Confirm evidence retention details and CI artifact policy.
+9. Confirm independent VC0 review and exception approvers.
+10. Confirm pilot-day physical-device checks and extension UI scope.
+11. Resolve whether `UIF-001` becomes a separate UI-state contract.
 
 ## 160. Risks
 
@@ -1054,11 +1096,11 @@ Approve widths, zoom, forced colors, themes, density, localization stress, and e
 
 - Agent OS uses a browser-based Mission Control.
 - UXA-001, DSN-001, and A11Y-001 define architecture, components, and accessibility-visible behavior.
-- Deterministic fixtures and a pinned browser can be created.
+- Deterministic fixtures and pinned browser revisions can be created.
 - Visual artifacts and metadata can be stored.
 - Reviewers can inspect the actual current runtime.
 - Visual validation remains mandatory before moving between frontend integrations.
-- Git integration occurs only after drafting and global consistency review.
+- GitHub Actions remains the CI execution environment unless superseded by an approved ADR.
 
 ## 162. Constraints
 
@@ -1071,12 +1113,13 @@ Approve widths, zoom, forced colors, themes, density, localization stress, and e
 - no high-risk mobile decision without complete review context;
 - no pixel-perfect cross-browser claim;
 - no substitution for functional or accessibility testing;
-- no unresolved VIS-0 release;
-- no Git commit, push, PR, merge, or baseline publication during drafting.
+- no unresolved VIS-0 release.
 
 ## 163. Acceptance criteria
 
-VVR-001 may advance to `1.0.0` when it is registered; Product accepts route and journey coverage; Architecture accepts deterministic runtime and evidence boundaries; Security accepts fixtures and critical-control review; Operations accepts runtime verification and deployment smoke; Quality accepts baselines, severity, exceptions, and gates; and the viewport/theme/browser matrices, critical scenarios, evidence manifest, and integration blockers are approved.
+VVR-001 may advance from `in-review` to `approved` when Product approval remains recorded; Architecture accepts Playwright integration, deterministic runtime, and evidence boundaries; Security accepts fixtures and critical-control review; Operations accepts runtime verification and deployment smoke; Quality accepts baselines, severity, exceptions, and gates; and the viewport/theme/browser matrices, critical scenarios, evidence manifest, and integration blockers are approved.
+
+Implementation status remains separate: installing Playwright and producing passing evidence is required before the document or relevant requirements can be claimed `implemented`.
 
 ## 164. Downstream impact
 
@@ -1091,30 +1134,14 @@ VVR-001 may advance to `1.0.0` when it is registered; Product accepts route and 
 | `CST-001` | Cost and budget tables, charts, and unknown states |
 | `ADP-HER-001` | Hermes adapter and capability scenarios |
 | `ADP-CDX-001` | Repository, diff, command, test, and Git-action scenarios |
-| Document register | Add the proposed document and dependencies |
+| Document register | Register version/status and dependencies |
 
 ## 165. Revision and approval history
 
-- Current status: `draft`
-- Current version: `0.1.0`
-- Approved by: no one
-
-| Version | Date | Status | Summary |
-|---|---|---|---|
-| 0.1.0 | 2026-07-20 | Draft | Initial visual validation and regression plan covering runtime identity, deterministic fixtures, baselines, viewports, themes, browsers, states, pages, journeys, captures, diffs, responsive and accessibility review, evidence, exceptions, integration gates, and release controls |
-
-## 166. References
-
-- `DOC-000` — Documentation Governance and Source-of-Truth Policy
-- `GLO-001` — Glossary and Controlled Terminology
-- `UXA-001` — UX Architecture and User Journey Specification — registered
-- `DSN-001` — Agent OS Design System Specification — registered
-- `A11Y-001` — Accessibility Requirements and Conformance Plan — registered
-- `TST-001` — Test Strategy and Verification Plan
-- `QAG-001` — Quality Assurance and Release Gates
-- `RUN-001` — Run and Execution Contract
-- `APR-001` — Approval Contract
-- `ART-001` — Artifact Contract
-- `OBS-001` — Observability Architecture
-- `OPS-001` — Operations and Production Runbook
-- `PLG-001` — Plugin and Extension Architecture
+- Current status: `in-review`
+- Current version: `0.3.0`
+- Product Owner: approved 2026-08-13
+- Architecture Owner: pending
+- Security Owner: pending
+- Operations Owner: pending
+- Quality Owner: pending
