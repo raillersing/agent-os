@@ -1,8 +1,8 @@
 ---
 document_id: ADR-003
 title: Product Information Architecture, Access Scope, Approval, Retention, and Durable Execution
-version: 0.1.1
-status: in-review
+version: 0.2.0
+status: approved
 owner: architecture-owner
 approvers:
   - product-owner
@@ -12,7 +12,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-08-12
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-13
 classification: internal
 source_of_truth: true
 related_documents:
@@ -45,21 +45,35 @@ supersedes: []
 approval_records:
   - role: product-owner
     status: approved
-    approval_date: 2026-08-12
-    evidence: explicit user approval in project conversation
-pending_approvals:
-  - architecture-owner
-  - security-owner
-  - data-owner
-  - operations-owner
-  - quality-owner
+    approval_date: 2026-08-13
+    evidence: explicit user approval after review while assuming the product-owner role
+  - role: architecture-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user approval after review while assuming the architecture-owner role
+  - role: security-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user approval after review while assuming the security-owner role
+  - role: data-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user approval after review while assuming the data-owner role
+  - role: operations-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user approval after review while assuming the operations-owner role
+  - role: quality-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user approval after review while assuming the quality-owner role
 ---
 
 # ADR-003 — Product Information Architecture, Access Scope, Approval, Retention, and Durable Execution
 
 ## Status
 
-**In-review — proposed baseline.** This ADR records the product and architecture decisions explicitly validated by the product owner on 2026-08-12. It is not approved until the required architecture, security, data, operations, and quality review is recorded.
+**Approved — 2026-08-13.** This ADR records the harmonized product and architecture baseline. Approval covers the decision baseline; it does not claim implementation.
 
 ## Context
 
@@ -130,18 +144,18 @@ Workspace policy may require stricter approval but cannot remove approval for `c
 
 ### 6. Retention and deletion baseline
 
-- Conversations, artifacts, memory, and run metadata are retained until user or workspace policy requests deletion; archival is preferred for inactive content.
-- Audit evidence for consequential actions uses profile `R4` under `DAT-002`; seven years is an initial proposal for that profile, pending data, security, and legal review.
-- Deleted content enters a 30-day recoverable deletion period, except compromised secrets, which are revoked immediately.
+- Conversations, artifacts, memory, and run metadata receive a retention profile from `DAT-002`; the shortest applicable purpose, legal, contractual, or security requirement wins.
+- The baseline defaults are `R0` 24 hours, `R1` 30 days, `R2` 180 days, `R3` 2 years, `R4` 7 years only for justified security/audit evidence, `R5` until hold release, and `R6` prohibited by default.
+- Deletion creates a tombstone and a tracked propagation job. Recoverability follows the assigned retention profile and documented backup schedule; it is not a universal 30-day promise.
 - Secrets are never stored in conversations, prompts, ordinary memory, artifacts, or logs.
 - Search indexes, embeddings, previews, caches, and derived records follow the source record's deletion policy and must be removed or rebuilt after deletion.
-- Backups use encrypted rotation policies defined by the deployment owner; backup retention does not silently override a valid deletion request beyond the documented recovery window.
+- Backups use encrypted rotation policies defined by the deployment owner; backup retention does not silently override a valid deletion request and must reapply tombstones after restore.
 
 These defaults are product proposals, not legal retention advice.
 
 ### 7. Durable orchestration
 
-Temporal is the proposed durable orchestration engine for long-running workflows, approvals, timers, retries, pause/resume, cancellation, worker recovery, and event history. PostgreSQL remains the authoritative store for Agent OS business state, permissions, conversations, artifacts, memory metadata, and audit records. Redis may support cache, notifications, or auxiliary transport but is not the authoritative run history.
+Temporal is the selected durable orchestration engine for long-running workflows, approvals, timers, retries, pause/resume, cancellation, worker recovery, and event history. PostgreSQL remains the authoritative store for Agent OS business state, permissions, conversations, artifacts, memory metadata, and audit records. Redis may support cache, notifications, or auxiliary transport but is not the authoritative run history.
 
 This decision supersedes the task-queue portion of ADR-001 only after this ADR is approved. Celery may remain for bounded auxiliary jobs if a later ADR documents the boundary.
 
@@ -176,11 +190,11 @@ Plugins may expose broad capabilities comparable to modern AI agents, including 
 1. Update controlled vocabulary, product requirements, domain model, IAM, policy, memory, artifact, plugin, audit, API, run, approval, event, deployment, and orchestration documents.
 2. Add machine-readable visibility, risk, approval, retention, and correlation fields to contracts.
 3. Create implementation and validation evidence before changing this ADR to `implemented`.
-4. Record formal approvers before changing this ADR to `approved`.
+4. Record formal approvers before changing this ADR to `approved`; implementation evidence is additionally required before `implemented`.
 
 ## Approval state
 
-The product owner explicitly approved this decision baseline on 2026-08-12. The ADR remains `in-review` pending the other designated approver roles. This record does not authorize implementation status or silently approve the related draft documents.
+The user explicitly approved this decision baseline on 2026-08-13 while assuming all designated approver roles. This record does not authorize implementation status or silently approve the related draft documents.
 
 ## Revision history
 
@@ -188,3 +202,5 @@ The product owner explicitly approved this decision baseline on 2026-08-12. The 
 |---|---|---|---|
 | 0.1.0 | 2026-08-12 | Draft | Initial validated product and architecture decision baseline |
 | 0.1.1 | 2026-08-12 | In-review | Product-owner approval recorded; remaining approvers listed; child decisions split out |
+| 0.2.0 | 2026-08-12 | In-review | Harmonized retention defaults and explicit implementation/approval boundary |
+| 0.2.0 | 2026-08-13 | Approved | All designated approver roles explicitly approved the decision baseline |

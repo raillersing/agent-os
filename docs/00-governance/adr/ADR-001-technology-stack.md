@@ -1,30 +1,40 @@
 ---
 document_id: ADR-001
 title: Technology Stack Selection
-version: 1.1.0
-status: in-review
+version: 1.2.0
+status: approved
 owner: architecture-owner
 approvers:
   - architecture-owner
   - product-owner
 created: 2026-07-20
-last_reviewed: 2026-07-20
-approval_date: 2026-07-20
+last_reviewed: 2026-08-13
+approval_date: 2026-08-13
 classification: internal
 source_of_truth: true
 related_documents:
   - SAD-001
   - DEP-001
   - DEV-001
-related_adrs: []
+related_adrs:
+  - ADR-004
 supersedes: []
+approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user approval after review while assuming the product-owner role
+  - role: architecture-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user approval after review while assuming the architecture-owner role
 ---
 
 # ADR-001 — Technology Stack Selection
 
 ## Status
 
-**In review** — the durable orchestration decision is being amended by ADR-004.
+**Approved — 2026-08-13.** This ADR defines the harmonized technology baseline. ADR-004 owns the detailed durable-orchestration decision.
 
 ## Context
 
@@ -51,7 +61,7 @@ We will use the following technology stack:
 | **ORM** | SQLAlchemy | 2.0+ | Industry standard, async support |
 | **Migrations** | Alembic | 1.13+ | Mature, works with SQLAlchemy |
 | **Validation** | Pydantic | 2.0+ | Data validation, settings management |
-| **Durable orchestration** | Temporal | current supported release | Long-running workflows, approvals, retries, timers, cancellation, and recovery |
+| **Durable orchestration** | Temporal | compatibility-pinned by implementation | Long-running workflows, approvals, retries, timers, cancellation, and recovery |
 
 ### Frontend
 
@@ -133,7 +143,7 @@ We will use the following technology stack:
 
 ### Mitigations
 
-1. Use Temporal for durable workflow execution; use bounded asynchronous workers for non-authoritative auxiliary jobs.
+1. Use Temporal for durable workflow execution. Bounded auxiliary jobs may use a separate mechanism only when documented by a later ADR; Redis is never the authoritative workflow history.
 2. Start with Next.js App Router for simplicity
 3. Provide Docker Compose for zero-config PostgreSQL
 
@@ -152,4 +162,3 @@ This decision aligns with:
 - [SQLAlchemy 2.0](https://docs.sqlalchemy.org/)
 - [Next.js Documentation](https://nextjs.org/docs)
 - [PostgreSQL Documentation](https://www.postgresql.org/docs/)
-- external reference SEO Agent OS — Similar architecture with Claude + Hermes + Obsidian

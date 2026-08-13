@@ -24,12 +24,12 @@ documents:
   - id: ADR-001
     title: Technology Stack Selection
     path: docs/00-governance/adr/ADR-001-technology-stack.md
-    version: 1.1.0
+    version: 1.2.0
     wave: 1
     priority: P0
-    status: in-review
+    status: approved
     owner: architecture-owner
-    approval_date: 2026-07-20
+    approval_date: 2026-08-13
     source_of_truth: true
     dependencies: [SAD-001, DEP-001, DEV-001]
   - id: ADR-002
@@ -45,30 +45,30 @@ documents:
   - id: ADR-003
     title: Product Information Architecture, Access Scope, Approval, Retention, and Durable Execution
     path: docs/00-governance/adr/ADR-003-product-information-architecture-and-durable-execution.md
-    version: 0.1.1
+    version: 0.2.0
     wave: 1
     priority: P0
-    status: in-review
+    status: approved
     owner: architecture-owner
     source_of_truth: true
     dependencies: [ADR-001, ADR-002, VSN-001, SAD-001, DDD-001, IAM-001, POL-001, ORC-001]
   - id: ADR-004
     title: Durable Orchestration Engine
     path: docs/00-governance/adr/ADR-004-durable-orchestration-engine.md
-    version: 0.2.0
+    version: 0.3.0
     wave: 1
     priority: P0
-    status: in-review
+    status: approved
     owner: architecture-owner
     source_of_truth: true
     dependencies: [ADR-001, ADR-003, SAD-001, ORC-001, RUN-001, EVT-001, DEP-001]
   - id: ADR-005
     title: Conversation Domain, Visibility, and Derived Data Privacy
     path: docs/00-governance/adr/ADR-005-conversation-domain-and-privacy.md
-    version: 0.2.0
+    version: 0.3.0
     wave: 1
     priority: P0
-    status: in-review
+    status: approved
     owner: architecture-owner
     source_of_truth: true
     dependencies: [ADR-003, DDD-001, DAT-001, DCT-001, API-001, EVT-001, MEM-001, ART-001, IAM-001, AUD-001]
@@ -204,6 +204,7 @@ documents:
   - id: DAT-002
     title: Data Classification, Retention and Deletion Standard
     path: docs/03-architecture/DAT-002-data-classification-retention-and-deletion-standard-v0.1.0.md
+    version: 0.2.0
     wave: 2
     priority: P1
     status: in-review

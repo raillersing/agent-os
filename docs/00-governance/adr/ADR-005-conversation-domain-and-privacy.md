@@ -1,8 +1,8 @@
 ---
 document_id: ADR-005
 title: Conversation Domain, Visibility, and Derived Data Privacy
-version: 0.2.0
-status: in-review
+version: 0.3.0
+status: approved
 owner: architecture-owner
 approvers:
   - product-owner
@@ -11,7 +11,7 @@ approvers:
   - data-owner
   - quality-owner
 created: 2026-08-12
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-13
 classification: internal
 source_of_truth: true
 related_documents:
@@ -33,20 +33,31 @@ supersedes: []
 approval_records:
   - role: product-owner
     status: approved
-    approval_date: 2026-08-12
-    evidence: explicit user validation of workspace isolation, private conversations, capture boundary, and derived-data rules
-pending_approvals:
-  - architecture-owner
-  - security-owner
-  - data-owner
-  - quality-owner
+    approval_date: 2026-08-13
+    evidence: explicit user approval after review while assuming the product-owner role
+  - role: architecture-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user approval after review while assuming the architecture-owner role
+  - role: security-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user approval after review while assuming the security-owner role
+  - role: data-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user approval after review while assuming the data-owner role
+  - role: quality-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user approval after review while assuming the quality-owner role
 ---
 
 # ADR-005 — Conversation Domain, Visibility, and Derived Data Privacy
 
 ## Status
 
-**In review — product decision recorded.** This ADR defines the domain and privacy boundary for conversations that pass through Agent OS. It does not claim that conversation capture, synchronization, or access control is implemented.
+**Approved — 2026-08-13.** This ADR defines the domain and privacy boundary for conversations that pass through Agent OS. It does not claim that conversation capture, synchronization, or access control is implemented.
 
 ## Decision
 
@@ -65,6 +76,8 @@ Each conversation has:
 - derived artifact and memory references;
 - audit and correlation identifiers.
 
+The aggregate is identified independently from projects, missions, tasks, and runs. Messages and attachments cannot exist outside a conversation scope, and every derived object carries a source-conversation reference or an explicit non-conversation origin.
+
 The default visibility is `private`. Workspace membership does not grant access to private conversations. Sharing a conversation, message, attachment, artifact, or derived memory is a separate auditable authorization decision.
 
 Only interactions crossing an Agent OS-controlled interface or adapter boundary are captured as Agent OS conversations. External conversations that never pass through Agent OS are not claimed as captured or synchronized.
@@ -76,6 +89,7 @@ Only interactions crossing an Agent OS-controlled interface or adapter boundary 
 - Revoking conversation access revokes access to derived views and triggers projection/index invalidation.
 - Deleting a conversation deletes or anonymizes derived content according to its retention and audit obligations.
 - Audit records preserve the access or deletion fact without retaining deleted content unnecessarily.
+- A deletion request is idempotent, produces a tombstone, and creates a propagation record for relational records, artifacts, indexes, embeddings, caches, exports, provider copies, and backups.
 
 ## Acceptance criteria
 
@@ -84,3 +98,4 @@ Only interactions crossing an Agent OS-controlled interface or adapter boundary 
 - Every message and derived object can be traced to its conversation and actor.
 - Conversation deletion has a recoverable period, legal-hold behavior, backup treatment, and audit record.
 - Provider and adapter records distinguish captured Agent OS content from external content not observed by Agent OS.
+- A provider or adapter cannot claim complete deletion of an external copy without provider evidence; unknown deletion state remains unknown and is surfaced to the user.

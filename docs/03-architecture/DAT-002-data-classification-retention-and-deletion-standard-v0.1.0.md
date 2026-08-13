@@ -12,7 +12,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-07-20
+last_reviewed: 2026-08-12
 classification: internal
 source_of_truth: true
 related_documents:
@@ -96,7 +96,7 @@ related_adrs:
 
 # DAT-002 — Agent OS Data Classification, Retention and Deletion Standard
 
-> **Status: Draft — proposed/unregistered.** This document defines the proposed data classification, handling, retention, hold, deletion, backup, export, and evidence standard for Agent OS. It covers human identity data, organization and workspace data, tasks, runs, prompts, model inputs and outputs, artifacts, memory, embeddings, logs, telemetry, audit evidence, approvals, secrets, support data, incidents, backups, caches, indexes, sandbox data, adapter/provider data, and deletion propagation. It does not provide legal advice, set final statutory retention periods, authorize silent deletion of audit evidence, or claim compliance with any privacy regime.
+> **Status: In review — registered baseline.** This document defines the proposed data classification, handling, retention, hold, deletion, backup, export, and evidence standard for Agent OS. It covers human identity data, organization and workspace data, tasks, runs, prompts, model inputs and outputs, artifacts, memory, embeddings, logs, telemetry, audit evidence, approvals, secrets, support data, incidents, backups, caches, indexes, sandbox data, adapter/provider data, and deletion propagation. It does not provide legal advice, authorize silent deletion of audit evidence, or claim compliance with any privacy regime.
 
 ## 1. Purpose
 
@@ -738,7 +738,7 @@ Audit evidence may require longer retention than ordinary operational data becau
 
 Audit evidence should reference protected objects rather than duplicate full content where possible.
 
-Detailed evidence architecture is defined in proposed/unregistered `AUD-001`.
+Detailed evidence architecture is defined in registered draft `AUD-001`.
 
 ## 85. Support data
 
@@ -786,7 +786,7 @@ Local worktrees, clones, package caches, diffs, logs, and generated files requir
 
 Cost records may be financially and commercially sensitive. They include usage units, pricing version, estimates, reservations, actuals, currency, cost center, provider references, and budget decisions.
 
-Detailed cost retention is refined in proposed/unregistered `CST-001`.
+Detailed cost retention is refined in registered draft `CST-001`.
 
 ## 90. Data inventory
 
@@ -845,7 +845,7 @@ When lineage is incomplete:
 
 Retention is assigned through profiles rather than arbitrary ad hoc dates.
 
-Proposed profiles:
+Registered baseline profiles:
 
 ```text
 R0 — ephemeral
@@ -889,7 +889,7 @@ Exceptional records retained indefinitely only with approved purpose, owner, rev
 
 ## 101. Proposed baseline retention schedule
 
-The following are discussion ranges, not approved periods:
+The following are the registered Agent OS baseline defaults, subject to the required data, security, and legal review:
 
 | Profile | Candidate direction |
 |---|---|
@@ -1881,7 +1881,7 @@ Verify that classification, retention, deletion, export, index, embedding, and p
 
 ## 178. Accessibility requirements
 
-Lifecycle interfaces follow proposed/unregistered `A11Y-001`.
+Lifecycle interfaces follow registered draft `A11Y-001`.
 
 Critical journeys:
 
@@ -1899,7 +1899,7 @@ Critical state cannot rely only on color.
 
 ## 179. Visual validation
 
-Proposed/unregistered `VVR-001` should cover:
+Registered draft `VVR-001` should cover:
 
 - C0–C4 labels;
 - unknown/conflicted classification;
@@ -2243,12 +2243,12 @@ DAT-002 may advance to `1.0.0` when:
 - `DCT-001` — Data Dictionary
 - `SEC-001` — Security Architecture
 - `THR-001` — Threat Model
-- `IAM-001` — Identity and Access Management Architecture — proposed/unregistered
-- `POL-001` — Policy and Permission Architecture — proposed/unregistered
-- `SAN-001` — Sandbox and Secure Execution Architecture — proposed/unregistered
+- `IAM-001` — Identity and Access Management Architecture — registered draft
+- `POL-001` — Policy and Permission Architecture — registered draft
+- `SAN-001` — Sandbox and Secure Execution Architecture — registered draft
 - `MEM-001` — Memory and Knowledge Architecture
 - `ART-001` — Artifact Contract
 - `RUN-001` — Run and Execution Contract
 - `OPS-001` — Operations and Production Runbook
 - `BCP-001` — Business Continuity and Disaster Recovery Plan
-- `SEC-002` — Security Control Catalogue — proposed/unregistered
+- `SEC-002` — Security Control Catalogue — registered draft

@@ -1,8 +1,8 @@
 ---
 document_id: ADR-004
 title: Durable Orchestration Engine
-version: 0.2.0
-status: in-review
+version: 0.3.0
+status: approved
 owner: architecture-owner
 approvers:
   - product-owner
@@ -11,7 +11,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-08-12
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-13
 classification: internal
 source_of_truth: true
 related_documents:
@@ -30,20 +30,31 @@ supersedes: []
 approval_records:
   - role: product-owner
     status: approved
-    approval_date: 2026-08-12
-    evidence: explicit user decision selecting Temporal as the durable orchestration engine
-pending_approvals:
-  - architecture-owner
-  - security-owner
-  - operations-owner
-  - quality-owner
+    approval_date: 2026-08-13
+    evidence: explicit user approval after review while assuming the product-owner role
+  - role: architecture-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user approval after review while assuming the architecture-owner role
+  - role: security-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user approval after review while assuming the security-owner role
+  - role: operations-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user approval after review while assuming the operations-owner role
+  - role: quality-owner
+    status: approved
+    approval_date: 2026-08-13
+    evidence: explicit user approval after review while assuming the quality-owner role
 ---
 
 # ADR-004 — Durable Orchestration Engine
 
 ## Status
 
-**In review — product decision recorded.** This ADR selects Temporal as the proposed durable orchestration boundary. It does not claim that Temporal is deployed or that execution is implemented.
+**Approved — 2026-08-13.** This ADR selects Temporal as the durable orchestration boundary. It does not claim that Temporal is deployed or that execution is implemented.
 
 ## Context
 
@@ -51,7 +62,7 @@ Agent OS requires durable workflows that may run for a long time, wait for appro
 
 ## Decision
 
-Agent OS will use **Temporal** as the proposed durable workflow engine for long-running orchestration.
+Agent OS will use **Temporal** as the durable workflow engine for long-running orchestration.
 
 - Temporal owns workflow execution history, timers, signals, approval waits, retry scheduling, cancellation, worker task queues, and workflow recovery.
 - PostgreSQL remains authoritative for Agent OS business state: identities, workspaces, permissions, conversations, projects, missions, tasks, artifacts, memory metadata, audit records, and cost records.
@@ -77,7 +88,7 @@ Agent OS will use **Temporal** as the proposed durable workflow engine for long-
 
 ## Migration and conflict resolution
 
-ADR-001 currently names Celery + Redis as the task queue. This ADR does not silently supersede that approved decision. Once ADR-004 is approved, ADR-001 must be updated or superseded explicitly for the durable orchestration choice. Celery may remain only for clearly bounded auxiliary jobs documented in a later decision.
+ADR-001 is harmonized with this decision for the durable orchestration boundary. Celery is not part of the authoritative workflow path. It may remain only for clearly bounded auxiliary jobs documented in a later decision and must not own run history, approvals, timers, recovery, or consequential dispatch.
 
 ## Acceptance criteria
 
@@ -86,6 +97,8 @@ ADR-001 currently names Celery + Redis as the task queue. This ADR does not sile
 - Approval wait, retry, timeout, cancellation, and unknown-effect paths are testable.
 - PostgreSQL and Temporal responsibilities are documented and do not compete as sources of truth.
 - Backup, restore, upgrade, and retention procedures cover both systems.
+- The implementation pins a compatible Temporal server and SDK version and records the compatibility evidence.
+- Compose, local deployment, and operations documentation expose the same Temporal service and worker topology.
 
 ## References
 
