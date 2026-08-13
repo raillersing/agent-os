@@ -1,4 +1,4 @@
-register_version: 0.7.0
+register_version: 0.8.0
 last_updated: 2026-08-13
 status_values:
   - draft
@@ -359,6 +359,36 @@ documents:
     status: approved
     owner: architecture-owner
     dependencies: [SAD-001]
+  - id: CTX-001
+    title: Context, Prompt and Instruction Architecture
+    path: docs/05-ai-governance/CTX-001-context-prompt-and-instruction-architecture-v0.1.0.md
+    wave: 2
+    priority: P0
+    version: 0.1.0
+    status: in-review
+    owner: architecture-owner
+    source_of_truth: false
+    dependencies: [SAD-001, MOD-001, RUN-001, MEM-001, POL-001, SEC-001]
+  - id: EVAL-001
+    title: AI Behavioral Evaluation and Model Qualification Standard
+    path: docs/05-ai-governance/EVAL-001-ai-behavioral-evaluation-and-model-qualification-standard-v0.1.0.md
+    wave: 4
+    priority: P0
+    version: 0.1.0
+    status: in-review
+    owner: quality-owner
+    source_of_truth: false
+    dependencies: [TST-001, QAG-001, MOD-001, RUN-001, CTX-001, MLC-001]
+  - id: MLC-001
+    title: Model and Provider Lifecycle and Change Management Standard
+    path: docs/05-ai-governance/MLC-001-model-and-provider-lifecycle-change-management-v0.1.0.md
+    wave: 4
+    priority: P1
+    version: 0.1.0
+    status: in-review
+    owner: architecture-owner
+    source_of_truth: false
+    dependencies: [MOD-001, CST-001, EVAL-001, CTX-001, OBS-001, OPS-001]
   - id: POL-001
     title: Policy and Permission Architecture
     path: docs/05-ai-governance/POL-001-policy-and-permission-architecture-v0.1.0.md
