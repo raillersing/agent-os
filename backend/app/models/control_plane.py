@@ -143,6 +143,9 @@ class RunAttempt(Base):
     """Append-only execution attribution for one simulator Activity invocation."""
 
     __tablename__ = "run_attempts"
+    __table_args__ = (
+        UniqueConstraint("run_id", "attempt_number", name="uq_run_attempts_number"),
+    )
 
     id = Column(Uuid, primary_key=True, default=uuid.uuid4)
     run_id = Column(Uuid, ForeignKey("execution_runs.id"), nullable=False, index=True)

@@ -25,6 +25,24 @@ from .workflows import D1SimulatorRunInput
 PROFILES = {profile.name: profile for profile in ALL_PROFILES}
 
 
+async def _terminal_result(
+    db, run: ExecutionRun, receipt: ExecutionReceipt | None
+) -> dict[str, str] | None:
+    """Return durable terminal evidence without creating new business facts."""
+    terminal_states = {"completed", "failed", "cancelled"}
+    state = receipt.terminal_state if receipt is not None else run.state
+    if state not in terminal_states:
+        return None
+    artifact = None
+    if receipt is not None and receipt.artifact_id:
+        artifact = await db.get(Artifact, receipt.artifact_id)
+    return {
+        "run_id": str(run.id),
+        "state": state,
+        "artifact_hash": artifact.content_hash if artifact else "",
+    }
+
+
 @activity.defn(name="finalize_d1_failed_run")
 async def finalize_d1_failed_run(run_id: str) -> dict[str, str]:
     async with AsyncSessionLocal() as db:
@@ -36,8 +54,9 @@ async def finalize_d1_failed_run(run_id: str) -> dict[str, str]:
                 select(ExecutionReceipt).where(ExecutionReceipt.run_id == run.id)
             )
         ).scalar_one_or_none()
-        if run.state in {"cancelling", "cancelled"}:
-            return {"run_id": run_id, "state": run.state}
+        terminal = await _terminal_result(db, run, existing_receipt)
+        if terminal is not None:
+            return {"run_id": run_id, "state": terminal["state"]}
         run.state, run.ended_at, run.receipt_state, run.version = (
             "failed",
             datetime.utcnow(),
@@ -95,6 +114,14 @@ async def execute_d1_simulator_run(request: D1SimulatorRunInput) -> dict[str, st
             raise ApplicationError(
                 "run unavailable", non_retryable=True, type="InvalidRun"
             )
+        existing_receipt = (
+            await db.execute(
+                select(ExecutionReceipt).where(ExecutionReceipt.run_id == run.id)
+            )
+        ).scalar_one_or_none()
+        terminal = await _terminal_result(db, run, existing_receipt)
+        if terminal is not None:
+            return terminal
         run.state, run.started_at, run.version = (
             "running",
             datetime.utcnow(),
@@ -219,6 +246,18 @@ async def execute_d1_simulator_run(request: D1SimulatorRunInput) -> dict[str, st
             raise ApplicationError(
                 str(error), non_retryable=True, type="NonRetryableSimulatorError"
             )
+        # Cancellation or another terminal reconciliation may have committed
+        # while the simulator was executing. Re-read durable state before
+        # materializing any attempt, artifact, receipt, or terminal audit.
+        await db.refresh(run)
+        existing_receipt = (
+            await db.execute(
+                select(ExecutionReceipt).where(ExecutionReceipt.run_id == run.id)
+            )
+        ).scalar_one_or_none()
+        terminal = await _terminal_result(db, run, existing_receipt)
+        if terminal is not None:
+            return terminal
         output_hash = hashlib.sha256(result.output_text.encode()).hexdigest()
         attempt.state, attempt.ended_at = "succeeded", datetime.utcnow()
         artifact = Artifact(
@@ -257,6 +296,7 @@ async def execute_d1_simulator_run(request: D1SimulatorRunInput) -> dict[str, st
             output_hash=output_hash,
         )
         db.add(receipt)
+        await db.flush()
         db.add(
             AuditEvent(
                 workspace_id=run.workspace_id,

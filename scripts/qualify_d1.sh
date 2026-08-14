@@ -23,6 +23,7 @@ export CORS_ORIGINS='["http://localhost:3080","http://127.0.0.1:3080","http://12
 curl() { command curl --retry 8 --retry-connrefused --retry-delay 1 "$@"; }
 
 dc() { docker compose -p "$COMPOSE_PROJECT_NAME" "$@"; }
+PYTHON_IMAGE="${D1_PYTHON_IMAGE:-agent-os-d1-backend}"
 
 cleanup_one_shots() {
   docker ps -aq --filter "label=com.docker.compose.project=$COMPOSE_PROJECT_NAME" \
@@ -110,6 +111,9 @@ for _ in $(seq 1 30); do
   fi
   sleep 1
 done
+# Re-read after the polling window so a completion committed at the boundary
+# is not mistaken for a failed qualification assertion.
+result=$(curl -fsS "http://127.0.0.1:18080/api/v1/execution-runs/$rid?workspace_id=$wid" -H "$auth")
 printf '%s' "$result" | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d["state"] == "completed" and d["attempts"] and d["artifacts"] and d["receipt"]'
 dc up -d frontend
 until curl -fsS http://127.0.0.1:13080 >/dev/null; do sleep 2; done
@@ -178,18 +182,25 @@ until curl -fsS http://127.0.0.1:18080/health >/dev/null; do sleep 1; done
 for _ in $(seq 1 45); do sleep 1; state=$(curl -fsS "http://127.0.0.1:18080/api/v1/execution-runs/$api_id?workspace_id=$wid" -H "$auth" | python3 -c 'import json,sys;print(json.load(sys.stdin)["state"])'); [ "$state" = completed ] && break; done
 check_run "$api_id" completed
 
+# Re-run the D1 fault/concurrency regression tests in the same qualification.
+# These tests cover post-commit dispatch recovery, terminal Activity redelivery,
+# cancellation/completion races, workspace boundaries, and concurrent accepts.
+docker run --rm -v "$ROOT:/workspace" -w /workspace "$PYTHON_IMAGE" sh -c \
+  'pip install --quiet pytest==7.4.4 pytest-asyncio==0.23.4 && cd /tmp && DATABASE_URL=sqlite+aiosqlite:///./d1-regression.db SECRET_KEY=test-secret-key-with-more-than-32-characters ADMIN_EMAIL=admin@test.local ADMIN_PASSWORD=test-password PYTHONPATH=/workspace/backend pytest -q /workspace/backend/tests/test_d1_execution.py -k "accepted_run or activity_redelivery or cancellation_completion or workspace_isolation or concurrent_duplicate"' \
+  2>&1 | tee "$ARTIFACT_DIR/d1-regression-tests.txt"
+
 # Re-run all repository gates in the same qualified run. The backend quality
 # container is disposable and uses an isolated SQLite file for unit tests.
-docker run --rm -v "$ROOT:/workspace" -w /workspace python:3.12-slim sh -c \
-  'pip install --quiet -r backend/requirements.runtime.txt pytest==7.4.4 pytest-asyncio==0.23.4 black==24.1.1 isort==5.13.2 flake8==7.0.0 && cd /tmp && DATABASE_URL=sqlite+aiosqlite:///./d1-gate.db SECRET_KEY=test-secret-key-with-more-than-32-characters ADMIN_EMAIL=admin@test.local ADMIN_PASSWORD=test-password PYTHONPATH=/workspace/backend pytest -q /workspace/backend/tests && cd /workspace && black --check backend && isort --check-only backend && flake8 backend' \
+docker run --rm -v "$ROOT:/workspace" -w /workspace "$PYTHON_IMAGE" sh -c \
+  'pip install --quiet pytest==7.4.4 pytest-asyncio==0.23.4 black==24.1.1 isort==5.13.2 flake8==7.0.0 && cd /tmp && DATABASE_URL=sqlite+aiosqlite:///./d1-gate.db SECRET_KEY=test-secret-key-with-more-than-32-characters ADMIN_EMAIL=admin@test.local ADMIN_PASSWORD=test-password PYTHONPATH=/workspace/backend pytest -q /workspace/backend/tests && cd /workspace && black --check backend && isort --check-only backend && flake8 backend' \
   2>&1 | tee "$ARTIFACT_DIR/backend-gates.txt"
 
 docker compose -p "$COMPOSE_PROJECT_NAME" build frontend 2>&1 | tee "$ARTIFACT_DIR/frontend-image-build.txt"
 dc run --rm --no-deps frontend npm run lint 2>&1 | tee "$ARTIFACT_DIR/frontend-lint.txt"
 dc run --rm --no-deps frontend npm run build 2>&1 | tee "$ARTIFACT_DIR/frontend-build.txt"
 
-docker run --rm -v "$ROOT:/workspace" -w /workspace python:3.12-slim sh -c \
-  'pip install --quiet -r backend/requirements.runtime.txt && python3 scripts/validate_docs.py && python3 scripts/check_openapi_parity.py' \
+docker run --rm -v "$ROOT:/workspace" -w /workspace "$PYTHON_IMAGE" sh -c \
+  'python3 scripts/validate_docs.py && python3 scripts/check_openapi_parity.py' \
   2>&1 | tee "$ARTIFACT_DIR/documentation-openapi.txt"
 
 docker run --rm -v "$ROOT:/workspace" -w /workspace node:22.14.0-bookworm-slim sh -c \

@@ -89,7 +89,10 @@ def test_workspace_mission_automation_and_approval_persist_across_clients():
         assert [item["project_id"] for item in projects.json()] == [
             project["project_id"]
         ]
-        project_get = restarted_client.get(f"/api/v1/projects/{project['project_id']}")
+        project_get = restarted_client.get(
+            f"/api/v1/projects/{project['project_id']}",
+            params={"workspace_id": workspace["id"]},
+        )
         assert project_get.status_code == 200
         assert project_get.json()["workspace_id"] == workspace["id"]
 
@@ -252,6 +255,7 @@ def test_project_update_requires_current_version():
         ).json()
         updated = client.patch(
             f"/api/v1/projects/{project['project_id']}",
+            params={"workspace_id": workspace["id"]},
             json={"state": "paused", "expected_version": 1},
         )
         assert updated.status_code == 200
@@ -259,6 +263,7 @@ def test_project_update_requires_current_version():
         assert updated.json()["version"] == 2
         stale = client.patch(
             f"/api/v1/projects/{project['project_id']}",
+            params={"workspace_id": workspace["id"]},
             json={"name": "Must fail", "expected_version": 1},
         )
         assert stale.status_code == 409

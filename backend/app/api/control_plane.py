@@ -7,10 +7,11 @@ from datetime import datetime
 from uuid import NAMESPACE_URL, UUID, uuid4, uuid5
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from temporalio.client import Client
+from temporalio.exceptions import CancelledError as TemporalCancelledError
 from temporalio.exceptions import WorkflowAlreadyStartedError
 
 from ..config import settings
@@ -51,6 +52,18 @@ from ..temporal.workflows import D1SimulatorRunInput, D1SimulatorRunWorkflow
 router = APIRouter()
 
 
+def _is_temporal_cancellation(error: BaseException) -> bool:
+    """Recognize direct and wrapped Temporal cancellation failures."""
+    seen: set[int] = set()
+    current: BaseException | None = error
+    while current is not None and id(current) not in seen:
+        seen.add(id(current))
+        if isinstance(current, (TemporalCancelledError, asyncio.CancelledError)):
+            return True
+        current = getattr(current, "cause", None) or current.__cause__
+    return False
+
+
 def record_event(
     db: AsyncSession,
     workspace_id: UUID,
@@ -76,6 +89,83 @@ async def require_workspace(db: AsyncSession, workspace_id: UUID) -> WorkspaceMo
     if workspace is None:
         raise HTTPException(status_code=404, detail="Workspace not found")
     return workspace
+
+
+async def dispatch_durable_run(
+    db: AsyncSession,
+    run_id: UUID,
+    input_text: str,
+    simulator_profile: str,
+    *,
+    recovery: bool = False,
+) -> bool:
+    """Start a stable Temporal workflow and record one durable dispatch edge."""
+    run = await db.get(ExecutionRunModel, run_id)
+    if run is None:
+        return False
+    client = await Client.connect(
+        settings.TEMPORAL_ADDRESS, namespace=settings.TEMPORAL_NAMESPACE
+    )
+    try:
+        await client.start_workflow(
+            D1SimulatorRunWorkflow.run,
+            D1SimulatorRunInput(
+                str(run.id),
+                str(run.workspace_id),
+                input_text,
+                simulator_profile,
+            ),
+            id=run.workflow_id,
+            task_queue=settings.TEMPORAL_TASK_QUEUE,
+        )
+    except WorkflowAlreadyStartedError:
+        pass
+    except Exception:
+        await db.rollback()
+        run = await db.get(ExecutionRunModel, run_id)
+        if run is not None and run.state in {"accepted", "unknown"}:
+            run.state, run.state_reason, run.version = (
+                "unknown",
+                "temporal_dispatch_unconfirmed",
+                run.version + 1,
+            )
+            record_event(
+                db,
+                run.workspace_id,
+                "run.dispatch_unknown",
+                "execution_run",
+                run.id,
+                {},
+            )
+            await db.commit()
+        return False
+
+    transitioned = await db.execute(
+        update(ExecutionRunModel)
+        .where(
+            ExecutionRunModel.id == run_id,
+            ExecutionRunModel.state.in_(["accepted", "unknown"]),
+        )
+        .values(
+            state="queued",
+            state_reason=None,
+            version=ExecutionRunModel.version + 1,
+        )
+    )
+    if transitioned.rowcount:
+        record_event(
+            db,
+            run.workspace_id,
+            "run.dispatched",
+            "execution_run",
+            run.id,
+            {
+                "workflow_id": run.workflow_id,
+                "idempotent_recovery": recovery,
+            },
+        )
+    await db.commit()
+    return True
 
 
 @router.get("/workspaces", response_model=list[Workspace])
@@ -148,20 +238,27 @@ async def create_project(
 
 
 @router.get("/projects/{project_id}", response_model=Project)
-async def get_project(project_id: UUID, db: AsyncSession = Depends(get_db)):
+async def get_project(
+    project_id: UUID,
+    workspace_id: UUID = Query(...),
+    db: AsyncSession = Depends(get_db),
+):
     project = await db.get(ProjectModel, project_id)
-    if project is None:
-        raise HTTPException(status_code=404, detail="Project not found")
+    if project is None or project.workspace_id != workspace_id:
+        raise HTTPException(status_code=404, detail="Project not found in workspace")
     return project
 
 
 @router.patch("/projects/{project_id}", response_model=Project)
 async def update_project(
-    project_id: UUID, payload: ProjectUpdate, db: AsyncSession = Depends(get_db)
+    project_id: UUID,
+    payload: ProjectUpdate,
+    workspace_id: UUID = Query(...),
+    db: AsyncSession = Depends(get_db),
 ):
     project = await db.get(ProjectModel, project_id)
-    if project is None:
-        raise HTTPException(status_code=404, detail="Project not found")
+    if project is None or project.workspace_id != workspace_id:
+        raise HTTPException(status_code=404, detail="Project not found in workspace")
     if project.version != payload.expected_version:
         raise HTTPException(status_code=409, detail="Project version is stale")
     for field, value in payload.model_dump(
@@ -185,12 +282,15 @@ async def update_project(
 
 @router.get("/missions", response_model=list[Mission])
 async def list_missions(
-    workspace_id: UUID | None = Query(default=None),
+    workspace_id: UUID = Query(...),
     db: AsyncSession = Depends(get_db),
 ):
-    query = select(MissionModel).order_by(MissionModel.created_at.desc())
-    if workspace_id:
-        query = query.where(MissionModel.workspace_id == workspace_id)
+    await require_workspace(db, workspace_id)
+    query = (
+        select(MissionModel)
+        .where(MissionModel.workspace_id == workspace_id)
+        .order_by(MissionModel.created_at.desc())
+    )
     result = await db.execute(query)
     return result.scalars().all()
 
@@ -227,6 +327,7 @@ async def create_task(
     db: AsyncSession = Depends(get_db),
     current_user: dict = Depends(require_authenticated_user),
 ):
+    await require_workspace(db, payload.workspace_id)
     mission = await db.get(MissionModel, payload.mission_id)
     project = await db.get(ProjectModel, payload.project_id)
     if (
@@ -302,38 +403,14 @@ async def start_execution_run(
             raise HTTPException(
                 status_code=409, detail="Idempotency key conflicts with another request"
             )
-        if existing.state == "unknown":
-            client = await Client.connect(
-                settings.TEMPORAL_ADDRESS, namespace=settings.TEMPORAL_NAMESPACE
-            )
-            try:
-                await client.start_workflow(
-                    D1SimulatorRunWorkflow.run,
-                    D1SimulatorRunInput(
-                        str(existing.id),
-                        str(existing.workspace_id),
-                        payload.input_text,
-                        payload.simulator_profile,
-                    ),
-                    id=existing.workflow_id,
-                    task_queue=settings.TEMPORAL_TASK_QUEUE,
-                )
-            except WorkflowAlreadyStartedError:
-                pass
-            existing.state, existing.state_reason, existing.version = (
-                "queued",
-                None,
-                existing.version + 1,
-            )
-            record_event(
+        if existing.state in {"accepted", "unknown"}:
+            await dispatch_durable_run(
                 db,
-                existing.workspace_id,
-                "run.dispatched",
-                "execution_run",
                 existing.id,
-                {"workflow_id": existing.workflow_id, "idempotent_recovery": True},
+                payload.input_text,
+                payload.simulator_profile,
+                recovery=True,
             )
-            await db.commit()
             await db.refresh(existing)
         return await execution_run_response(db, existing)
     snapshot = TaskSnapshotModel(
@@ -388,43 +465,13 @@ async def start_execution_run(
     )
     await db.commit()
     await db.refresh(run)
-    try:
-        client = await Client.connect(
-            settings.TEMPORAL_ADDRESS, namespace=settings.TEMPORAL_NAMESPACE
-        )
-        await client.start_workflow(
-            D1SimulatorRunWorkflow.run,
-            D1SimulatorRunInput(
-                str(run.id),
-                str(run.workspace_id),
-                payload.input_text,
-                payload.simulator_profile,
-            ),
-            id=run.workflow_id,
-            task_queue=settings.TEMPORAL_TASK_QUEUE,
-        )
-        run.state, run.version = "queued", run.version + 1
-        record_event(
-            db,
-            run.workspace_id,
-            "run.dispatched",
-            "execution_run",
-            run.id,
-            {"workflow_id": run.workflow_id},
-        )
-        await db.commit()
-        await db.refresh(run)
-    except Exception:
-        run.state, run.state_reason, run.version = (
-            "unknown",
-            "temporal_dispatch_unconfirmed",
-            run.version + 1,
-        )
-        record_event(
-            db, run.workspace_id, "run.dispatch_unknown", "execution_run", run.id, {}
-        )
-        await db.commit()
-        await db.refresh(run)
+    await dispatch_durable_run(
+        db,
+        run.id,
+        payload.input_text,
+        payload.simulator_profile,
+    )
+    await db.refresh(run)
     return await execution_run_response(db, run)
 
 
@@ -512,6 +559,7 @@ async def cancel_execution_run(
         {"workflow_id": run.workflow_id},
     )
     await db.commit()
+    cancellation_confirmed = False
     try:
         client = await Client.connect(
             settings.TEMPORAL_ADDRESS, namespace=settings.TEMPORAL_NAMESPACE
@@ -523,8 +571,59 @@ async def cancel_execution_run(
         # terminal state, so a late activity completion cannot overwrite it.
         try:
             await handle.result()
-        except (Exception, asyncio.CancelledError):
-            pass
+        except TemporalCancelledError:
+            cancellation_confirmed = True
+        except asyncio.CancelledError:
+            cancellation_confirmed = True
+        except Exception as error:
+            # A failed workflow is reconciled from the durable business row.
+            cancellation_confirmed = _is_temporal_cancellation(error)
+        await db.refresh(run)
+        if run.state in {"completed", "failed", "cancelled"}:
+            await db.commit()
+            await db.refresh(run)
+            return await execution_run_response(db, run)
+        existing_receipt = (
+            await db.execute(
+                select(ExecutionReceiptModel).where(
+                    ExecutionReceiptModel.run_id == run.id
+                )
+            )
+        ).scalar_one_or_none()
+        if existing_receipt and existing_receipt.terminal_state in {
+            "completed",
+            "failed",
+            "cancelled",
+        }:
+            run.state = existing_receipt.terminal_state
+            run.cancellation_state = (
+                "confirmed"
+                if existing_receipt.terminal_state == "cancelled"
+                else run.cancellation_state
+            )
+            run.receipt_state = "available"
+            run.ended_at = run.ended_at or datetime.utcnow()
+            await db.commit()
+            await db.refresh(run)
+            return await execution_run_response(db, run)
+        if not cancellation_confirmed:
+            run.state, run.cancellation_state, run.state_reason, run.version = (
+                "unknown",
+                "unconfirmed",
+                "cancellation_unconfirmed",
+                run.version + 1,
+            )
+            record_event(
+                db,
+                run.workspace_id,
+                "run.cancellation_unknown",
+                "execution_run",
+                run.id,
+                {},
+            )
+            await db.commit()
+            await db.refresh(run)
+            return await execution_run_response(db, run)
         run.state, run.cancellation_state, run.ended_at, run.version = (
             "cancelled",
             "confirmed",
@@ -567,6 +666,11 @@ async def cancel_execution_run(
             )
         record_event(db, run.workspace_id, "run.cancelled", "execution_run", run.id, {})
     except Exception:
+        await db.refresh(run)
+        if run.state in {"completed", "failed", "cancelled"}:
+            await db.commit()
+            await db.refresh(run)
+            return await execution_run_response(db, run)
         run.state, run.cancellation_state, run.state_reason, run.version = (
             "unknown",
             "unconfirmed",
@@ -591,11 +695,12 @@ async def update_mission_status(
     mission_id: UUID,
     status: str,
     progress: int = Query(default=0, ge=0, le=100),
+    workspace_id: UUID = Query(...),
     db: AsyncSession = Depends(get_db),
 ):
     mission = await db.get(MissionModel, mission_id)
-    if mission is None:
-        raise HTTPException(status_code=404, detail="Mission not found")
+    if mission is None or mission.workspace_id != workspace_id:
+        raise HTTPException(status_code=404, detail="Mission not found in workspace")
     allowed = {
         "draft",
         "planned",
