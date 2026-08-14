@@ -243,6 +243,22 @@ class ApiClient {
       body: { status, decision_note: decisionNote },
     });
   }
+
+  async listTasks(workspaceId: string) {
+    return this.request<any[]>(`/api/v1/tasks?workspace_id=${encodeURIComponent(workspaceId)}`);
+  }
+
+  async listExecutionRuns(workspaceId: string) {
+    return this.request<any[]>(`/api/v1/execution-runs?workspace_id=${encodeURIComponent(workspaceId)}`);
+  }
+
+  async getExecutionRun(id: string, workspaceId: string) {
+    return this.request<any>(`/api/v1/execution-runs/${id}?workspace_id=${encodeURIComponent(workspaceId)}`);
+  }
+
+  async cancelExecutionRun(id: string, workspaceId: string) {
+    return this.request<any>(`/api/v1/execution-runs/${id}/cancel?workspace_id=${encodeURIComponent(workspaceId)}`, { method: 'POST' });
+  }
 }
 
 export const api = new ApiClient();

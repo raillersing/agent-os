@@ -1,19 +1,31 @@
 """Workspace-scoped persistent control-plane endpoints."""
 
+import asyncio
+import hashlib
+import json
 from datetime import datetime
-from uuid import NAMESPACE_URL, UUID, uuid5
+from uuid import NAMESPACE_URL, UUID, uuid4, uuid5
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
+from temporalio.client import Client
+from temporalio.exceptions import WorkflowAlreadyStartedError
 
+from ..config import settings
 from ..core.database import get_db
 from ..core.security import require_authenticated_user
 from ..models.control_plane import Approval as ApprovalModel
 from ..models.control_plane import AuditEvent as AuditEventModel
 from ..models.control_plane import Automation as AutomationModel
+from ..models.control_plane import ExecutionReceipt as ExecutionReceiptModel
+from ..models.control_plane import ExecutionRun as ExecutionRunModel
 from ..models.control_plane import Mission as MissionModel
 from ..models.control_plane import Project as ProjectModel
+from ..models.control_plane import RunAttempt as RunAttemptModel
+from ..models.control_plane import Task as TaskModel
+from ..models.control_plane import TaskSnapshot as TaskSnapshotModel
 from ..models.control_plane import Workspace as WorkspaceModel
 from ..schemas.control_plane import (
     Approval,
@@ -22,14 +34,19 @@ from ..schemas.control_plane import (
     AuditEvent,
     Automation,
     AutomationCreate,
+    ExecutionRun,
+    ExecutionRunCreate,
     Mission,
     MissionCreate,
     Project,
     ProjectCreate,
     ProjectUpdate,
+    Task,
+    TaskCreate,
     Workspace,
     WorkspaceCreate,
 )
+from ..temporal.workflows import D1SimulatorRunInput, D1SimulatorRunWorkflow
 
 router = APIRouter()
 
@@ -202,6 +219,371 @@ async def create_mission(payload: MissionCreate, db: AsyncSession = Depends(get_
     await db.commit()
     await db.refresh(mission)
     return mission
+
+
+@router.post("/tasks", response_model=Task, status_code=201)
+async def create_task(
+    payload: TaskCreate,
+    db: AsyncSession = Depends(get_db),
+    current_user: dict = Depends(require_authenticated_user),
+):
+    mission = await db.get(MissionModel, payload.mission_id)
+    project = await db.get(ProjectModel, payload.project_id)
+    if (
+        mission is None
+        or project is None
+        or mission.workspace_id != payload.workspace_id
+        or mission.project_id != payload.project_id
+        or project.workspace_id != payload.workspace_id
+    ):
+        raise HTTPException(
+            status_code=404, detail="Mission not found in project workspace"
+        )
+    task = TaskModel(
+        **payload.model_dump(),
+        created_by=uuid5(NAMESPACE_URL, f"agent-os:{current_user['sub']}"),
+    )
+    db.add(task)
+    await db.flush()
+    record_event(
+        db,
+        task.workspace_id,
+        "task.created",
+        "task",
+        task.id,
+        {"mission_id": str(task.mission_id)},
+    )
+    await db.commit()
+    await db.refresh(task)
+    return task
+
+
+@router.get("/tasks", response_model=list[Task])
+async def list_tasks(
+    workspace_id: UUID = Query(...),
+    mission_id: UUID | None = None,
+    db: AsyncSession = Depends(get_db),
+):
+    await require_workspace(db, workspace_id)
+    query = select(TaskModel).where(TaskModel.workspace_id == workspace_id)
+    if mission_id:
+        query = query.where(TaskModel.mission_id == mission_id)
+    return (
+        (await db.execute(query.order_by(TaskModel.created_at.desc()))).scalars().all()
+    )
+
+
+@router.post("/tasks/{task_id}/runs", response_model=ExecutionRun, status_code=202)
+async def start_execution_run(
+    task_id: UUID, payload: ExecutionRunCreate, db: AsyncSession = Depends(get_db)
+):
+    task = await db.get(TaskModel, task_id)
+    if task is None or task.workspace_id != payload.workspace_id:
+        raise HTTPException(status_code=404, detail="Task not found in workspace")
+    request_hash = hashlib.sha256(
+        json.dumps(
+            {
+                "input_text": payload.input_text,
+                "simulator_profile": payload.simulator_profile,
+            },
+            sort_keys=True,
+        ).encode()
+    ).hexdigest()
+    existing = (
+        await db.execute(
+            select(ExecutionRunModel).where(
+                ExecutionRunModel.workspace_id == payload.workspace_id,
+                ExecutionRunModel.idempotency_key == payload.idempotency_key,
+            )
+        )
+    ).scalar_one_or_none()
+    if existing:
+        if existing.request_hash != request_hash:
+            raise HTTPException(
+                status_code=409, detail="Idempotency key conflicts with another request"
+            )
+        if existing.state == "unknown":
+            client = await Client.connect(
+                settings.TEMPORAL_ADDRESS, namespace=settings.TEMPORAL_NAMESPACE
+            )
+            try:
+                await client.start_workflow(
+                    D1SimulatorRunWorkflow.run,
+                    D1SimulatorRunInput(
+                        str(existing.id),
+                        str(existing.workspace_id),
+                        payload.input_text,
+                        payload.simulator_profile,
+                    ),
+                    id=existing.workflow_id,
+                    task_queue=settings.TEMPORAL_TASK_QUEUE,
+                )
+            except WorkflowAlreadyStartedError:
+                pass
+            existing.state, existing.state_reason, existing.version = (
+                "queued",
+                None,
+                existing.version + 1,
+            )
+            record_event(
+                db,
+                existing.workspace_id,
+                "run.dispatched",
+                "execution_run",
+                existing.id,
+                {"workflow_id": existing.workflow_id, "idempotent_recovery": True},
+            )
+            await db.commit()
+            await db.refresh(existing)
+        return await execution_run_response(db, existing)
+    snapshot = TaskSnapshotModel(
+        task_id=task.id,
+        workspace_id=task.workspace_id,
+        input_text=payload.input_text,
+        simulator_profile=payload.simulator_profile,
+        content_hash=hashlib.sha256(payload.input_text.encode()).hexdigest(),
+    )
+    db.add(snapshot)
+    await db.flush()
+    run = ExecutionRunModel(
+        workspace_id=task.workspace_id,
+        project_id=task.project_id,
+        mission_id=task.mission_id,
+        task_id=task.id,
+        task_snapshot_id=snapshot.id,
+        idempotency_key=payload.idempotency_key,
+        request_hash=request_hash,
+        correlation_id=payload.correlation_id or uuid4(),
+        workflow_id=f"d1-run-{hashlib.sha256(f'{task.workspace_id}:{task.id}:{payload.idempotency_key}'.encode()).hexdigest()}",
+    )
+    db.add(run)
+    try:
+        await db.flush()
+    except IntegrityError:
+        # The database uniqueness constraint closes the race between two
+        # simultaneous requests that passed the read-before-write lookup.
+        await db.rollback()
+        existing = (
+            await db.execute(
+                select(ExecutionRunModel).where(
+                    ExecutionRunModel.workspace_id == payload.workspace_id,
+                    ExecutionRunModel.idempotency_key == payload.idempotency_key,
+                )
+            )
+        ).scalar_one_or_none()
+        if existing is None:
+            raise
+        if existing.request_hash != request_hash:
+            raise HTTPException(
+                status_code=409, detail="Idempotency key conflicts with another request"
+            )
+        return await execution_run_response(db, existing)
+    record_event(
+        db,
+        run.workspace_id,
+        "run.accepted",
+        "execution_run",
+        run.id,
+        {"task_id": str(task.id), "correlation_id": str(run.correlation_id)},
+    )
+    await db.commit()
+    await db.refresh(run)
+    try:
+        client = await Client.connect(
+            settings.TEMPORAL_ADDRESS, namespace=settings.TEMPORAL_NAMESPACE
+        )
+        await client.start_workflow(
+            D1SimulatorRunWorkflow.run,
+            D1SimulatorRunInput(
+                str(run.id),
+                str(run.workspace_id),
+                payload.input_text,
+                payload.simulator_profile,
+            ),
+            id=run.workflow_id,
+            task_queue=settings.TEMPORAL_TASK_QUEUE,
+        )
+        run.state, run.version = "queued", run.version + 1
+        record_event(
+            db,
+            run.workspace_id,
+            "run.dispatched",
+            "execution_run",
+            run.id,
+            {"workflow_id": run.workflow_id},
+        )
+        await db.commit()
+        await db.refresh(run)
+    except Exception:
+        run.state, run.state_reason, run.version = (
+            "unknown",
+            "temporal_dispatch_unconfirmed",
+            run.version + 1,
+        )
+        record_event(
+            db, run.workspace_id, "run.dispatch_unknown", "execution_run", run.id, {}
+        )
+        await db.commit()
+        await db.refresh(run)
+    return await execution_run_response(db, run)
+
+
+async def execution_run_response(db: AsyncSession, run: ExecutionRunModel) -> dict:
+    from ..models.control_plane import Artifact, ExecutionReceipt, RunAttempt
+
+    attempts = (
+        (
+            await db.execute(
+                select(RunAttempt)
+                .where(RunAttempt.run_id == run.id)
+                .order_by(RunAttempt.attempt_number)
+            )
+        )
+        .scalars()
+        .all()
+    )
+    artifacts = (
+        (await db.execute(select(Artifact).where(Artifact.run_id == run.id)))
+        .scalars()
+        .all()
+    )
+    receipt = (
+        await db.execute(
+            select(ExecutionReceipt).where(ExecutionReceipt.run_id == run.id)
+        )
+    ).scalar_one_or_none()
+    return {
+        **{column.name: getattr(run, column.name) for column in run.__table__.columns},
+        "attempts": attempts,
+        "artifacts": artifacts,
+        "receipt": receipt,
+    }
+
+
+@router.get("/execution-runs/{run_id}", response_model=ExecutionRun)
+async def get_execution_run(
+    run_id: UUID, workspace_id: UUID = Query(...), db: AsyncSession = Depends(get_db)
+):
+    run = await db.get(ExecutionRunModel, run_id)
+    if run is None or run.workspace_id != workspace_id:
+        raise HTTPException(status_code=404, detail="Run not found in workspace")
+    return await execution_run_response(db, run)
+
+
+@router.get("/execution-runs", response_model=list[ExecutionRun])
+async def list_execution_runs(
+    workspace_id: UUID = Query(...), db: AsyncSession = Depends(get_db)
+):
+    await require_workspace(db, workspace_id)
+    runs = (
+        (
+            await db.execute(
+                select(ExecutionRunModel)
+                .where(ExecutionRunModel.workspace_id == workspace_id)
+                .order_by(ExecutionRunModel.created_at.desc())
+            )
+        )
+        .scalars()
+        .all()
+    )
+    return [await execution_run_response(db, run) for run in runs]
+
+
+@router.post("/execution-runs/{run_id}/cancel", response_model=ExecutionRun)
+async def cancel_execution_run(
+    run_id: UUID, workspace_id: UUID = Query(...), db: AsyncSession = Depends(get_db)
+):
+    run = await db.get(ExecutionRunModel, run_id)
+    if run is None or run.workspace_id != workspace_id:
+        raise HTTPException(status_code=404, detail="Run not found in workspace")
+    if run.state in {"completed", "failed", "cancelled"}:
+        raise HTTPException(status_code=409, detail="Run is already terminal")
+    run.state, run.cancellation_state, run.version = (
+        "cancelling",
+        "requested",
+        run.version + 1,
+    )
+    record_event(
+        db,
+        run.workspace_id,
+        "run.cancellation_requested",
+        "execution_run",
+        run.id,
+        {"workflow_id": run.workflow_id},
+    )
+    await db.commit()
+    try:
+        client = await Client.connect(
+            settings.TEMPORAL_ADDRESS, namespace=settings.TEMPORAL_NAMESPACE
+        )
+        handle = client.get_workflow_handle(run.workflow_id)
+        await handle.cancel()
+        # The cancellation request is not terminal evidence by itself. Wait
+        # until Temporal closes the workflow before recording the business
+        # terminal state, so a late activity completion cannot overwrite it.
+        try:
+            await handle.result()
+        except (Exception, asyncio.CancelledError):
+            pass
+        run.state, run.cancellation_state, run.ended_at, run.version = (
+            "cancelled",
+            "confirmed",
+            datetime.utcnow(),
+            run.version + 1,
+        )
+        attempt = (
+            (
+                await db.execute(
+                    select(RunAttemptModel)
+                    .where(RunAttemptModel.run_id == run.id)
+                    .order_by(RunAttemptModel.attempt_number.desc())
+                )
+            )
+            .scalars()
+            .first()
+        )
+        if attempt and attempt.state == "running":
+            attempt.state, attempt.ended_at = "cancelled", datetime.utcnow()
+        snapshot = await db.get(TaskSnapshotModel, run.task_snapshot_id)
+        run.receipt_state = "available"
+        existing_receipt = (
+            await db.execute(
+                select(ExecutionReceiptModel).where(
+                    ExecutionReceiptModel.run_id == run.id
+                )
+            )
+        ).scalar_one_or_none()
+        if existing_receipt is None:
+            db.add(
+                ExecutionReceiptModel(
+                    workspace_id=run.workspace_id,
+                    run_id=run.id,
+                    attempt_id=attempt.id if attempt else None,
+                    terminal_state="cancelled",
+                    reason_code="cancelled_by_request",
+                    simulator_identity="simulator/d0",
+                    input_hash=snapshot.content_hash if snapshot else "unknown",
+                )
+            )
+        record_event(db, run.workspace_id, "run.cancelled", "execution_run", run.id, {})
+    except Exception:
+        run.state, run.cancellation_state, run.state_reason, run.version = (
+            "unknown",
+            "unconfirmed",
+            "cancellation_unconfirmed",
+            run.version + 1,
+        )
+        record_event(
+            db,
+            run.workspace_id,
+            "run.cancellation_unknown",
+            "execution_run",
+            run.id,
+            {},
+        )
+    await db.commit()
+    await db.refresh(run)
+    return await execution_run_response(db, run)
 
 
 @router.patch("/missions/{mission_id}/status", response_model=Mission)
