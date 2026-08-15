@@ -64,6 +64,85 @@ class Mission(MissionCreate, ORMModel):
     updated_at: datetime
 
 
+class TaskCreate(BaseModel):
+    workspace_id: UUID
+    project_id: UUID
+    mission_id: UUID
+    title: str = Field(min_length=1, max_length=255)
+    desired_outcome: str = Field(min_length=1)
+
+
+class Task(TaskCreate, ORMModel):
+    id: UUID
+    state: str
+    created_by: UUID
+    version: int
+    created_at: datetime
+    updated_at: datetime
+
+
+class ExecutionRunCreate(BaseModel):
+    workspace_id: UUID
+    input_text: str = Field(min_length=1)
+    simulator_profile: str = Field(
+        default="success",
+        pattern="^(success|retryable_failure|non_retryable_failure|timeout|unknown_cost|slow_success)$",
+    )
+    idempotency_key: str = Field(min_length=1, max_length=128)
+    correlation_id: UUID | None = None
+
+
+class RunAttempt(ORMModel):
+    id: UUID
+    attempt_number: int
+    state: str
+    failure_kind: str | None
+    provider_identity: str
+    side_effect_certainty: str
+    started_at: datetime
+    ended_at: datetime | None
+
+
+class Artifact(ORMModel):
+    id: UUID
+    media_type: str
+    content_hash: str
+    state: str
+    created_at: datetime
+
+
+class ExecutionReceipt(ORMModel):
+    id: UUID
+    terminal_state: str
+    reason_code: str | None
+    simulator_identity: str
+    input_hash: str
+    output_hash: str | None
+    created_at: datetime
+
+
+class ExecutionRun(ORMModel):
+    id: UUID
+    workspace_id: UUID
+    project_id: UUID
+    mission_id: UUID
+    task_id: UUID
+    task_snapshot_id: UUID
+    state: str
+    state_reason: str | None
+    correlation_id: UUID
+    workflow_id: str
+    cancellation_state: str
+    receipt_state: str
+    version: int
+    created_at: datetime
+    started_at: datetime | None
+    ended_at: datetime | None
+    attempts: list[RunAttempt] = []
+    artifacts: list[Artifact] = []
+    receipt: ExecutionReceipt | None = None
+
+
 class AutomationCreate(BaseModel):
     workspace_id: UUID
     name: str = Field(min_length=1, max_length=255)

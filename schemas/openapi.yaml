@@ -389,6 +389,7 @@ paths:
       parameters:
         - name: workspace_id
           in: query
+          required: true
           schema: { type: string, format: uuid }
       responses:
         '200':
@@ -460,6 +461,10 @@ paths:
           in: path
           required: true
           schema: { type: string, format: uuid }
+        - name: workspace_id
+          in: query
+          required: true
+          schema: { type: string, format: uuid }
       responses:
         '200':
           description: Project found
@@ -474,6 +479,10 @@ paths:
       parameters:
         - name: project_id
           in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: workspace_id
+          in: query
           required: true
           schema: { type: string, format: uuid }
       requestBody:
@@ -498,6 +507,10 @@ paths:
       parameters:
         - name: mission_id
           in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: workspace_id
+          in: query
           required: true
           schema: { type: string, format: uuid }
         - name: status
@@ -638,6 +651,98 @@ paths:
                   version: { type: string }
                   docs: { type: string }
 
+  /api/v1/tasks:
+    get:
+      operationId: listTasks
+      summary: List workspace tasks
+      tags: [Control Plane]
+      parameters: [{ name: workspace_id, in: query, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200':
+          description: Tasks listed
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/Task' } }
+        '404': { $ref: '#/components/responses/NotFound' }
+    post:
+      operationId: createTask
+      summary: Create a task
+      tags: [Control Plane]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TaskCreate' }
+      responses:
+        '201':
+          description: Task created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /api/v1/tasks/{task_id}/runs:
+    post:
+      operationId: startExecutionRun
+      summary: Start a durable simulator run
+      tags: [Control Plane]
+      parameters: [{ name: task_id, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ExecutionRunCreate' }
+      responses:
+        '202':
+          description: Run durably accepted
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ExecutionRun' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /api/v1/execution-runs:
+    get:
+      operationId: listExecutionRuns
+      summary: List workspace execution runs
+      tags: [Control Plane]
+      parameters: [{ name: workspace_id, in: query, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200':
+          description: Runs listed
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/ExecutionRun' } }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /api/v1/execution-runs/{run_id}:
+    get:
+      operationId: getExecutionRun
+      summary: Get an execution run with evidence
+      tags: [Control Plane]
+      parameters:
+        - { name: run_id, in: path, required: true, schema: { type: string, format: uuid } }
+        - { name: workspace_id, in: query, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '200':
+          description: Run found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ExecutionRun' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /api/v1/execution-runs/{run_id}/cancel:
+    post:
+      operationId: cancelExecutionRun
+      summary: Cancel an execution run
+      tags: [Control Plane]
+      parameters:
+        - { name: run_id, in: path, required: true, schema: { type: string, format: uuid } }
+        - { name: workspace_id, in: query, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '200':
+          description: Cancellation outcome recorded
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ExecutionRun' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
 components:
   securitySchemes:
     bearerAuth:
@@ -725,9 +830,11 @@ components:
             updated_at: { type: string, format: date-time }
     TaskCreate:
       type: object
-      required: [project_id, title, desired_outcome]
+      required: [workspace_id, project_id, mission_id, title, desired_outcome]
       properties:
+        workspace_id: { type: string, format: uuid }
         project_id: { type: string, format: uuid }
+        mission_id: { type: string, format: uuid }
         title: { type: string, minLength: 1 }
         desired_outcome: { type: string, minLength: 1 }
     TaskUpdate:
@@ -742,15 +849,81 @@ components:
       allOf:
         - $ref: '#/components/schemas/TaskCreate'
         - type: object
-          required: [task_id, workspace_id, state, current_snapshot_id, created_by, created_at, version]
+          required: [id, state, created_by, version, created_at, updated_at]
           properties:
-            task_id: { type: string, format: uuid }
-            workspace_id: { type: string, format: uuid }
-            state: { type: string, enum: [draft, ready, active, blocked, completed, cancelled, archived] }
-            current_snapshot_id: { type: [string, 'null'], format: uuid }
+            id: { type: string, format: uuid }
+            state: { type: string }
             created_by: { type: string, format: uuid }
             created_at: { type: string, format: date-time }
             version: { type: integer, minimum: 1 }
+            updated_at: { type: string, format: date-time }
+    ExecutionRunCreate:
+      type: object
+      required: [workspace_id, input_text, idempotency_key]
+      properties:
+        workspace_id: { type: string, format: uuid }
+        input_text: { type: string, minLength: 1 }
+        simulator_profile:
+          type: string
+          default: success
+          pattern: '^(success|retryable_failure|non_retryable_failure|timeout|unknown_cost|slow_success)$'
+        idempotency_key: { type: string, minLength: 1, maxLength: 128 }
+        correlation_id: { type: [string, 'null'], format: uuid }
+    RunAttempt:
+      type: object
+      required: [id, attempt_number, state, failure_kind, provider_identity, side_effect_certainty, started_at, ended_at]
+      properties:
+        id: { type: string, format: uuid }
+        attempt_number: { type: integer }
+        state: { type: string }
+        failure_kind: { type: [string, 'null'] }
+        provider_identity: { type: string }
+        side_effect_certainty: { type: string }
+        started_at: { type: string, format: date-time }
+        ended_at: { type: [string, 'null'], format: date-time }
+    Artifact:
+      type: object
+      required: [id, media_type, content_hash, state, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        media_type: { type: string }
+        content_hash: { type: string }
+        state: { type: string }
+        created_at: { type: string, format: date-time }
+    ExecutionReceipt:
+      type: object
+      required: [id, terminal_state, reason_code, simulator_identity, input_hash, output_hash, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        terminal_state: { type: string }
+        reason_code: { type: [string, 'null'] }
+        simulator_identity: { type: string }
+        input_hash: { type: string }
+        output_hash: { type: [string, 'null'] }
+        created_at: { type: string, format: date-time }
+    ExecutionRun:
+      type: object
+      required: [id, workspace_id, project_id, mission_id, task_id, task_snapshot_id, state, state_reason, correlation_id, workflow_id, cancellation_state, receipt_state, version, created_at, started_at, ended_at]
+      properties:
+        id: { type: string, format: uuid }
+        workspace_id: { type: string, format: uuid }
+        project_id: { type: string, format: uuid }
+        mission_id: { type: string, format: uuid }
+        task_id: { type: string, format: uuid }
+        task_snapshot_id: { type: string, format: uuid }
+        state: { type: string, enum: [accepted, queued, running, retrying, completed, failed, cancelled, cancelling, unknown] }
+        state_reason: { type: [string, 'null'] }
+        correlation_id: { type: string, format: uuid }
+        workflow_id: { type: string }
+        cancellation_state: { type: string }
+        receipt_state: { type: string }
+        version: { type: integer, minimum: 1 }
+        created_at: { type: string, format: date-time }
+        started_at: { type: [string, 'null'], format: date-time }
+        ended_at: { type: [string, 'null'], format: date-time }
+        attempts: { type: array, items: { $ref: '#/components/schemas/RunAttempt' }, default: [] }
+        artifacts: { type: array, items: { $ref: '#/components/schemas/Artifact' }, default: [] }
+        receipt: { anyOf: [{ $ref: '#/components/schemas/ExecutionReceipt' }, { type: 'null' }] }
     ConversationCreate:
       type: object
       properties:

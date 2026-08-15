@@ -9,6 +9,7 @@ NON_RETRYABLE_FAILURE = FixtureProfile(
 )
 TIMEOUT = FixtureProfile("timeout", FailureKind.TIMEOUT)
 UNKNOWN_COST = FixtureProfile("unknown_cost", unknown_cost=True)
+SLOW_SUCCESS = FixtureProfile("slow_success")
 
 ALL_PROFILES = (
     SUCCESS,
@@ -16,4 +17,5 @@ ALL_PROFILES = (
     NON_RETRYABLE_FAILURE,
     TIMEOUT,
     UNKNOWN_COST,
+    SLOW_SUCCESS,
 )
