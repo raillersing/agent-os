@@ -186,7 +186,7 @@ check_run "$api_id" completed
 # These tests cover post-commit dispatch recovery, terminal Activity redelivery,
 # cancellation/completion races, workspace boundaries, and concurrent accepts.
 docker run --rm -v "$ROOT:/workspace" -w /workspace "$PYTHON_IMAGE" sh -c \
-  'pip install --quiet pytest==7.4.4 pytest-asyncio==0.23.4 && cd /tmp && DATABASE_URL=sqlite+aiosqlite:///./d1-regression.db SECRET_KEY=test-secret-key-with-more-than-32-characters ADMIN_EMAIL=admin@test.local ADMIN_PASSWORD=test-password PYTHONPATH=/workspace/backend pytest -q /workspace/backend/tests/test_d1_execution.py -k "accepted_run or activity_redelivery or cancellation_completion or workspace_isolation or concurrent_duplicate"' \
+  'pip install --quiet pytest==7.4.4 pytest-asyncio==0.23.4 && cd /tmp && DATABASE_URL=sqlite+aiosqlite:///./d1-regression.db SECRET_KEY=test-secret-key-with-more-than-32-characters ADMIN_EMAIL=admin@test.local ADMIN_PASSWORD=test-password PYTHONPATH=/workspace/backend pytest -q /workspace/backend/tests/test_d1_execution.py -k "accepted_run or accepted_run_remains_recoverable or unknown_temporal or unknown_cancellation or duplicate_post_cancellation or activity_redelivery or cancellation_completion or workspace_isolation or concurrent_duplicate"' \
   2>&1 | tee "$ARTIFACT_DIR/d1-regression-tests.txt"
 
 # Re-run all repository gates in the same qualified run. The backend quality

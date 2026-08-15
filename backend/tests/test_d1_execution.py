@@ -37,6 +37,22 @@ async def _connect(*args, **kwargs):
     return _TemporalClient()
 
 
+async def _set_run_dispatch_state(
+    run_id: str,
+    *,
+    state: str,
+    state_reason: str | None,
+    cancellation_state: str = "not_requested",
+):
+    async with database.AsyncSessionLocal() as db:
+        run = await db.get(ExecutionRun, UUID(run_id))
+        assert run is not None
+        run.state = state
+        run.state_reason = state_reason
+        run.cancellation_state = cancellation_state
+        await db.commit()
+
+
 def _hierarchy(client: TestClient):
     suffix = uuid4().hex[:8]
     workspace = client.post("/api/v1/workspaces", json={"name": f"D1 {suffix}"}).json()
@@ -190,6 +206,113 @@ def test_accepted_run_is_reconciled_after_dispatch_crash(monkeypatch):
             )
 
     assert asyncio.run(audit_dispatch_count()) == 1
+
+
+def test_unknown_temporal_dispatch_is_reconciled(monkeypatch):
+    monkeypatch.setattr(control_plane.Client, "connect", _connect)
+    with TestClient(app) as client:
+        client.headers.update(auth_headers(client))
+        workspace, task = _hierarchy(client)
+        run = client.post(
+            f"/api/v1/tasks/{task['id']}/runs",
+            json={
+                "workspace_id": workspace["id"],
+                "input_text": "dispatch unknown",
+                "simulator_profile": "success",
+                "idempotency_key": "dispatch-unknown",
+            },
+        ).json()
+    asyncio.run(
+        _set_run_dispatch_state(
+            run["id"],
+            state="unknown",
+            state_reason="temporal_dispatch_unconfirmed",
+        )
+    )
+    reconciler = _RecordingTemporalClient()
+    assert asyncio.run(reconcile_pending_runs(reconciler)) == 1
+    assert reconciler.calls == [run["workflow_id"]]
+    assert asyncio.run(reconcile_pending_runs(reconciler)) == 0
+
+
+def test_unknown_cancellation_is_not_reconciled(monkeypatch):
+    monkeypatch.setattr(control_plane.Client, "connect", _connect)
+    with TestClient(app) as client:
+        client.headers.update(auth_headers(client))
+        workspace, task = _hierarchy(client)
+        run = client.post(
+            f"/api/v1/tasks/{task['id']}/runs",
+            json={
+                "workspace_id": workspace["id"],
+                "input_text": "cancellation unknown",
+                "simulator_profile": "success",
+                "idempotency_key": "cancellation-unknown",
+            },
+        ).json()
+    asyncio.run(
+        _set_run_dispatch_state(
+            run["id"],
+            state="unknown",
+            state_reason="cancellation_unconfirmed",
+            cancellation_state="unconfirmed",
+        )
+    )
+    reconciler = _RecordingTemporalClient()
+    assert asyncio.run(reconcile_pending_runs(reconciler)) == 0
+    assert reconciler.calls == []
+
+
+def test_duplicate_post_cancellation_unknown_does_not_dispatch(monkeypatch):
+    monkeypatch.setattr(control_plane.Client, "connect", _connect)
+    with TestClient(app) as client:
+        client.headers.update(auth_headers(client))
+        workspace, task = _hierarchy(client)
+        payload = {
+            "workspace_id": workspace["id"],
+            "input_text": "duplicate cancellation unknown",
+            "simulator_profile": "success",
+            "idempotency_key": "duplicate-cancellation-unknown",
+        }
+        run = client.post(f"/api/v1/tasks/{task['id']}/runs", json=payload).json()
+    asyncio.run(
+        _set_run_dispatch_state(
+            run["id"],
+            state="unknown",
+            state_reason="cancellation_unconfirmed",
+            cancellation_state="unconfirmed",
+        )
+    )
+
+    async def forbidden_connect(*args, **kwargs):
+        raise AssertionError("cancellation-unknown run must not be redispatched")
+
+    monkeypatch.setattr(control_plane.Client, "connect", forbidden_connect)
+    with TestClient(app) as client:
+        client.headers.update(auth_headers(client))
+        duplicate = client.post(f"/api/v1/tasks/{task['id']}/runs", json=payload)
+    assert duplicate.status_code == 202
+    assert duplicate.json()["id"] == run["id"]
+    assert duplicate.json()["state"] == "unknown"
+
+
+def test_accepted_run_remains_recoverable(monkeypatch):
+    monkeypatch.setattr(control_plane.Client, "connect", _connect)
+    with TestClient(app) as client:
+        client.headers.update(auth_headers(client))
+        workspace, task = _hierarchy(client)
+        run = client.post(
+            f"/api/v1/tasks/{task['id']}/runs",
+            json={
+                "workspace_id": workspace["id"],
+                "input_text": "accepted recovery",
+                "simulator_profile": "success",
+                "idempotency_key": "accepted-recovery",
+            },
+        ).json()
+    asyncio.run(_set_run_dispatch_state(run["id"], state="accepted", state_reason=None))
+    reconciler = _RecordingTemporalClient()
+    assert asyncio.run(reconcile_pending_runs(reconciler)) == 1
+    assert reconciler.calls == [run["workflow_id"]]
 
 
 def test_activity_redelivery_after_terminal_success_is_idempotent(monkeypatch):

@@ -47,6 +47,10 @@ from ..schemas.control_plane import (
     Workspace,
     WorkspaceCreate,
 )
+from ..temporal.reconciliation import (
+    dispatch_recoverable_filter,
+    is_dispatch_recoverable,
+)
 from ..temporal.workflows import D1SimulatorRunInput, D1SimulatorRunWorkflow
 
 router = APIRouter()
@@ -103,6 +107,8 @@ async def dispatch_durable_run(
     run = await db.get(ExecutionRunModel, run_id)
     if run is None:
         return False
+    if not is_dispatch_recoverable(run):
+        return False
     client = await Client.connect(
         settings.TEMPORAL_ADDRESS, namespace=settings.TEMPORAL_NAMESPACE
     )
@@ -123,7 +129,7 @@ async def dispatch_durable_run(
     except Exception:
         await db.rollback()
         run = await db.get(ExecutionRunModel, run_id)
-        if run is not None and run.state in {"accepted", "unknown"}:
+        if run is not None and is_dispatch_recoverable(run):
             run.state, run.state_reason, run.version = (
                 "unknown",
                 "temporal_dispatch_unconfirmed",
@@ -144,7 +150,7 @@ async def dispatch_durable_run(
         update(ExecutionRunModel)
         .where(
             ExecutionRunModel.id == run_id,
-            ExecutionRunModel.state.in_(["accepted", "unknown"]),
+            dispatch_recoverable_filter(ExecutionRunModel),
         )
         .values(
             state="queued",
@@ -403,7 +409,7 @@ async def start_execution_run(
             raise HTTPException(
                 status_code=409, detail="Idempotency key conflicts with another request"
             )
-        if existing.state in {"accepted", "unknown"}:
+        if is_dispatch_recoverable(existing):
             await dispatch_durable_run(
                 db,
                 existing.id,

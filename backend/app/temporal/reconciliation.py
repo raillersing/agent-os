@@ -1,6 +1,6 @@
 """Durable dispatch reconciliation for accepted D1 runs."""
 
-from sqlalchemy import select, update
+from sqlalchemy import and_, or_, select, update
 from temporalio.client import Client
 from temporalio.exceptions import WorkflowAlreadyStartedError
 
@@ -8,6 +8,32 @@ from ..config import settings
 from ..core.database import AsyncSessionLocal
 from ..models.control_plane import AuditEvent, ExecutionRun, TaskSnapshot
 from .workflows import D1SimulatorRunInput, D1SimulatorRunWorkflow
+
+DISPATCH_CANCELLATION_STATES = {"requested", "confirmed", "unconfirmed"}
+
+
+def is_dispatch_recoverable(run: ExecutionRun) -> bool:
+    """Classify only states that represent an unresolved dispatch."""
+    if run.cancellation_state in DISPATCH_CANCELLATION_STATES:
+        return False
+    if run.state == "accepted":
+        return True
+    return (
+        run.state == "unknown" and run.state_reason == "temporal_dispatch_unconfirmed"
+    )
+
+
+def dispatch_recoverable_filter(model):
+    """SQL predicate matching :func:`is_dispatch_recoverable`."""
+    no_cancellation = model.cancellation_state.not_in(DISPATCH_CANCELLATION_STATES)
+    return or_(
+        and_(model.state == "accepted", no_cancellation),
+        and_(
+            model.state == "unknown",
+            model.state_reason == "temporal_dispatch_unconfirmed",
+            no_cancellation,
+        ),
+    )
 
 
 async def reconcile_pending_runs(client: Client) -> int:
@@ -18,7 +44,7 @@ async def reconcile_pending_runs(client: Client) -> int:
             (
                 await db.execute(
                     select(ExecutionRun).where(
-                        ExecutionRun.state.in_(["accepted", "unknown"])
+                        dispatch_recoverable_filter(ExecutionRun)
                     )
                 )
             )
@@ -28,6 +54,9 @@ async def reconcile_pending_runs(client: Client) -> int:
         for run in runs:
             snapshot = await db.get(TaskSnapshot, run.task_snapshot_id)
             if snapshot is None:
+                continue
+            await db.refresh(run)
+            if not is_dispatch_recoverable(run):
                 continue
             try:
                 await client.start_workflow(
@@ -50,7 +79,7 @@ async def reconcile_pending_runs(client: Client) -> int:
                 update(ExecutionRun)
                 .where(
                     ExecutionRun.id == run.id,
-                    ExecutionRun.state.in_(["accepted", "unknown"]),
+                    dispatch_recoverable_filter(ExecutionRun),
                 )
                 .values(
                     state="queued",
