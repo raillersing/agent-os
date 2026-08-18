@@ -27,7 +27,7 @@ pydantic-settings==2.1.0
 PyYAML==6.0.1
 
 # HTTP client
-httpx==0.26.0
+httpx==0.28.1
 
 # LLM providers (installed but not enabled or invoked by D0)
 anthropic==0.18.1
@@ -40,7 +40,7 @@ chromadb==0.4.22
 pytest==7.4.4
 pytest-asyncio==0.23.4
 pytest-cov==4.1.0
-httpx==0.26.0
+httpx==0.28.1
 
 # Linting
 black==24.1.1
