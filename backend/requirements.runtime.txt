@@ -17,6 +17,6 @@ passlib[bcrypt]==1.7.4
 bcrypt==4.1.2
 pydantic==2.6.1
 pydantic-settings==2.1.0
-httpx==0.26.0
+httpx==0.28.1
 openai==1.109.1
 python-dotenv==1.0.1
