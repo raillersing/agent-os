@@ -73,11 +73,13 @@ related_adrs:
 
 > **Status: Approved baseline — 2026-08-13.** This document defines the quality governance model, formal release gates, mandatory evidence, blockers, waivers, sign-off responsibilities, stage-transition criteria, release decision records, and post-release obligations for Agent OS. It does not select the final CI/CD platform, deployment technology, test framework, or commercial certification scheme.
 
-## 1. Current baseline gates
+## Current baseline gates
 
 The repository CI baseline must include controlled-document validation, backend lint and tests, frontend lint and build, OpenAPI parity, OpenAPI/AsyncAPI syntax validation, Docker image builds, and Docker Compose configuration validation. A passing baseline gate does not authorize a production release while real provider execution, adapter evidence, security testing, persistence smoke, visual validation, backup/restore, and operational evidence remain incomplete.
 
-## 2. Purpose
+The current workflow invokes the Redocly and AsyncAPI CLIs through `npx` without a repository-pinned version. Until those tool versions are pinned in the project toolchain, schema validation is a valid development check but not a fully reproducible release gate.
+
+## 1. Purpose
 
 Agent OS coordinates software agents, adapters, model providers, tools, approvals, artifacts, memory, asynchronous execution, and recovery workflows.
 
@@ -3099,7 +3101,7 @@ Define build identity, artifact manifests, environment promotion, and integrity 
 - no commercialization claim from local MVP evidence alone;
 - no autonomous commit, push, PR, merge, or release;
 - no final quality toolchain selected in this draft;
-- Git versioning remains deferred until all drafts and global consistency review are complete.
+- Git versioning is active; release evidence must identify the exact commit or immutable build under review.
 
 ## 197. Acceptance criteria
 
@@ -3137,7 +3139,7 @@ QAG-001 may advance to `1.0.0` when:
 ### Approval state
 
 - Current status: `approved`
-- Current version: `0.1.0`
+- Current version: `0.2.0`
 - Approved by: Product Owner under explicit user authorization to finalize the declared scope
 - Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
@@ -3146,6 +3148,7 @@ QAG-001 may advance to `1.0.0` when:
 | Version | Date | Status | Summary |
 |---|---|---|---|
 | 0.1.0 | 2026-07-20 | Draft | Initial quality assurance and release-gate contract covering quality governance, G0-G6 stages, evidence, blockers, severity, exceptions, sign-off, domain gates, release decisions, pilot/commercial readiness, post-release verification, metrics, documentation quality, and acceptance criteria |
+| 0.2.0 | 2026-08-13 | Approved | Corrected gate numbering and documented the reproducibility boundary of the current schema-tool invocation |
 
 ## References
 
