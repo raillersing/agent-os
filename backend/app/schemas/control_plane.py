@@ -88,6 +88,10 @@ class ExecutionRunCreate(BaseModel):
         default="success",
         pattern="^(success|retryable_failure|non_retryable_failure|timeout|unknown_cost|slow_success)$",
     )
+    execution_mode: str = Field(default="simulator", pattern="^(simulator|openai)$")
+    model_profile: str = Field(
+        default="model.general.balanced", min_length=1, max_length=128
+    )
     idempotency_key: str = Field(min_length=1, max_length=128)
     correlation_id: UUID | None = None
 
@@ -99,6 +103,26 @@ class RunAttempt(ORMModel):
     failure_kind: str | None
     provider_identity: str
     side_effect_certainty: str
+    adapter_id: str | None = None
+    adapter_version: str | None = None
+    logical_model_profile: str | None = None
+    configured_provider: str | None = None
+    configured_model: str | None = None
+    actual_provider: str | None = None
+    actual_model: str | None = None
+    actual_identity_state: str | None = None
+    context_manifest_id: UUID | None = None
+    provider_request_id: str | None = None
+    response_id: str | None = None
+    usage_source: str | None = None
+    input_tokens: int | None = None
+    output_tokens: int | None = None
+    total_tokens: int | None = None
+    cached_input_tokens: int | None = None
+    cost_state: str | None = None
+    cost_amount: float | None = None
+    latency_ms: int | None = None
+    terminal_reason: str | None = None
     started_at: datetime
     ended_at: datetime | None
 
@@ -116,6 +140,7 @@ class ExecutionReceipt(ORMModel):
     terminal_state: str
     reason_code: str | None
     simulator_identity: str
+    provider_identity: str | None = None
     input_hash: str
     output_hash: str | None
     created_at: datetime
@@ -138,6 +163,9 @@ class ExecutionRun(ORMModel):
     created_at: datetime
     started_at: datetime | None
     ended_at: datetime | None
+    execution_mode: str = "simulator"
+    model_profile: str = "model.general.balanced"
+    retry_count: int = 0
     attempts: list[RunAttempt] = []
     artifacts: list[Artifact] = []
     receipt: ExecutionReceipt | None = None

@@ -99,6 +99,16 @@ documents:
     owner: operations-owner
     source_of_truth: false
     dependencies: [ADR-002, ADR-004, DEP-001, OPS-001, BCP-001, SEC-001, DAT-002, OBS-001, QAG-001]
+  - id: ADR-009
+    title: D2 First Real AI Provider Boundary and Evidence
+    path: docs/00-governance/adr/ADR-009-d2-first-real-ai-openai-boundary.md
+    version: 0.1.0
+    wave: 1
+    priority: P0
+    status: in-review
+    owner: architecture-owner
+    source_of_truth: false
+    dependencies: [ADR-006, MOD-001, CTX-001, CST-001, EVAL-001]
   - id: ADR-010
     title: Multi-Execution Backends and Normalized AI Economics
     path: docs/00-governance/adr/ADR-010-multi-execution-backends-and-normalized-ai-economics.md

@@ -35,6 +35,8 @@ class D1SimulatorRunInput:
     workspace_id: str
     input_text: str
     simulator_profile: str
+    execution_mode: str = "simulator"
+    model_profile: str = "model.general.balanced"
 
 
 @workflow.defn
@@ -54,6 +56,7 @@ class D1SimulatorRunWorkflow:
                     non_retryable_error_types=[
                         "NonRetryableSimulatorError",
                         "SimulatorTimeoutError",
+                        "NonRetryableModelProviderError",
                     ],
                 ),
             )
