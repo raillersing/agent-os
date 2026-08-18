@@ -1,8 +1,8 @@
 ---
 document_id: OBS-001
 title: Agent OS Observability Architecture
-version: 0.1.0
-status: approved
+version: 1.1.0
+status: in-review
 owner: operations-owner
 approvers:
   - product-owner
@@ -12,14 +12,24 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-08-13
+last_reviewed: 2026-08-18
 approval_date: 2026-08-13
 approval_records:
   - role: product-owner
     status: approved
     approval_date: 2026-08-13
     evidence: explicit user authorization; user assumes the designated approval roles for this finalization
-pending_approvals: []
+extension_approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-18
+    evidence: explicit Product Owner approval of the execution-backend and normalized-economics observability extension only
+pending_approvals:
+  - architecture-owner
+  - security-owner
+  - data-owner
+  - operations-owner
+  - quality-owner
 classification: internal
 source_of_truth: false
 dependencies:
@@ -3075,7 +3085,33 @@ Includes:
 - external telemetry governance;
 - capacity planning.
 
-## 198. Requirement catalogue
+## 198. Execution-backend and normalized-economics dimensions
+
+Run, attempt, model, and runtime telemetry should expose these bounded
+dimensions without collapsing their sources:
+
+| Dimension | Meaning |
+|---|---|
+| `execution_backend_type` | `model_provider_connection`, `agent_runtime_connection`, or `deterministic_simulator`; requested, selected, and actual values remain distinguishable. |
+| `billing_source` | Provider billing/calculation, subscription inclusion, allocation, invoice, or unknown. |
+| `actual_cost_state` | Actual monetary state, including `subscription_included` and `unknown`; absent incremental billing is not zero. |
+| `actual_cost_usd` | Actual amount when evidenced; null when unavailable or subscription-included without an incremental amount. |
+| `equivalent_cost_state` | Normalized reference state: calculated, estimated, estimated_range, partial, or unknown. |
+| `equivalent_cost_usd` | Simulated USD equivalent under a versioned reference model, never provider billing truth. |
+| `pricing_snapshot_id` | Immutable per-execution snapshot used by the equivalent-cost calculation or estimate. |
+| `pricing_basis` | `exact_model_api_price`, `proxy_model_api_price`, `configured_reference_rate`, or `unavailable`. |
+
+These dimensions are emitted with usage source, token completeness, pricing
+version, effective time, calculation method, confidence, and assumptions
+where applicable. Dashboards distinguish subscription fees from per-run
+equivalent value and label derived savings/value as simulated economics.
+Unknown and partial states remain visible.
+
+The extension does not authorize a provider or runtime. D2 remains the
+OpenAI Responses API proof; the router and Codex/Hermes adapters are post-D2
+planning under `ADR-010`.
+
+## 199. Requirement catalogue
 
 ### Correlation and signals
 
@@ -3132,7 +3168,7 @@ Includes:
 - `OBS-REQ-EVS-007` — Observability evidence supports quality gates.
 - `OBS-REQ-EVS-008` — User-facing observability is accessible.
 
-## 199. Traceability
+## 200. Traceability
 
 | Source | OBS-001 response |
 |---|---|
@@ -3152,7 +3188,7 @@ Includes:
 | `OPS-001` | Alert and diagnostic runbooks |
 | `BCP-001` | Backup, restore, continuity metrics |
 
-## 200. Mapping to containers
+## 201. Mapping to containers
 
 | Area | Container |
 |---|---|
@@ -3169,7 +3205,7 @@ Includes:
 | Database/event stores | `CTR-015`, `CTR-016` |
 | Artifact/index stores | `CTR-017`, `CTR-018` |
 
-## 201. ADR backlog
+## 202. ADR backlog
 
 ### `ADR-CANDIDATE-OBS-001 — Telemetry stack and local-first profile`
 
@@ -3191,7 +3227,7 @@ Select dashboard/alert engine, routing, acknowledgment, suppression, and runbook
 
 Define retention classes, redaction, classification, external export, bundle formats, and holds.
 
-## 202. Open decisions
+## 203. Open decisions
 
 1. Which local-first observability stack?
 2. Which log format and collector?
@@ -3219,7 +3255,7 @@ Define retention classes, redaction, classification, external export, bundle for
 24. Which data may leave the local environment?
 25. Which observability maturity stage is required before pilot?
 
-## 203. Risks
+## 204. Risks
 
 | Risk | Consequence | Response |
 |---|---|---|
@@ -3244,7 +3280,7 @@ Define retention classes, redaction, classification, external export, bundle for
 | Inaccessible dashboards | Operator/user exclusion | Accessibility |
 | Tooling too complex for small team | Operational burden | Local-first maturity stages |
 
-## 204. Assumptions
+## 205. Assumptions
 
 - components can emit structured signals;
 - correlation IDs can propagate;
@@ -3257,7 +3293,7 @@ Define retention classes, redaction, classification, external export, bundle for
 - quality gates can reference observability evidence;
 - a local-first deployment is required.
 
-## 205. Constraints
+## 206. Constraints
 
 - no raw secrets;
 - no full sensitive content by default;
@@ -3271,7 +3307,7 @@ Define retention classes, redaction, classification, external export, bundle for
 - no commit, push, PR, or merge during the current documentation phase;
 - Git versioning remains deferred until all drafts and global consistency review are complete.
 
-## 206. Acceptance criteria
+## 207. Acceptance criteria
 
 OBS-001 may advance to `1.0.0` when:
 
@@ -3291,7 +3327,7 @@ OBS-001 may advance to `1.0.0` when:
 14. accessibility requirements apply to dashboards;
 15. `OPS-001` and `BCP-001` can proceed.
 
-## 207. Downstream impact
+## 208. Downstream impact
 
 | Document | Required use |
 |---|---|
@@ -3302,20 +3338,22 @@ OBS-001 may advance to `1.0.0` when:
 | `QAG-001` | Observability quality gates |
 | `RTM-001` | Observability requirements-to-evidence mapping |
 
-## 208. Revision and approval history
+## 209. Revision and approval history
 
 ### Approval state
 
-- Current status: `approved`
-- Current version: `0.1.0`
-- Approved by: Product Owner under explicit user authorization to finalize the declared scope
-- Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
+- Current status: `in-review`
+- Current version: `1.1.0`
+- Prior version approved by: Product Owner under explicit user authorization on 2026-08-13; retained as historical evidence only
+- Extension approved by: Product Owner on 2026-08-18
+- Finalization note: the new extension remains in review; implementation and verification remain separate evidence gates
 
 ### Revision history
 
 | Version | Date | Status | Summary |
 |---|---|---|---|
 | 0.1.0 | 2026-07-20 | Draft | Initial observability architecture covering logs, metrics, traces, correlation, timelines, freshness, health/readiness, run/approval/adapter/model/artifact/memory/event/cost observability, dashboards, alerts, SLIs, diagnostic bundles, retention, security, testing, and governance |
+| 1.1.0 | 2026-08-18 | In review | Added bounded execution-backend, billing-source, actual/equivalent-cost, pricing-snapshot, and pricing-basis dimensions; prior approval is not carried forward |
 
 ## References
 
