@@ -20,13 +20,16 @@ from ..core.security import require_authenticated_user
 from ..models.control_plane import Approval as ApprovalModel
 from ..models.control_plane import AuditEvent as AuditEventModel
 from ..models.control_plane import Automation as AutomationModel
+from ..models.control_plane import ContextManifest as ContextManifestModel
 from ..models.control_plane import ExecutionReceipt as ExecutionReceiptModel
 from ..models.control_plane import ExecutionRun as ExecutionRunModel
 from ..models.control_plane import Mission as MissionModel
+from ..models.control_plane import ModelInvocation as ModelInvocationModel
 from ..models.control_plane import Project as ProjectModel
 from ..models.control_plane import RunAttempt as RunAttemptModel
 from ..models.control_plane import Task as TaskModel
 from ..models.control_plane import TaskSnapshot as TaskSnapshotModel
+from ..models.control_plane import UsageRecord as UsageRecordModel
 from ..models.control_plane import Workspace as WorkspaceModel
 from ..schemas.control_plane import (
     Approval,
@@ -100,6 +103,8 @@ async def dispatch_durable_run(
     run_id: UUID,
     input_text: str,
     simulator_profile: str,
+    execution_mode: str = "simulator",
+    model_profile: str = "model.general.balanced",
     *,
     recovery: bool = False,
 ) -> bool:
@@ -120,6 +125,8 @@ async def dispatch_durable_run(
                 str(run.workspace_id),
                 input_text,
                 simulator_profile,
+                execution_mode,
+                model_profile,
             ),
             id=run.workflow_id,
             task_queue=settings.TEMPORAL_TASK_QUEUE,
@@ -392,6 +399,8 @@ async def start_execution_run(
             {
                 "input_text": payload.input_text,
                 "simulator_profile": payload.simulator_profile,
+                "execution_mode": payload.execution_mode,
+                "model_profile": payload.model_profile,
             },
             sort_keys=True,
         ).encode()
@@ -415,6 +424,8 @@ async def start_execution_run(
                 existing.id,
                 payload.input_text,
                 payload.simulator_profile,
+                payload.execution_mode,
+                payload.model_profile,
                 recovery=True,
             )
             await db.refresh(existing)
@@ -424,6 +435,8 @@ async def start_execution_run(
         workspace_id=task.workspace_id,
         input_text=payload.input_text,
         simulator_profile=payload.simulator_profile,
+        execution_mode=payload.execution_mode,
+        model_profile=payload.model_profile,
         content_hash=hashlib.sha256(payload.input_text.encode()).hexdigest(),
     )
     db.add(snapshot)
@@ -476,6 +489,8 @@ async def start_execution_run(
         run.id,
         payload.input_text,
         payload.simulator_profile,
+        payload.execution_mode,
+        payload.model_profile,
     )
     await db.refresh(run)
     return await execution_run_response(db, run)
@@ -505,8 +520,12 @@ async def execution_run_response(db: AsyncSession, run: ExecutionRunModel) -> di
             select(ExecutionReceipt).where(ExecutionReceipt.run_id == run.id)
         )
     ).scalar_one_or_none()
+    snapshot = await db.get(TaskSnapshotModel, run.task_snapshot_id)
     return {
         **{column.name: getattr(run, column.name) for column in run.__table__.columns},
+        "execution_mode": snapshot.execution_mode if snapshot else "simulator",
+        "model_profile": snapshot.model_profile if snapshot else "unknown",
+        "retry_count": max(len(attempts) - 1, 0),
         "attempts": attempts,
         "artifacts": artifacts,
         "receipt": receipt,
@@ -521,6 +540,112 @@ async def get_execution_run(
     if run is None or run.workspace_id != workspace_id:
         raise HTTPException(status_code=404, detail="Run not found in workspace")
     return await execution_run_response(db, run)
+
+
+@router.get("/execution-runs/{run_id}/evidence")
+async def get_execution_run_evidence(
+    run_id: UUID, workspace_id: UUID = Query(...), db: AsyncSession = Depends(get_db)
+):
+    """Return authorized D2 provenance without raw prompt or secret content."""
+    run = await db.get(ExecutionRunModel, run_id)
+    if run is None or run.workspace_id != workspace_id:
+        raise HTTPException(status_code=404, detail="Run not found in workspace")
+    manifests = (
+        (
+            await db.execute(
+                select(ContextManifestModel)
+                .where(ContextManifestModel.run_id == run.id)
+                .order_by(ContextManifestModel.created_at)
+            )
+        )
+        .scalars()
+        .all()
+    )
+    invocations = (
+        (
+            await db.execute(
+                select(ModelInvocationModel)
+                .where(ModelInvocationModel.run_id == run.id)
+                .order_by(ModelInvocationModel.created_at)
+            )
+        )
+        .scalars()
+        .all()
+    )
+    usage = (
+        (
+            await db.execute(
+                select(UsageRecordModel)
+                .where(UsageRecordModel.run_id == run.id)
+                .order_by(UsageRecordModel.created_at)
+            )
+        )
+        .scalars()
+        .all()
+    )
+    snapshot = await db.get(TaskSnapshotModel, run.task_snapshot_id)
+    return {
+        "run_id": str(run.id),
+        "execution_mode": snapshot.execution_mode if snapshot else "simulator",
+        "model_profile": snapshot.model_profile if snapshot else "unknown",
+        "retry_count": max(len(invocations) - 1, 0),
+        "context_manifests": [
+            {
+                "id": str(item.id),
+                "manifest_hash": item.manifest_hash,
+                "context_profile_id": item.context_profile_id,
+                "context_profile_version": item.context_profile_version,
+                "segments": item.segments,
+                "disclosure_state": item.disclosure_state,
+                "token_budget": item.token_budget,
+                "transformations": item.transformations,
+            }
+            for item in manifests
+        ],
+        "invocations": [
+            {
+                "id": str(item.id),
+                "attempt_id": str(item.attempt_id),
+                "adapter_id": item.adapter_id,
+                "adapter_version": item.adapter_version,
+                "logical_model_profile": item.logical_model_profile,
+                "configured_provider": item.configured_provider,
+                "configured_model": item.configured_model,
+                "actual_provider": item.actual_provider,
+                "actual_model": item.actual_model,
+                "identity_state": item.identity_state,
+                "invocation_state": item.invocation_state,
+                "error_code": item.error_code,
+                "provider_request_id": item.provider_request_id,
+                "response_id": item.response_id,
+                "prompt_hash": item.prompt_hash,
+                "stop_reason": item.stop_reason,
+                "refusal_state": item.refusal_state,
+                "tools_enabled": bool(item.tools_enabled),
+                "latency_ms": item.latency_ms,
+            }
+            for item in invocations
+        ],
+        "usage": [
+            {
+                "id": str(item.id),
+                "attempt_id": str(item.attempt_id),
+                "source": item.source,
+                "completeness": item.completeness,
+                "input_tokens": item.input_tokens,
+                "output_tokens": item.output_tokens,
+                "total_tokens": item.total_tokens,
+                "cached_input_tokens": item.cached_input_tokens,
+                "pricing_profile_version": item.pricing_profile_version,
+                "currency": item.currency,
+                "cost_state": item.cost_state,
+                "estimated_cost": item.estimated_cost,
+                "measured_cost": item.measured_cost,
+                "provider_reported_cost": item.provider_reported_cost,
+            }
+            for item in usage
+        ],
+    }
 
 
 @router.get("/execution-runs", response_model=list[ExecutionRun])

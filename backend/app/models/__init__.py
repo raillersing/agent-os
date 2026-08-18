@@ -8,13 +8,17 @@ from .control_plane import (
     Artifact,
     AuditEvent,
     Automation,
+    ContextManifest,
+    EvaluationCaseResult,
     ExecutionReceipt,
     ExecutionRun,
     Mission,
+    ModelInvocation,
     Project,
     RunAttempt,
     Task,
     TaskSnapshot,
+    UsageRecord,
     Workspace,
 )
 from .memory import Memory
@@ -36,4 +40,8 @@ __all__ = [
     "RunAttempt",
     "Artifact",
     "ExecutionReceipt",
+    "ContextManifest",
+    "ModelInvocation",
+    "UsageRecord",
+    "EvaluationCaseResult",
 ]

@@ -46,6 +46,12 @@ class Settings(BaseSettings):
 
     # LLM Providers
     OPENAI_API_KEY: str = ""
+    OPENAI_EXECUTION_ENABLED: bool = False
+    OPENAI_MODEL: str = "gpt-4o-mini"
+    OPENAI_TIMEOUT_SECONDS: float = 30.0
+    D2_MAX_INPUT_CHARS: int = 12000
+    D2_MAX_OUTPUT_TOKENS: int = 256
+    D2_RUN_BUDGET_USD: float | None = None
     ANTHROPIC_API_KEY: str = ""
 
     # Memory

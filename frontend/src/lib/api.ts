@@ -259,6 +259,10 @@ class ApiClient {
   async cancelExecutionRun(id: string, workspaceId: string) {
     return this.request<any>(`/api/v1/execution-runs/${id}/cancel?workspace_id=${encodeURIComponent(workspaceId)}`, { method: 'POST' });
   }
+
+  async getExecutionEvidence(id: string, workspaceId: string) {
+    return this.request<any>(`/api/v1/execution-runs/${id}/evidence?workspace_id=${encodeURIComponent(workspaceId)}`);
+  }
 }
 
 export const api = new ApiClient();

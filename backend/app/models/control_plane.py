@@ -100,6 +100,10 @@ class TaskSnapshot(Base):
     workspace_id = Column(Uuid, ForeignKey("workspaces.id"), nullable=False, index=True)
     input_text = Column(Text, nullable=False)
     simulator_profile = Column(String(64), nullable=False)
+    execution_mode = Column(String(32), default="simulator", nullable=False)
+    model_profile = Column(
+        String(128), default="model.general.balanced", nullable=False
+    )
     content_hash = Column(String(64), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
@@ -156,6 +160,26 @@ class RunAttempt(Base):
     failure_kind = Column(String(64), nullable=True)
     provider_identity = Column(String(128), nullable=False)
     side_effect_certainty = Column(String(32), nullable=False)
+    adapter_id = Column(String(128), nullable=True)
+    adapter_version = Column(String(64), nullable=True)
+    logical_model_profile = Column(String(128), nullable=True)
+    configured_provider = Column(String(64), nullable=True)
+    configured_model = Column(String(128), nullable=True)
+    actual_provider = Column(String(64), nullable=True)
+    actual_model = Column(String(128), nullable=True)
+    actual_identity_state = Column(String(32), nullable=True)
+    context_manifest_id = Column(Uuid, nullable=True)
+    provider_request_id = Column(String(256), nullable=True)
+    response_id = Column(String(256), nullable=True)
+    usage_source = Column(String(32), nullable=True)
+    input_tokens = Column(Integer, nullable=True)
+    output_tokens = Column(Integer, nullable=True)
+    total_tokens = Column(Integer, nullable=True)
+    cached_input_tokens = Column(Integer, nullable=True)
+    cost_state = Column(String(32), nullable=True)
+    cost_amount = Column(Float, nullable=True)
+    latency_ms = Column(Integer, nullable=True)
+    terminal_reason = Column(String(64), nullable=True)
     started_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     ended_at = Column(DateTime, nullable=True)
 
@@ -192,6 +216,7 @@ class ExecutionReceipt(Base):
     terminal_state = Column(String(32), nullable=False)
     reason_code = Column(String(96), nullable=True)
     simulator_identity = Column(String(128), nullable=False)
+    provider_identity = Column(String(128), nullable=True)
     input_hash = Column(String(64), nullable=False)
     output_hash = Column(String(64), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
@@ -240,3 +265,107 @@ class AuditEvent(Base):
     actor = Column(String(128), nullable=False, default="local-system")
     details = Column(JSON, default=dict)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
+
+
+class ContextManifest(Base):
+    """Hash-addressed, workspace-scoped context evidence without raw secrets."""
+
+    __tablename__ = "context_manifests"
+
+    id = Column(Uuid, primary_key=True, default=uuid.uuid4)
+    workspace_id = Column(Uuid, ForeignKey("workspaces.id"), nullable=False, index=True)
+    run_id = Column(Uuid, ForeignKey("execution_runs.id"), nullable=False, index=True)
+    attempt_id = Column(Uuid, ForeignKey("run_attempts.id"), nullable=True, index=True)
+    context_profile_id = Column(String(128), nullable=False)
+    context_profile_version = Column(String(64), nullable=False)
+    segments = Column(JSON, nullable=False)
+    system_instruction_hash = Column(String(64), nullable=False)
+    rendered_input_hash = Column(String(64), nullable=False)
+    manifest_hash = Column(String(64), nullable=False, index=True)
+    disclosure_state = Column(String(64), nullable=False)
+    token_budget = Column(JSON, nullable=False)
+    transformations = Column(JSON, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+
+class ModelInvocation(Base):
+    """Provider-neutral invocation observation linked to one material attempt."""
+
+    __tablename__ = "model_invocations"
+
+    id = Column(Uuid, primary_key=True, default=uuid.uuid4)
+    workspace_id = Column(Uuid, ForeignKey("workspaces.id"), nullable=False, index=True)
+    run_id = Column(Uuid, ForeignKey("execution_runs.id"), nullable=False, index=True)
+    attempt_id = Column(
+        Uuid, ForeignKey("run_attempts.id"), nullable=False, unique=True
+    )
+    context_manifest_id = Column(
+        Uuid, ForeignKey("context_manifests.id"), nullable=False
+    )
+    adapter_id = Column(String(128), nullable=False)
+    adapter_version = Column(String(64), nullable=False)
+    logical_model_profile = Column(String(128), nullable=False)
+    configured_provider = Column(String(64), nullable=False)
+    configured_model = Column(String(128), nullable=False)
+    actual_provider = Column(String(64), nullable=True)
+    actual_model = Column(String(128), nullable=True)
+    identity_state = Column(String(32), nullable=False)
+    provider_request_id = Column(String(256), nullable=True)
+    response_id = Column(String(256), nullable=True)
+    prompt_hash = Column(String(64), nullable=False)
+    runtime_version = Column(String(64), nullable=False)
+    workflow_version = Column(String(64), nullable=False)
+    policy_version = Column(String(64), nullable=False)
+    invocation_state = Column(String(32), nullable=False, default="prepared")
+    error_code = Column(String(96), nullable=True)
+    stop_reason = Column(String(64), nullable=False)
+    refusal_state = Column(String(32), nullable=False)
+    tools_enabled = Column(Integer, nullable=False, default=0)
+    latency_ms = Column(Integer, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+
+class UsageRecord(Base):
+    """Source-labelled usage and cost facts; unknown values remain NULL."""
+
+    __tablename__ = "usage_records"
+
+    id = Column(Uuid, primary_key=True, default=uuid.uuid4)
+    workspace_id = Column(Uuid, ForeignKey("workspaces.id"), nullable=False, index=True)
+    run_id = Column(Uuid, ForeignKey("execution_runs.id"), nullable=False, index=True)
+    attempt_id = Column(
+        Uuid, ForeignKey("run_attempts.id"), nullable=False, unique=True
+    )
+    source = Column(String(32), nullable=False)
+    completeness = Column(String(32), nullable=False)
+    input_tokens = Column(Integer, nullable=True)
+    output_tokens = Column(Integer, nullable=True)
+    total_tokens = Column(Integer, nullable=True)
+    cached_input_tokens = Column(Integer, nullable=True)
+    raw_usage = Column(JSON, nullable=False)
+    pricing_profile_version = Column(String(64), nullable=False)
+    currency = Column(String(8), nullable=False)
+    cost_state = Column(String(32), nullable=False)
+    estimated_cost = Column(Float, nullable=True)
+    measured_cost = Column(Float, nullable=True)
+    provider_reported_cost = Column(Float, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+
+class EvaluationCaseResult(Base):
+    """Durable result of a bounded D2 golden evaluation case."""
+
+    __tablename__ = "evaluation_case_results"
+
+    id = Column(Uuid, primary_key=True, default=uuid.uuid4)
+    suite_id = Column(String(128), nullable=False, index=True)
+    suite_version = Column(String(64), nullable=False)
+    case_id = Column(String(128), nullable=False)
+    run_id = Column(Uuid, ForeignKey("execution_runs.id"), nullable=True, index=True)
+    provider = Column(String(64), nullable=False)
+    model = Column(String(128), nullable=False)
+    outcome = Column(String(32), nullable=False)
+    dimensions = Column(JSON, nullable=False)
+    threshold_snapshot = Column(JSON, nullable=False)
+    evidence_reference = Column(String(256), nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)

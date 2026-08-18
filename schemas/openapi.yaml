@@ -742,6 +742,21 @@ paths:
               schema: { $ref: '#/components/schemas/ExecutionRun' }
         '404': { $ref: '#/components/responses/NotFound' }
         '409': { $ref: '#/components/responses/Conflict' }
+  /api/v1/execution-runs/{run_id}/evidence:
+    get:
+      operationId: getExecutionRunEvidence
+      summary: Get authorized D2 provenance and usage evidence
+      tags: [Control Plane]
+      parameters:
+        - { name: run_id, in: path, required: true, schema: { type: string, format: uuid } }
+        - { name: workspace_id, in: query, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '200':
+          description: D2 evidence without raw prompt content
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ExecutionEvidence' }
+        '404': { $ref: '#/components/responses/NotFound' }
 
 components:
   securitySchemes:
@@ -869,6 +884,8 @@ components:
           pattern: '^(success|retryable_failure|non_retryable_failure|timeout|unknown_cost|slow_success)$'
         idempotency_key: { type: string, minLength: 1, maxLength: 128 }
         correlation_id: { type: [string, 'null'], format: uuid }
+        execution_mode: { type: string, enum: [simulator, openai], default: simulator }
+        model_profile: { type: string, default: model.general.balanced }
     RunAttempt:
       type: object
       required: [id, attempt_number, state, failure_kind, provider_identity, side_effect_certainty, started_at, ended_at]
@@ -881,6 +898,26 @@ components:
         side_effect_certainty: { type: string }
         started_at: { type: string, format: date-time }
         ended_at: { type: [string, 'null'], format: date-time }
+        adapter_id: { type: [string, 'null'] }
+        adapter_version: { type: [string, 'null'] }
+        logical_model_profile: { type: [string, 'null'] }
+        configured_provider: { type: [string, 'null'] }
+        configured_model: { type: [string, 'null'] }
+        actual_provider: { type: [string, 'null'] }
+        actual_model: { type: [string, 'null'] }
+        actual_identity_state: { type: [string, 'null'] }
+        context_manifest_id: { type: [string, 'null'], format: uuid }
+        provider_request_id: { type: [string, 'null'] }
+        response_id: { type: [string, 'null'] }
+        usage_source: { type: [string, 'null'] }
+        input_tokens: { type: [integer, 'null'] }
+        output_tokens: { type: [integer, 'null'] }
+        total_tokens: { type: [integer, 'null'] }
+        cached_input_tokens: { type: [integer, 'null'] }
+        cost_state: { type: [string, 'null'] }
+        cost_amount: { type: [number, 'null'] }
+        latency_ms: { type: [integer, 'null'] }
+        terminal_reason: { type: [string, 'null'] }
     Artifact:
       type: object
       required: [id, media_type, content_hash, state, created_at]
@@ -898,6 +935,7 @@ components:
         terminal_state: { type: string }
         reason_code: { type: [string, 'null'] }
         simulator_identity: { type: string }
+        provider_identity: { type: [string, 'null'] }
         input_hash: { type: string }
         output_hash: { type: [string, 'null'] }
         created_at: { type: string, format: date-time }
@@ -921,9 +959,20 @@ components:
         created_at: { type: string, format: date-time }
         started_at: { type: [string, 'null'], format: date-time }
         ended_at: { type: [string, 'null'], format: date-time }
+        execution_mode: { type: string, enum: [simulator, openai] }
+        model_profile: { type: string }
+        retry_count: { type: integer, minimum: 0 }
         attempts: { type: array, items: { $ref: '#/components/schemas/RunAttempt' }, default: [] }
         artifacts: { type: array, items: { $ref: '#/components/schemas/Artifact' }, default: [] }
         receipt: { anyOf: [{ $ref: '#/components/schemas/ExecutionReceipt' }, { type: 'null' }] }
+    ExecutionEvidence:
+      type: object
+      required: [run_id, context_manifests, invocations, usage]
+      properties:
+        run_id: { type: string, format: uuid }
+        context_manifests: { type: array, items: { type: object, additionalProperties: true } }
+        invocations: { type: array, items: { type: object, additionalProperties: true } }
+        usage: { type: array, items: { type: object, additionalProperties: true } }
     ConversationCreate:
       type: object
       properties:

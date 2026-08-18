@@ -20,8 +20,11 @@ await page.getByText('Tasks', { exact: true }).waitFor();
 await page.getByText('D1 task', { exact: true }).waitFor();
 await page.getByRole('heading', { name: 'Runs', exact: true }).waitFor();
 await page.locator('article strong').filter({ hasText: 'completed' }).waitFor();
+await page.getByText('SIMULATOR', { exact: true }).waitFor();
 await page.getByText(/receipt /).waitFor();
 await page.getByText(/artifact /).waitFor();
+await page.getByRole('button', { name: 'Inspect AI evidence' }).click();
+await page.getByText(/Disclosure: local_simulator/).waitFor();
 
-console.log('D1 frontend E2E PASS: task, completed run, receipt and artifact visible');
+console.log('D1/D2 frontend E2E PASS: simulator disclosure, task, completed run, receipt, artifact and evidence visible');
 await browser.close();
