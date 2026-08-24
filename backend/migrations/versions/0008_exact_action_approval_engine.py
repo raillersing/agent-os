@@ -108,6 +108,26 @@ def upgrade() -> None:
             ["id"],
         )
 
+    # Workspace budget tracking columns required by the upcoming budget
+    # feature; included here so the ORM model in main stays consistent.
+    if dialect == "sqlite":
+        with op.batch_alter_table("workspaces") as batch_op:
+            batch_op.add_column(
+                sa.Column("spent", sa.Float(), nullable=False, server_default="0.0")
+            )
+            batch_op.add_column(
+                sa.Column("version", sa.Integer(), nullable=False, server_default="1")
+            )
+    else:
+        op.add_column(
+            "workspaces",
+            sa.Column("spent", sa.Float(), nullable=False, server_default="0.0"),
+        )
+        op.add_column(
+            "workspaces",
+            sa.Column("version", sa.Integer(), nullable=False, server_default="1"),
+        )
+
     # One-time atomic consumption ledger for exact-action approvals.
     op.create_table(
         "approval_consumptions",
@@ -205,6 +225,10 @@ def downgrade() -> None:
             batch_op.drop_column("task_id")
             batch_op.drop_column("run_id")
             batch_op.drop_column("workspace_id")
+
+        with op.batch_alter_table("workspaces") as batch_op:
+            batch_op.drop_column("version")
+            batch_op.drop_column("spent")
     else:
         op.drop_constraint(
             "fk_approvals_attempt_id_run_attempts", "approvals", type_="foreignkey"
