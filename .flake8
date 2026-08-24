@@ -1,3 +1,10 @@
 [flake8]
-# Black owns line wrapping; migration/model registration imports are intentional.
-ignore = E501,E402,F401,W503
+# Black owns line wrapping; model registration imports are intentional.
+ignore = E501,E402,W503
+exclude =
+    .venv
+    venv
+    migrations/versions/__pycache__
+    __pycache__
+per-file-ignores =
+    __init__.py:F401

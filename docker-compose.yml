@@ -13,7 +13,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U agent_os"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -44,7 +44,7 @@ services:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "temporal operator cluster health --address \"$(hostname -i):7233\""]
+      test: ["CMD-SHELL", "temporal operator cluster health --address 127.0.0.1:7233"]
       interval: 10s
       timeout: 5s
       retries: 12
@@ -64,6 +64,8 @@ services:
       - ADMIN_EMAIL=${ADMIN_EMAIL:?Set ADMIN_EMAIL in .env}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in .env}
       - CORS_ORIGINS=${CORS_ORIGINS:-["http://localhost:3080","http://127.0.0.1:3080"]}
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
     ports:
       - "${BACKEND_HOST_PORT:-8080}:8080"
     depends_on:
@@ -92,6 +94,8 @@ services:
       - TEMPORAL_NAMESPACE=${TEMPORAL_NAMESPACE:-default}
       - TEMPORAL_TASK_QUEUE=${TEMPORAL_TASK_QUEUE:-agent-os-d0}
       - SECRET_KEY=${SECRET_KEY:?Set SECRET_KEY in .env}
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
     depends_on:
       temporal:
         condition: service_healthy
