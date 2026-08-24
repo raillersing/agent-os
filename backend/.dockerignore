@@ -9,4 +9,3 @@ __pycache__/
 htmlcov/
 chroma_db/
 tests/
-migrations/
