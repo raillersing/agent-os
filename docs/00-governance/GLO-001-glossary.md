@@ -1,19 +1,23 @@
 ---
 document_id: GLO-001
 title: Agent OS Glossary and Controlled Terminology
-version: 0.2.0
+version: 0.3.0
 status: approved
 owner: product-owner
 approvers:
   - product-owner
 created: 2026-07-16
-last_reviewed: 2026-08-12
+last_reviewed: 2026-08-18
 approval_date: 2026-08-13
 approval_records:
   - role: product-owner
     status: approved
     approval_date: 2026-08-13
     evidence: explicit user authorization after document review
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-18
+    evidence: explicit Product Owner approval of the multi-execution backend and normalized economics extension
 classification: internal
 source_of_truth: true
 related_documents:
@@ -65,3 +69,13 @@ This glossary defines the initial vocabulary used by the project. Terms remain d
 | Visibility scope | Resource access scope: private, project, or workspace. Visibility is separate from workspace membership. |
 | Workflow | Versioned and durable process coordinating deterministic steps, agents, tools, approvals, retries, and completion rules. |
 | Workspace | Primary isolation and organization boundary containing projects, permissions, knowledge, agents, tools, tasks, runs, artifacts, budgets, and policies. |
+| Execution Backend | Explicit execution route selected by policy for a run or attempt. Agent OS distinguishes model-provider connections, agent-runtime connections, and the deterministic simulator. |
+| Model Provider Connection | Execution backend connection that invokes a model directly through an external provider or local model endpoint, such as the OpenAI Responses API. |
+| Agent Runtime Connection | Execution backend connection that governs an agent runtime or session, which may manage model access, tools, state, and work internally. |
+| Subscription-backed Runtime | Agent runtime authenticated through an included subscription or session entitlement rather than a per-request API credential and invoice. It is not an actual cost of zero. |
+| Actual Monetary Cost | Monetary cost fact sourced from provider billing/calculation, a subscription inclusion, an approved allocation, an invoice, or an explicit unknown state. |
+| Normalized Equivalent Cost | Versioned simulated USD value representing equivalent usage under a reference pricing model; it is distinct from actual monetary cost, billing, accounting, and realized savings. |
+| Pricing Catalog | Versioned collection of pricing rules for providers, models/SKUs, units, effective periods, conditional rates, sources, freshness, and confidence. |
+| Pricing Snapshot | Immutable per-execution capture of the Pricing Catalog rules and identifiers used to calculate or estimate an equivalent cost. |
+| Billing Source | Authority or semantic origin of a monetary fact, such as provider invoice, API usage calculation, subscription inclusion, allocation, or unknown. |
+| Paid Fallback | Explicitly authorized routing from one backend or runtime to a paid provider/API route, with policy, budget, identity, disclosure, and evidence re-evaluated. |

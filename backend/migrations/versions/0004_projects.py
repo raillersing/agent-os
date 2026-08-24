@@ -37,19 +37,36 @@ def upgrade():
     op.create_index("ix_projects_created_by", "projects", ["created_by"])
     op.add_column("missions", sa.Column("project_id", sa.Uuid(), nullable=True))
     op.create_index("ix_missions_project_id", "missions", ["project_id"])
-    op.create_foreign_key(
-        "fk_missions_project_id_projects",
-        "missions",
-        "projects",
-        ["project_id"],
-        ["id"],
-    )
+    dialect = op.get_context().dialect.name
+    if dialect == "sqlite":
+        with op.batch_alter_table("missions") as batch_op:
+            batch_op.create_foreign_key(
+                "fk_missions_project_id_projects",
+                "projects",
+                ["project_id"],
+                ["id"],
+            )
+    else:
+        op.create_foreign_key(
+            "fk_missions_project_id_projects",
+            "missions",
+            "projects",
+            ["project_id"],
+            ["id"],
+        )
 
 
 def downgrade():
-    op.drop_constraint(
-        "fk_missions_project_id_projects", "missions", type_="foreignkey"
-    )
+    dialect = op.get_context().dialect.name
+    if dialect == "sqlite":
+        with op.batch_alter_table("missions") as batch_op:
+            batch_op.drop_constraint(
+                "fk_missions_project_id_projects", type_="foreignkey"
+            )
+    else:
+        op.drop_constraint(
+            "fk_missions_project_id_projects", "missions", type_="foreignkey"
+        )
     op.drop_index("ix_missions_project_id", table_name="missions")
     op.drop_column("missions", "project_id")
     op.drop_index("ix_projects_created_by", table_name="projects")

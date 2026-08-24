@@ -106,29 +106,27 @@ developer workstation
 
 without treating a local demo as production readiness.
 
-## 2. Current local implementation baseline
+## Current local implementation baseline
 
 The supported local environment is the root `docker-compose.yml` stack with PostgreSQL, Redis, FastAPI backend, and Next.js frontend. The host endpoints are API `http://localhost:8080`, API documentation `http://localhost:8080/docs`, frontend `http://localhost:3080`, PostgreSQL `localhost:5435`, and Redis `localhost:6381`. Required local variables are defined by `.env.example`; Compose configuration can be checked without starting services using `docker compose config --quiet` with those variables supplied.
 
 This is a development baseline only. It is not evidence of production deployment, high availability, provider execution, adapter execution, backup/restore, or secure external exposure.
 
-## 3. Document status
+## 2. Document status
 
-`DEP-001` is being drafted as an autonomous document because deployment architecture and operational procedures are different concerns.
+`DEP-001` is a registered and approved deployment baseline. Deployment architecture and operational procedures remain separate concerns: `DEP-001` defines environments and promotion controls, while `OPS-001` defines operator actions. Approval of this baseline does not imply that pilot or production deployment evidence exists.
 
-The document register must later confirm one of these outcomes:
+The document register currently treats `DEP-001` as the authoritative deployment baseline for its scope, and `OPS-001` depends on it. Any future merger or retirement must be recorded through an explicit supersession change; it is not an unresolved registration condition.
 
-```text
-Option A
-DEP-001 becomes an official controlled document
-and OPS-001 depends on it
+### Current readiness boundary
 
-Option B
-DEP-001 is merged into OPS-001
-and the autonomous ID is retired
-```
-
-Until the global documentation audit, `register_status` remains `pending_confirmation`.
+| Environment | Documented posture | Current evidence |
+|---|---|---|
+| Developer workstation | Supported | Repository checks and local tooling |
+| Canonical local Compose stack | Supported for development | Compose configuration, health route and service definitions |
+| Ephemeral integration | Target | No committed full-stack CI smoke evidence yet |
+| Controlled pilot | Target | Backup/restore, observability, adapter and operator evidence absent |
+| Commercial production | Target | Hosting, secret management, security, SLO and continuity decisions open |
 
 ## 3. Deployment objectives
 
@@ -3328,8 +3326,7 @@ macOS remains a future compatibility target unless a separate platform decision 
 - no autonomous pilot/commercial deployment;
 - no merge, release, migration, restore, or production activation by agent alone;
 - no general production-readiness claim from local MVP;
-- no Git modification during current documentation drafting;
-- Git versioning remains deferred until global consistency review and explicit authorization.
+- Git changes are versioned and reviewable; deployment actions still require explicit authorization.
 
 ## 210. Acceptance criteria
 
@@ -3369,7 +3366,7 @@ DEP-001 may advance to `1.0.0` when:
 ### Approval state
 
 - Current status: `approved`
-- Current version: `0.1.0`
+- Current version: `0.3.0`
 - Approved by: Product Owner under explicit user authorization to finalize the declared scope
 - Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
@@ -3378,6 +3375,7 @@ DEP-001 may advance to `1.0.0` when:
 | Version | Date | Status | Summary |
 |---|---|---|---|
 | 0.1.0 | 2026-07-20 | Draft | Initial deployment architecture and environment strategy covering profiles D0-D5, Linux/WSL, Docker Compose, containers, builds, immutable promotion, configuration, secrets, networking, TLS, stores, volumes, migrations, rollback, maintenance, pilot, commercial deployment, evidence, testing, and governance |
+| 0.3.0 | 2026-08-13 | Approved | Confirmed DEP-001 as the registered deployment baseline and added local, integration, pilot, and production readiness boundaries |
 
 ## References
 
