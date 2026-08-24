@@ -23,6 +23,7 @@ from .control_plane import (
     Workspace,
 )
 from .memory import Memory
+from .outbox import InboxEvent, OutboxEvent
 from .run import Run
 
 __all__ = [
@@ -46,4 +47,6 @@ __all__ = [
     "ModelInvocation",
     "UsageRecord",
     "EvaluationCaseResult",
+    "OutboxEvent",
+    "InboxEvent",
 ]
