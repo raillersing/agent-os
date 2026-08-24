@@ -1,8 +1,8 @@
 ---
 document_id: INT-001
 title: Agent OS Integration Architecture
-version: 1.0.0
-status: approved
+version: 1.1.0
+status: in-review
 owner: architecture-owner
 approvers:
   - product-owner
@@ -12,7 +12,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-07-19
+last_reviewed: 2026-08-18
 approval_date: 2026-08-13
 review_records:
   - role: product-owner
@@ -24,6 +24,17 @@ approval_records:
     status: approved
     approval_date: 2026-08-13
     evidence: explicit user authorization in this request
+extension_approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-18
+    evidence: explicit Product Owner approval of the multi-execution backend and routing extension only
+pending_approvals:
+  - architecture-owner
+  - security-owner
+  - data-owner
+  - operations-owner
+  - quality-owner
 pending_approvals:
   - architecture-owner
   - security-owner
@@ -1298,7 +1309,37 @@ INT-001 may advance to `1.0.0` when:
 | `TST-001` | Contract/conformance/security tests |
 | `RTM-001` | Integration traceability |
 
-## 62. Revision and approval history
+## 62. Multi-execution backend routing extension
+
+The integration architecture adds an explicit routing chain:
+
+```text
+Execution Router
+→ Model Provider Gateway
+→ Agent Adapter Gateway
+```
+
+`ModelProviderConnection` is the normalized boundary for direct external or
+local model inference. `AgentRuntimeConnection` is the normalized boundary
+for governed runtimes such as Hermes or a Codex subscription session. They
+may be used simultaneously, but they remain separate connection classes and
+their authentication, identity, usage, billing, and evidence sources are not
+collapsed.
+
+The router records requested, selected, and actual backend/runtime, model
+identity where available, authentication source, billing source, fallback
+decision, usage source, actual monetary cost, and normalized equivalent cost.
+No fallback from a subscription runtime to a paid API is silent; it requires
+explicit policy and authorization. The deterministic simulator remains a
+third backend class.
+
+The direct OpenAI Responses API remains the D2 provider proof. Hermes and
+Codex runtime integration are post-D2 planning and do not imply D3 has
+started. The prior version's Product Owner approval is historical evidence
+only for this new revision; specialist approval of the extension remains
+pending.
+
+## 63. Revision and approval history
 
 ### Approval state
 

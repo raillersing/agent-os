@@ -1,7 +1,7 @@
 ---
 document_id: ADR-006
 title: MVP Model Provider and Cost-Control Baseline
-version: 0.1.0
+version: 0.2.0
 status: in-review
 owner: architecture-owner
 approvers:
@@ -12,7 +12,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-08-13
-last_reviewed: 2026-08-13
+last_reviewed: 2026-08-18
 classification: internal
 source_of_truth: false
 related_documents:
@@ -32,6 +32,10 @@ approval_records:
     status: approved
     approval_date: 2026-08-13
     evidence: explicit user approval of the MVP implementation recommendations on 2026-08-13
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-18
+    evidence: explicit Product Owner approval of the compatible multi-backend and normalized economics extension
 pending_approvals:
   - architecture-owner
   - security-owner
@@ -95,6 +99,22 @@ Local inference is not required to complete the first external-provider vertical
 Anthropic is the next planned external provider after the first OpenAI vertical slice is proven. Additional direct providers and provider aggregators are deferred until an explicit binding and policy decision exists.
 
 No provider is enabled merely because an SDK dependency exists in the repository.
+
+### 5.1 Post-D2 coexistence extension
+
+The first real provider proof remains the OpenAI Responses API path defined by
+D2 and `ADR-009`. A Codex subscription-backed runtime does not replace D2,
+change Issue #10 scope, or become an approved provider through this ADR.
+
+After D2, direct API providers, subscription-backed agent runtimes, and the
+deterministic simulator coexist under the explicit backend taxonomy and
+router proposed in `ADR-010`. OpenAI API billing/authentication and
+ChatGPT/Codex subscription billing/authentication are distinct domains.
+
+Actual monetary cost remains distinct from normalized equivalent cost. A
+subscription-backed run may have `actual_cost_state=subscription_included`
+and `actual_cost_usd=null`; it is not represented as zero. Equivalent cost is
+a versioned simulated reference value and is not provider billing truth.
 
 ### 6. No silent fallback
 
