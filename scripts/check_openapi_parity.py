@@ -28,6 +28,7 @@ CONTRACT_SCHEMAS = {
     "ToolResult",
     "Workspace",
     "WorkspaceCreate",
+    "WorkspaceUpdate",
     "Project",
     "ProjectCreate",
     "ProjectUpdate",
@@ -45,6 +46,8 @@ CONTRACT_SCHEMAS = {
     "Approval",
     "ApprovalCreate",
     "ApprovalDecision",
+    "ApprovalConsumeRequest",
+    "ApprovalInvalidateRequest",
     "AuditEvent",
 }
 

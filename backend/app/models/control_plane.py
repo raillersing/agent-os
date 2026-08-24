@@ -1,7 +1,6 @@
 """Persistent MVP control-plane domain models."""
 
 import uuid
-from datetime import datetime
 
 from sqlalchemy import (
     JSON,
@@ -17,6 +16,7 @@ from sqlalchemy import (
 )
 
 from ..core.database import Base
+from ..core.time import utcnow
 
 
 class Workspace(Base):
@@ -27,10 +27,10 @@ class Workspace(Base):
     description = Column(Text, default="")
     status = Column(String(32), default="active", nullable=False, index=True)
     budget = Column(Float, default=0.0)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(
-        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
-    )
+    spent = Column(Float, default=0.0, nullable=False)
+    version = Column(Integer, default=1, nullable=False)
+    created_at = Column(DateTime, default=utcnow, nullable=False)
+    updated_at = Column(DateTime, default=utcnow, onupdate=utcnow, nullable=False)
 
 
 class Project(Base):
@@ -45,10 +45,8 @@ class Project(Base):
     state = Column(String(32), default="active", nullable=False, index=True)
     created_by = Column(Uuid, nullable=False, index=True)
     version = Column(Integer, default=1, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(
-        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
-    )
+    created_at = Column(DateTime, default=utcnow, nullable=False)
+    updated_at = Column(DateTime, default=utcnow, onupdate=utcnow, nullable=False)
 
 
 class Mission(Base):
@@ -64,10 +62,8 @@ class Mission(Base):
     progress = Column(Integer, default=0, nullable=False)
     plan = Column(JSON, default=list)
     evidence = Column(JSON, default=list)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(
-        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
-    )
+    created_at = Column(DateTime, default=utcnow, nullable=False)
+    updated_at = Column(DateTime, default=utcnow, onupdate=utcnow, nullable=False)
 
 
 class Task(Base):
@@ -84,10 +80,8 @@ class Task(Base):
     state = Column(String(32), default="ready", nullable=False, index=True)
     created_by = Column(Uuid, nullable=False, index=True)
     version = Column(Integer, default=1, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(
-        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
-    )
+    created_at = Column(DateTime, default=utcnow, nullable=False)
+    updated_at = Column(DateTime, default=utcnow, onupdate=utcnow, nullable=False)
 
 
 class TaskSnapshot(Base):
@@ -105,7 +99,7 @@ class TaskSnapshot(Base):
         String(128), default="model.general.balanced", nullable=False
     )
     content_hash = Column(String(64), nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=utcnow, nullable=False)
 
 
 class ExecutionRun(Base):
@@ -115,8 +109,9 @@ class ExecutionRun(Base):
     __table_args__ = (
         UniqueConstraint(
             "workspace_id",
+            "task_id",
             "idempotency_key",
-            name="uq_execution_runs_workspace_idempotency",
+            name="uq_execution_runs_workspace_task_idempotency",
         ),
     )
 
@@ -137,7 +132,7 @@ class ExecutionRun(Base):
     cancellation_state = Column(String(32), default="not_requested", nullable=False)
     receipt_state = Column(String(32), default="pending", nullable=False)
     version = Column(Integer, default=1, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=utcnow, nullable=False)
     started_at = Column(DateTime, nullable=True)
     ended_at = Column(DateTime, nullable=True)
     last_reliable_evidence_at = Column(DateTime, nullable=True)
@@ -180,7 +175,7 @@ class RunAttempt(Base):
     cost_amount = Column(Float, nullable=True)
     latency_ms = Column(Integer, nullable=True)
     terminal_reason = Column(String(64), nullable=True)
-    started_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    started_at = Column(DateTime, default=utcnow, nullable=False)
     ended_at = Column(DateTime, nullable=True)
 
 
@@ -200,7 +195,7 @@ class Artifact(Base):
     # Artifact rather than globally unique by hash.
     content_hash = Column(String(64), nullable=False)
     state = Column(String(32), default="accepted", nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=utcnow, nullable=False)
 
 
 class ExecutionReceipt(Base):
@@ -219,7 +214,7 @@ class ExecutionReceipt(Base):
     provider_identity = Column(String(128), nullable=True)
     input_hash = Column(String(64), nullable=False)
     output_hash = Column(String(64), nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=utcnow, nullable=False)
 
 
 class Automation(Base):
@@ -233,23 +228,92 @@ class Automation(Base):
     trigger_config = Column(JSON, default=dict)
     steps = Column(JSON, default=list)
     enabled = Column(Integer, default=1, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(
-        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
-    )
+    created_at = Column(DateTime, default=utcnow, nullable=False)
+    updated_at = Column(DateTime, default=utcnow, onupdate=utcnow, nullable=False)
 
 
 class Approval(Base):
+    """Exact-action human approval request with one-time consumption binding.
+
+    Aligns with APR-001: the request is immutable, the fingerprint binds to the
+    normalized action, and consumption is recorded in a separate table so the
+    consumed state survives retries, restores, and concurrent attempts.
+    """
+
     __tablename__ = "approvals"
 
     id = Column(Uuid, primary_key=True, default=uuid.uuid4)
+    workspace_id = Column(Uuid, ForeignKey("workspaces.id"), nullable=False, index=True)
     mission_id = Column(Uuid, ForeignKey("missions.id"), nullable=False, index=True)
+    run_id = Column(Uuid, ForeignKey("execution_runs.id"), nullable=True, index=True)
+    task_id = Column(Uuid, ForeignKey("tasks.id"), nullable=True, index=True)
+    attempt_id = Column(Uuid, ForeignKey("run_attempts.id"), nullable=True, index=True)
+
+    # Human-readable summary retained for UX and backwards compatibility.
     action = Column(String(255), nullable=False)
     scope = Column(JSON, default=dict)
-    status = Column(String(32), default="pending", nullable=False, index=True)
+
+    # Exact-action taxonomy and fingerprint (APR-001 §7, §12).
+    action_class = Column(String(64), default="external_effect", nullable=False)
+    capability_code = Column(String(128), default="manual", nullable=False)
+    risk_class = Column(String(32), default="r3", nullable=False)
+    normalized_target = Column(String(512), default="", nullable=False)
+    action_fingerprint = Column(String(64), nullable=False)
+    request_hash = Column(String(64), nullable=False, index=True)
+
+    # Review material and policy context.
+    expected_effects = Column(Text, default="", nullable=False)
+    reversibility_state = Column(String(32), default="unknown", nullable=False)
+    data_classification = Column(String(32), default="internal", nullable=False)
+    policy_version = Column(String(64), default="AUT-001:0.2.0", nullable=False)
+    required_authority = Column(String(128), default="workspace_owner", nullable=False)
+    independence_level = Column(
+        String(32), default="i1_requester_may_approve", nullable=False
+    )
+
+    # Identity and lifecycle.
+    requester_identity_id = Column(Uuid, nullable=True)
+    requester_identity_type = Column(String(32), default="human", nullable=False)
+    decided_by = Column(Uuid, nullable=True)
+    status = Column(String(32), default="requested", nullable=False, index=True)
     decision_note = Column(Text, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    expires_at = Column(DateTime, nullable=True)
+    version = Column(Integer, default=1, nullable=False)
+    created_at = Column(DateTime, default=utcnow, nullable=False)
     decided_at = Column(DateTime, nullable=True)
+    updated_at = Column(DateTime, default=utcnow, onupdate=utcnow, nullable=False)
+
+
+class ApprovalConsumption(Base):
+    """One-time, atomic consumption of an approved exact action.
+
+    A separate table lets the consumed state remain append-only and unique per
+    approval request, satisfying APR-INV-007 and APR-INV-008.
+    """
+
+    __tablename__ = "approval_consumptions"
+    __table_args__ = (
+        UniqueConstraint(
+            "approval_request_id", name="uq_approval_consumptions_request"
+        ),
+    )
+
+    id = Column(Uuid, primary_key=True, default=uuid.uuid4)
+    approval_request_id = Column(
+        Uuid, ForeignKey("approvals.id"), nullable=False, unique=True, index=True
+    )
+    approval_decision_id = Column(Uuid, nullable=True)
+    run_id = Column(Uuid, ForeignKey("execution_runs.id"), nullable=False, index=True)
+    step_id = Column(Uuid, nullable=True)
+    attempt_id = Column(Uuid, ForeignKey("run_attempts.id"), nullable=False, index=True)
+    action_fingerprint = Column(String(64), nullable=False)
+    request_version = Column(Integer, nullable=False)
+    policy_version = Column(String(64), nullable=False)
+    consumed_by_component = Column(String(128), nullable=False)
+    consumed_at = Column(DateTime, default=utcnow, nullable=False)
+    execution_dispatch_reference = Column(String(256), nullable=True)
+    result_reference = Column(String(256), nullable=True)
+    version = Column(Integer, default=1, nullable=False)
 
 
 class AuditEvent(Base):
@@ -264,7 +328,7 @@ class AuditEvent(Base):
     resource_id = Column(Uuid, nullable=False, index=True)
     actor = Column(String(128), nullable=False, default="local-system")
     details = Column(JSON, default=dict)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
+    created_at = Column(DateTime, default=utcnow, nullable=False, index=True)
 
 
 class ContextManifest(Base):
@@ -285,7 +349,7 @@ class ContextManifest(Base):
     disclosure_state = Column(String(64), nullable=False)
     token_budget = Column(JSON, nullable=False)
     transformations = Column(JSON, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=utcnow, nullable=False)
 
 
 class ModelInvocation(Base):
@@ -322,7 +386,7 @@ class ModelInvocation(Base):
     refusal_state = Column(String(32), nullable=False)
     tools_enabled = Column(Integer, nullable=False, default=0)
     latency_ms = Column(Integer, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=utcnow, nullable=False)
 
 
 class UsageRecord(Base):
@@ -349,7 +413,7 @@ class UsageRecord(Base):
     estimated_cost = Column(Float, nullable=True)
     measured_cost = Column(Float, nullable=True)
     provider_reported_cost = Column(Float, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=utcnow, nullable=False)
 
 
 class EvaluationCaseResult(Base):
@@ -368,4 +432,4 @@ class EvaluationCaseResult(Base):
     dimensions = Column(JSON, nullable=False)
     threshold_snapshot = Column(JSON, nullable=False)
     evidence_reference = Column(String(256), nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=utcnow, nullable=False)

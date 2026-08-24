@@ -5,6 +5,7 @@ Models Package
 from .agent import Agent
 from .control_plane import (
     Approval,
+    ApprovalConsumption,
     Artifact,
     AuditEvent,
     Automation,
@@ -22,6 +23,7 @@ from .control_plane import (
     Workspace,
 )
 from .memory import Memory
+from .outbox import InboxEvent, OutboxEvent
 from .run import Run
 
 __all__ = [
@@ -33,6 +35,7 @@ __all__ = [
     "Mission",
     "Automation",
     "Approval",
+    "ApprovalConsumption",
     "AuditEvent",
     "Task",
     "TaskSnapshot",
@@ -44,4 +47,6 @@ __all__ = [
     "ModelInvocation",
     "UsageRecord",
     "EvaluationCaseResult",
+    "OutboxEvent",
+    "InboxEvent",
 ]
