@@ -59,6 +59,20 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 
+  /api/v1/auth/logout:
+    post:
+      operationId: logout
+      summary: Logout
+      description: Clear the browser authentication cookie.
+      tags: [Auth]
+      security: []
+      responses:
+        '200':
+          description: Logged out
+          content:
+            application/json:
+              schema: { type: object }
+
   /api/v1/agents:
     get:
       operationId: listAgents
@@ -381,6 +395,46 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/Workspace' }
 
+  /api/v1/workspaces/{workspace_id}:
+    get:
+      operationId: getWorkspace
+      summary: Get a persisted workspace
+      tags: [Control Plane]
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Workspace found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Workspace' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    patch:
+      operationId: updateWorkspace
+      summary: Update a persisted workspace
+      tags: [Control Plane]
+      parameters:
+        - name: workspace_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/WorkspaceUpdate' }
+      responses:
+        '200':
+          description: Workspace updated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Workspace' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
   /api/v1/missions:
     get:
       operationId: listMissions
@@ -609,6 +663,83 @@ paths:
               schema: { $ref: '#/components/schemas/Approval' }
         '409':
           description: Approval was already decided
+
+  /api/v1/approvals/{approval_id}/consume:
+    post:
+      operationId: consumeApproval
+      summary: Consume an approved decision
+      tags: [Control Plane]
+      parameters:
+        - name: approval_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: workspace_id
+          in: query
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ApprovalConsumeRequest' }
+      responses:
+        '200':
+          description: Approval consumed
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Approval' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /api/v1/approvals/{approval_id}/invalidate:
+    post:
+      operationId: invalidateApproval
+      summary: Invalidate an approval decision
+      tags: [Control Plane]
+      parameters:
+        - name: approval_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: workspace_id
+          in: query
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ApprovalInvalidateRequest' }
+      responses:
+        '200':
+          description: Approval invalidated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Approval' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+
+  /api/v1/artifacts:
+    get:
+      operationId: listArtifacts
+      summary: List workspace artifacts
+      description: List artifacts produced inside a workspace.
+      tags: [Control Plane]
+      parameters:
+        - name: workspace_id
+          in: query
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Artifacts listed
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Artifact' }
+        '404': { $ref: '#/components/responses/NotFound' }
 
   /api/v1/audit-events:
     get:
@@ -920,10 +1051,14 @@ components:
         terminal_reason: { type: [string, 'null'] }
     Artifact:
       type: object
-      required: [id, media_type, content_hash, state, created_at]
+      required: [id, workspace_id, run_id, attempt_id, media_type, content, content_hash, state, created_at]
       properties:
         id: { type: string, format: uuid }
+        workspace_id: { type: string, format: uuid }
+        run_id: { type: string, format: uuid }
+        attempt_id: { type: string, format: uuid }
         media_type: { type: string }
+        content: { type: string }
         content_hash: { type: string }
         state: { type: string }
         created_at: { type: string, format: date-time }
@@ -1018,17 +1153,27 @@ components:
       type: object
       required: [name]
       properties:
-        name: { type: string }
+        name: { type: string, minLength: 1, maxLength: 255 }
         description: { type: string, default: '' }
         budget: { type: number, minimum: 0, default: 0 }
+    WorkspaceUpdate:
+      type: object
+      properties:
+        name: { type: [string, 'null'], minLength: 1, maxLength: 255 }
+        description: { type: [string, 'null'] }
+        budget: { type: [number, 'null'], minimum: 0 }
+        spent: { type: [number, 'null'] }
+        status: { type: [string, 'null'] }
+        expected_version: { type: [integer, 'null'] }
     Workspace:
       allOf:
         - $ref: '#/components/schemas/WorkspaceCreate'
         - type: object
-          required: [id, status, created_at, updated_at]
+          required: [id, status, spent, created_at, updated_at]
           properties:
             id: { type: string, format: uuid }
             status: { type: string, example: active }
+            spent: { type: number }
             created_at: { type: string, format: date-time }
             updated_at: { type: string, format: date-time }
     MissionCreate:
@@ -1077,8 +1222,22 @@ components:
       required: [mission_id, action]
       properties:
         mission_id: { type: string, format: uuid }
-        action: { type: string }
-        scope: { type: object }
+        workspace_id: { type: [string, 'null'], format: uuid }
+        action: { type: string, minLength: 1, maxLength: 255 }
+        scope: { type: object, default: {} }
+        run_id: { type: [string, 'null'], format: uuid }
+        task_id: { type: [string, 'null'], format: uuid }
+        action_class: { type: string, maxLength: 64, default: external_effect }
+        capability_code: { type: string, maxLength: 128, default: manual }
+        risk_class: { type: string, maxLength: 32, default: r3 }
+        normalized_target: { type: string, maxLength: 512, default: '' }
+        expected_effects: { type: string, default: '' }
+        reversibility_state: { type: string, maxLength: 32, default: unknown }
+        data_classification: { type: string, maxLength: 32, default: internal }
+        policy_version: { type: string, maxLength: 64, default: 'AUT-001:0.2.0' }
+        required_authority: { type: string, maxLength: 128, default: workspace_owner }
+        independence_level: { type: string, maxLength: 32, default: i1_requester_may_approve }
+        expires_at: { type: [string, 'null'], format: date-time }
     ApprovalDecision:
       type: object
       required: [status]
@@ -1086,16 +1245,70 @@ components:
         status: { type: string, enum: [approved, rejected] }
         decision_note: { type: string }
     Approval:
-      allOf:
-        - $ref: '#/components/schemas/ApprovalCreate'
-        - type: object
-          required: [id, status, created_at]
-          properties:
-            id: { type: string, format: uuid }
-            status: { type: string, enum: [pending, approved, rejected] }
-            decision_note: { type: [string, 'null'] }
-            created_at: { type: string, format: date-time }
-            decided_at: { type: [string, 'null'], format: date-time }
+      type: object
+      required: [mission_id, action, id, attempt_id, action_fingerprint, request_hash, status, requester_identity_id, requester_identity_type, decided_by, decision_note, version, created_at, decided_at, updated_at]
+      properties:
+        mission_id: { type: string, format: uuid }
+        workspace_id: { type: [string, 'null'], format: uuid }
+        action: { type: string, minLength: 1, maxLength: 255 }
+        scope: { type: object, default: {} }
+        run_id: { type: [string, 'null'], format: uuid }
+        task_id: { type: [string, 'null'], format: uuid }
+        action_class: { type: string, maxLength: 64, default: external_effect }
+        capability_code: { type: string, maxLength: 128, default: manual }
+        risk_class: { type: string, maxLength: 32, default: r3 }
+        normalized_target: { type: string, maxLength: 512, default: '' }
+        expected_effects: { type: string, default: '' }
+        reversibility_state: { type: string, maxLength: 32, default: unknown }
+        data_classification: { type: string, maxLength: 32, default: internal }
+        policy_version: { type: string, maxLength: 64, default: 'AUT-001:0.2.0' }
+        required_authority: { type: string, maxLength: 128, default: workspace_owner }
+        independence_level: { type: string, maxLength: 32, default: i1_requester_may_approve }
+        expires_at: { type: [string, 'null'], format: date-time }
+        id: { type: string, format: uuid }
+        attempt_id: { type: [string, 'null'], format: uuid }
+        action_fingerprint: { type: string }
+        request_hash: { type: string }
+        status: { type: string }
+        requester_identity_id: { type: [string, 'null'], format: uuid }
+        requester_identity_type: { type: string }
+        decided_by: { type: [string, 'null'], format: uuid }
+        decision_note: { type: [string, 'null'] }
+        version: { type: integer }
+        created_at: { type: string, format: date-time }
+        decided_at: { type: [string, 'null'], format: date-time }
+        updated_at: { type: string, format: date-time }
+    ApprovalConsumeRequest:
+      type: object
+      required: [run_id, attempt_id, action_fingerprint]
+      properties:
+        run_id: { type: string, format: uuid }
+        attempt_id: { type: string, format: uuid }
+        action_fingerprint: { type: string, minLength: 1, maxLength: 64 }
+        execution_dispatch_reference: { type: [string, 'null'], maxLength: 256 }
+        consumed_by_component: { type: string, maxLength: 128, default: tool_gateway }
+    ApprovalInvalidateRequest:
+      type: object
+      required: [reason_code]
+      properties:
+        reason_code: { type: string, minLength: 1, maxLength: 64 }
+        evidence_reference: { type: [string, 'null'], maxLength: 256 }
+    ApprovalConsumption:
+      type: object
+      required: [id, approval_request_id, run_id, attempt_id, action_fingerprint, request_version, policy_version, consumed_by_component, consumed_at, version]
+      properties:
+        id: { type: string, format: uuid }
+        approval_request_id: { type: string, format: uuid }
+        run_id: { type: string, format: uuid }
+        attempt_id: { type: string, format: uuid }
+        action_fingerprint: { type: string }
+        request_version: { type: integer }
+        policy_version: { type: string }
+        consumed_by_component: { type: string }
+        consumed_at: { type: string, format: date-time }
+        execution_dispatch_reference: { type: [string, 'null'] }
+        result_reference: { type: [string, 'null'] }
+        version: { type: integer }
     AuditEvent:
       type: object
       required: [id, workspace_id, event_type, resource_type, resource_id, actor, details, created_at]
