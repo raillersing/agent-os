@@ -2,232 +2,113 @@
 
 Merci de votre intérêt pour Agent OS ! Ce guide explique comment contribuer au projet.
 
-## Table des Matières
+## Prérequis
 
-1. [Code of Conduct](#code-of-conduct)
-2. [Comment Contribuer](#comment-contribuer)
-3. [Développement](#développement)
-4. [Style Guide](#style-guide)
-5. [Pull Requests](#pull-requests)
-6. [Issues](#issues)
-
----
-
-## Code of Conduct
-
-En participant à ce projet, vous acceptez de respecter notre Code of Conduct:
-
-- Respecter les autres contributeurs
-- Être constructif et bienveillant
-- Se concentrer sur ce qui est meilleur pour la communauté
-- Respecter les décisions du projet
-
----
-
-## Comment Contribuer
-
-### Types de Contributions
-
-- **Bug Reports**: Signaler des bugs via GitHub Issues
-- **Documentation**: Améliorer la documentation
-- **Code**: Corriger des bugs ou ajouter des fonctionnalités
-- **Tests**: Ajouter ou améliorer les tests
-- **Design**: Proposer des améliorations UI/UX
-
-### Première Contribution
-
-1. Cherchez les issues标签 `good-first-issue`
-2. Commentez l'issue pour indiquer que vous travaillez dessus
-3. Fork le dépôt
-4. Créez une branche pour votre feature
-5. Faites vos modifications
-6. Soumettez une Pull Request
-
----
-
-## Développement
-
-### Prérequis
-
-- Python 3.10+
+- Python 3.12
+- Node.js 20
 - Docker & Docker Compose
 - Git
 
-### Setup de Développement
+## Démarrage rapide
 
 ```bash
-# Cloner votre fork
-git clone https://github.com/VOTRE-UTILISATEUR/agent-os.git
+# Cloner le dépôt
+git clone https://github.com/raillersing/agent-os.git
 cd agent-os
 
-# Ajouter le remote upstream
-git remote add upstream https://github.com/raillersing/agent-os.git
+# Configurer l'environnement
+cp .env.example .env
+# Éditer .env avec des secrets locaux (SECRET_KEY, ADMIN_PASSWORD, LLM keys)
 
-# Installer les dépendances de développement
-pip install -r requirements-dev.txt
+# Lancer la stack de développement (Postgres, Redis, Temporal, backend, worker, frontend)
+docker compose up -d
+make migrate
 
-# Lancer l'environnement de développement
-docker-compose -f docker-compose.dev.yml up
+# Vérifier l'état
+make status
+make logs-backend
 ```
 
-### Structure du Code
-
-```
-agent_os/
-├── api/            # Routes API
-├── core/           # Logique métier
-├── models/         # Modèles de données
-├── services/       # Services
-├── utils/          # Utilitaires
-└── cli/            # Interface ligne de commande
-```
-
-### Tests
+## Développement backend
 
 ```bash
-# Lancer tous les tests
-pytest
-
-# Tests avec couverture
-pytest --cov=agent_os
-
-# Tests spécifiques
-pytest tests/test_agents.py -v
+cd backend
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+pytest -q
 ```
 
-### Linting
+## Développement frontend
 
 ```bash
-# Vérifier le style
-flake8 agent_os/
-black --check agent_os/
-isort --check-only agent_os/
-
-# Formater le code
-black agent_os/
-isort agent_os/
+cd frontend
+npm install
+npm run dev        # http://localhost:3080 avec NEXT_PUBLIC_API_URL
+npm run lint
+npm run build
 ```
 
----
+## Prototype
 
-## Style Guide
-
-### Python
-
-- Suivre PEP 8
-- Utiliser Black pour le formatage
-- Utiliser isort pour l'import
-- Maximum 88 caractères par ligne
-- Docstrings pour toutes les fonctions publiques
-
-### Documentation
-
-- Markdown pour la documentation
-- Max 80 caractères par ligne
-- Sections avec `##` uniquement
-- Code blocks avec language tag
-
-### Git
-
-- Messages de commit en français
-- Format: `<type>: <description>`
-- Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
-
-Exemples:
-```
-feat: ajouter la gestion des mémoires
-fix: corriger le routage des requêtes
-docs: mettre à jour le guide d'installation
+```bash
+cd prototype
+npm install
+npm run dev
+npm run build
 ```
 
----
+## Structure du code
 
-## Pull Requests
+```
+backend/
+├── app/
+│   ├── api/        # Routes FastAPI
+│   ├── core/       # Sécurité, configuration, base de données
+│   ├── models/     # Modèles SQLAlchemy
+│   ├── schemas/    # Contrats Pydantic
+│   ├── services/   # Logique métier réutilisable
+│   ├── temporal/   # Workflows et activités Temporal
+│   └── simulator/  # Simulateur déterministe D0/D1
+├── migrations/     # Révisions Alembic
+└── tests/          # Tests pytest hermétiques
 
-### Processus
+frontend/
+├── src/
+│   ├── app/        # Routes Next.js App Router
+│   ├── components/ # Composants React
+│   └── lib/        # Appels API et utilitaires
+```
 
-1. **Créer une branche**
-   ```bash
-   git checkout -b feat/ma-fonctionnalite
-   ```
+## Style et qualité
 
-2. **Faire vos modifications**
-   - Écrire du code propre
-   - Ajouter des tests
-   - Mettre à jour la documentation si nécessaire
+- Python : `black`, `isort`, `flake8` (configuration dans `.flake8` et `backend/pyproject.toml`)
+- TypeScript / Next.js : ESLint, `next build`
+- Les migrations Alembic doivent rester compatibles SQLite et PostgreSQL (utiliser `batch_alter_table` pour SQLite)
+- Les datetimes backend doivent être timezone-aware via `app.core.time.utcnow()`
 
-3. **Tester**
-   ```bash
-   pytest
-   flake8 agent_os/
-   black --check agent_os/
-   ```
+## Tests
 
-4. **Committer**
-   ```bash
-   git add .
-   git commit -m "feat: ajouter ma fonctionnalite"
-   ```
+- Backend : `cd backend && pytest -q` (base SQLite temporaire par session)
+- Intégration HTTP : `tests/test_api_integration.py`
+- Intégration Temporal : `tests/test_temporal_integration.py`
 
-5. **Push**
-   ```bash
-   git push origin feat/ma-fonctionnalite
-   ```
+## Pull requests
 
-6. **Créer la Pull Request**
-   - Titre descriptif
-   - Description des changements
-   - Référence aux issues fermées
-   - Screenshots si applicable
+1. Créer une branche depuis `main`.
+2. Faire des commits atomiques et explicites.
+3. S'assurer que `pytest -q`, `make lint` et `docker compose config --quiet` passent.
+4. Ouvrir une Pull Request avec une description claire.
 
-### Critères de Revue
+## Signalement de bugs
 
-- [ ] Code fonctionnel
-- [ ] Tests passing
-- [ ] Documentation mise à jour
-- [ ] Pas de régression
-- [ ] Respect du style guide
+Ouvrir une issue avec :
+- Le contexte et les étapes de reproduction
+- Le comportement attendu vs observé
+- Les logs et captures d'écran si pertinent
 
-### Après Merge
+## Conduite
 
-- Supprimer la branche locale et distante
-- Pull les changements upstream
-
----
-
-## Issues
-
-### Créer une Issue
-
-Utilisez les templates GitHub:
-- **Bug Report**: Pour signaler un bug
-- **Feature Request**: Pour proposer une fonctionnalité
-- **Documentation**: Pour signaler un problème de doc
-
-### Informations Incluses
-
-- Description claire du problème
-- Étapes pour reproduire
-- Comportement attendu vs réel
-- Environnement (OS, Python, etc.)
-- Screenshots si applicable
-
-### Étiquettes
-
-| Étiquette | Description |
-|-----------|-------------|
-| `bug` | Bug confirmé |
-| `enhancement` | Nouvelle fonctionnalité |
-| `documentation` | Amélioration de la doc |
-| `good-first-issue` | Bonne première contribution |
-| `help-wanted` | Besoin d'aide |
-| `priority:high` | Haute priorité |
-
----
-
-## Questions ?
-
-- Ouvrez une [Discussion GitHub](https://github.com/raillersing/agent-os/discussions)
-- Rejoignez la [Discord Community](https://discord.gg/agent-os)
-
-Merci pour vos contributions ! 🎉
+- Respecter les autres contributeurs
+- Privilégier la sécurité et la maintenabilité
+- Documenter les changements de contrat API ou de schéma
