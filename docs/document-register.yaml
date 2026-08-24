@@ -619,6 +619,16 @@ documents:
     approval_date: 2026-08-13
     owner: quality-owner
     dependencies: [TST-001, DOC-000]
+  - id: DEP-MIGRATION-001
+    title: Dependency Migration Plan
+    path: docs/dependency-migration-plan.md
+    wave: 4
+    priority: P1
+    version: 1.0.0
+    status: approved
+    owner: engineering-owner
+    source_of_truth: true
+    dependencies: [DEV-001, QAG-001]
   - id: VVR-001
     title: Visual Validation and Regression Plan
     path: docs/13-assurance/VVR-001-visual-validation-and-regression-plan-v0.1.0.md

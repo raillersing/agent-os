@@ -1,3 +1,18 @@
+---
+document_id: DEP-MIGRATION-001
+title: Dependency Migration Plan
+version: 1.0.0
+status: approved
+owner: engineering-owner
+approvers: [engineering-owner, architecture-owner]
+created: 2026-08-24
+last_reviewed: 2026-08-24
+classification: internal
+source_of_truth: true
+related_documents: [DEV-001, QAG-001]
+related_adrs: [ADR-001]
+---
+
 # Dependency Migration Plan
 
 This document tracks coordinated dependency upgrades that cannot safely be done
