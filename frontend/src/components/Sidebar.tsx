@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useState } from 'react'
 import api from '@/lib/api'
 
 const navigation = [
@@ -40,6 +41,16 @@ function NavIcon({ name }: { name: string }) {
 
 export default function Sidebar() {
   const pathname = usePathname()
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+
+  async function handleLogout() {
+    setIsLoggingOut(true)
+    try {
+      await api.logout()
+    } finally {
+      window.location.href = '/login'
+    }
+  }
 
   return (
     <aside className="sidebar">
@@ -78,10 +89,10 @@ export default function Sidebar() {
           <div className="health-row"><span className="live-dot"></span><strong>System operational</strong><span className="health-code">SYS/01</span></div>
           <p><span>3 agents connected</span><span>1 approval waiting</span></p>
         </div>
-        <button className="user-menu" aria-label="Sign out" onClick={() => { api.logout(); window.location.href = '/login' }}>
+        <button className="user-menu" aria-label="Sign out" disabled={isLoggingOut} onClick={handleLogout}>
           <span className="avatar">ER</span>
           <span><strong>Eric</strong><small>Owner</small></span>
-          <span className="chevron">⌄</span>
+          <span className="chevron">{isLoggingOut ? '…' : '⌄'}</span>
         </button>
       </div>
     </aside>

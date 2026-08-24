@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agent-os"
+version = "0.1.0"
+description = "Agent OS control plane and durable execution runtime"
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+pythonpath = [".."]
+testpaths = ["tests"]
+
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  .venv
+  | venv
+  | migrations/versions/__pycache__
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+skip = [".venv", "venv", "migrations/versions/__pycache__"]
