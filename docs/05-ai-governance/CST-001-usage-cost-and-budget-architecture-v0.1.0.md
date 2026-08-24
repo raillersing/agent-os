@@ -1,8 +1,8 @@
 ---
 document_id: CST-001
 title: Agent OS Usage, Cost and Budget Architecture
-version: 1.0.0
-status: approved
+version: 1.1.0
+status: in-review
 owner: product-owner
 approvers:
   - product-owner
@@ -12,7 +12,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-08-13
+last_reviewed: 2026-08-18
 approval_date: 2026-08-13
 approval_records:
   - role: product-owner
@@ -39,6 +39,17 @@ approval_records:
     status: approved
     approval_date: 2026-08-13
     evidence: explicit user confirmation that the full team approved this document
+extension_approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-18
+    evidence: explicit Product Owner approval of the multi-backend and normalized-economics extension only
+pending_approvals:
+  - architecture-owner
+  - security-owner
+  - data-owner
+  - operations-owner
+  - quality-owner
 classification: internal
 source_of_truth: false
 related_documents: []
@@ -115,7 +126,7 @@ related_adrs:
 
 # CST-001 — Agent OS Usage, Cost and Budget Architecture
 
-> **Status: Draft — registered.** This document defines the proposed usage, cost, pricing, reservation, budget, quota, threshold, approval, reconciliation, forecasting, anomaly, reporting, and evidence architecture for Agent OS. It covers model tokens and requests, tools, adapters, compute, sandbox resources, network, storage, artifacts, memory, external services, human review, internal allocation, provider invoices, credits, refunds, currencies, pricing versions, unknown costs, and release safeguards. It does not define final prices charged to customers, select a billing provider, provide tax or accounting advice, guarantee provider estimates, or treat unknown cost as zero.
+> **Status: In review — Product Owner approved the compatible extension on 2026-08-18; specialist approvals remain pending.** This document defines the proposed usage, cost, pricing, reservation, budget, quota, threshold, approval, reconciliation, forecasting, anomaly, reporting, and evidence architecture for Agent OS. It covers model tokens and requests, tools, adapters, compute, sandbox resources, network, storage, artifacts, memory, external services, human review, internal allocation, provider invoices, credits, refunds, currencies, pricing versions, unknown costs, and release safeguards. It does not define final prices charged to customers, select a billing provider, provide tax or accounting advice, guarantee provider estimates, or treat unknown cost as zero.
 
 ## 1. Purpose
 
@@ -2409,20 +2420,95 @@ CST-001 may advance to `1.0.0` when:
 | `VVR-001` | Cost/budget visual scenarios and regression baselines |
 | Document register | Add proposed document and dependencies |
 
-## 171. Revision and approval history
+## 171. Multi-backend and normalized-economics extension
+
+### 171.1 Actual Monetary Cost
+
+Actual Monetary Cost is a source-labelled monetary fact and is never
+collapsed with usage, a reservation, a normalized equivalent, a customer
+price, or a subscription fee. Its state vocabulary includes at least
+`provider_billed`, `provider_calculated`, `subscription_included`,
+`allocated`, `invoiced`, `reconciled`, and `unknown`. A subscription-backed
+execution uses `actual_cost_state=subscription_included` and
+`actual_cost_usd=null` when no incremental monetary charge is evidenced; it
+must not be represented as `$0`.
+
+### 171.2 Normalized Equivalent Cost
+
+Normalized Equivalent Cost is a simulated USD value for comparison and
+budgeting under a versioned reference pricing model. It is not provider
+billing, accounting truth, a customer charge, or realized financial savings.
+An execution may record both facts independently:
+
+```text
+actual_cost_state
+actual_cost_usd
+billing_source
+equivalent_cost_state
+equivalent_cost_usd
+pricing_catalog_id
+pricing_snapshot_id
+pricing_basis
+pricing_version
+effective_at
+token_usage_source
+calculation_method
+confidence
+completeness
+assumptions
+```
+
+`pricing_basis` is one of `exact_model_api_price`,
+`proxy_model_api_price`, `configured_reference_rate`, or `unavailable`.
+There is no silent runtime-to-SKU mapping. Calculation states include
+`calculated`, `estimated`, `estimated_range`, `partial`, and `unknown`.
+
+### 171.3 Pricing Catalog and Pricing Snapshot
+
+The versioned Pricing Catalog contains provider, model/SKU, effective period,
+currency, input-token, cached-input, output-token, tool/unit rates,
+conditional pricing rules, source/reference, freshness, confidence, and
+supersession/versioning. A Pricing Snapshot is an immutable per-execution
+capture of the catalog rules used for calculation or estimation.
+
+Historical equivalent costs remain bound to their original snapshot and do
+not change when current provider pricing changes. If token evidence is
+partial, the calculation remains partial or unknown; input/output/cached
+breakdowns are not fabricated.
+
+### 171.4 Independent budgets and subscription fees
+
+Budget policy evaluates actual monetary and normalized equivalent-consumption
+budgets independently. For example, an API budget may be
+`20 USD/day` while equivalent AI consumption is capped at `100 USD/day`.
+Subscription fees are tracked separately from per-run equivalent value.
+Dashboards may show both and label derived savings/value as simulated
+economics, never as provider billing or accounting truth.
+
+### 171.5 Historical approval evidence
+
+The `approval_records` above preserve the prior version's full-team approval
+evidence for historical traceability. That approval is not approval of this
+1.1.0 extension. This revision remains `in-review` until the required roles
+explicitly review the new content; only the Product Owner extension approval
+dated 2026-08-18 is recorded for this revision.
+
+## 172. Revision and approval history
 
 ### Approval state
 
-- Current status: `approved`
-- Current version: `0.1.0`
-- Approved by: the full approval team on 2026-08-13
-- Required next action: register proposal, then Product, Architecture, Security, Data, Operations, and Quality review
+- Current status: `in-review`
+- Current version: `1.1.0`
+- Prior version approval: full approval team on 2026-08-13, preserved as historical evidence only
+- Extension approval: Product Owner on 2026-08-18
+- Required next action: Architecture, Security, Data, Operations, and Quality review of the extension
 
 ### Revision history
 
 | Version | Date | Status | Summary |
 |---|---|---|---|
 | 0.1.0 | 2026-07-20 | Draft | Initial usage, cost, pricing, reservation, budget, quota, threshold, approval, reconciliation, forecasting, anomaly, reporting, evidence, recovery, and commercial-boundary architecture |
+| 1.1.0 | 2026-08-18 | In review | Added independent actual/equivalent economics, immutable Pricing Catalog/Snapshot semantics, normalized budgets, and subscription-fee separation; prior approval retained as historical evidence |
 
 ## 172. References
 

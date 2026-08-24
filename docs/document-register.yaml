@@ -1,5 +1,5 @@
-register_version: 0.8.0
-last_updated: 2026-08-13
+register_version: 0.9.0
+last_updated: 2026-08-18
 status_values:
   - draft
   - in-review
@@ -72,7 +72,7 @@ documents:
   - id: ADR-006
     title: MVP Model Provider and Cost-Control Baseline
     path: docs/00-governance/adr/ADR-006-mvp-model-provider-baseline.md
-    version: 0.1.0
+    version: 0.2.0
     wave: 1
     priority: P0
     status: in-review
@@ -99,11 +99,32 @@ documents:
     owner: operations-owner
     source_of_truth: false
     dependencies: [ADR-002, ADR-004, DEP-001, OPS-001, BCP-001, SEC-001, DAT-002, OBS-001, QAG-001]
+  - id: ADR-009
+    title: D2 First Real AI Provider Boundary and Evidence
+    path: docs/00-governance/adr/ADR-009-d2-first-real-ai-openai-boundary.md
+    version: 0.1.0
+    wave: 1
+    priority: P0
+    status: in-review
+    owner: architecture-owner
+    source_of_truth: false
+    dependencies: [ADR-006, MOD-001, CTX-001, CST-001, EVAL-001]
+  - id: ADR-010
+    title: Multi-Execution Backends and Normalized AI Economics
+    path: docs/00-governance/adr/ADR-010-multi-execution-backends-and-normalized-ai-economics.md
+    version: 0.1.0
+    wave: 2
+    priority: P0
+    status: in-review
+    owner: architecture-owner
+    source_of_truth: false
+    dependencies: [GLO-001, ADR-006, MOD-001, CST-001, INT-001, ADP-CDX-001, OBS-001]
   - id: GLO-001
     title: Glossary and Controlled Terminology
     path: docs/00-governance/GLO-001-glossary.md
     wave: 1
     priority: P0
+    version: 0.3.0
     status: approved
     owner: product-owner
     dependencies: [DOC-000]
@@ -270,8 +291,8 @@ documents:
     path: docs/03-architecture/INT-001-integration-architecture-v0.1.0.md
     wave: 2
     priority: P0
-    version: 1.0.0
-    status: approved
+    version: 1.1.0
+    status: in-review
     owner: architecture-owner
     approval_date: 2026-08-13
     dependencies: [SAD-001]
@@ -328,7 +349,7 @@ documents:
     path: docs/04-contracts/MOD-001-model-profile-contract-v0.1.0.md
     wave: 3
     priority: P0
-    version: 1.0.1
+    version: 1.1.0
     status: in-review
     owner: architecture-owner
     dependencies: [INT-001]
@@ -355,8 +376,8 @@ documents:
     path: docs/05-ai-governance/CST-001-usage-cost-and-budget-architecture-v0.1.0.md
     wave: 2
     priority: P1
-    version: 1.0.0
-    status: approved
+    version: 1.1.0
+    status: in-review
     owner: architecture-owner
     dependencies: [SAD-001]
   - id: CTX-001
@@ -511,7 +532,8 @@ documents:
     path: docs/09-operations/OBS-001-observability-architecture-v0.1.0.md
     wave: 5
     priority: P0
-    status: approved
+    version: 1.1.0
+    status: in-review
     approval_date: 2026-08-13
     owner: operations-owner
     dependencies: [SAD-001, ORC-001]
@@ -556,8 +578,8 @@ documents:
     path: docs/11-integrations/ADP-CDX-001-codex-adapter-detailed-specification-v0.1.0.md
     wave: 3
     priority: P1
-    version: 1.0.0
-    status: approved
+    version: 1.1.0
+    status: in-review
     owner: integration-owner
     dependencies: [AGC-001, INT-001]
   - id: ADP-HER-001

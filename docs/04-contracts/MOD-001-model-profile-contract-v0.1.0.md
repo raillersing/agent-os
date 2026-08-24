@@ -1,7 +1,7 @@
 ---
 document_id: MOD-001
 title: Agent OS Model Profile Contract
-version: 1.0.1
+version: 1.1.0
 status: in-review
 owner: architecture-owner
 approvers:
@@ -12,7 +12,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-19
-last_reviewed: 2026-08-13
+last_reviewed: 2026-08-18
 review_records:
   - role: product-owner
     review_status: approved
@@ -23,6 +23,10 @@ approval_records:
     status: approved
     approval_date: 2026-08-13
     evidence: explicit user authorization after document review
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-18
+    evidence: explicit Product Owner approval of the compatible execution-backend and normalized-economics extension
 pending_approvals:
   - architecture-owner
   - security-owner
@@ -1810,7 +1814,50 @@ Implementation evidence remains a separate gate; approval of this contract does 
 | `RTM-001` | Model requirements-to-tests traceability |
 | `ADR-006` | Concrete MVP provider and cost-control sequence |
 
-## 90. Revision and approval history
+## 90. Compatible execution-backend and economics extension
+
+### 90.1 Runtime and backend separation
+
+`ModelProfile` remains provider-neutral and expresses model intent. It does
+not imply an `AgentRuntimeConnection`, a Codex subscription session, or any
+other runtime authority. `ProviderBinding` remains a direct model-provider
+candidate; runtime model observation is a separate fact from the direct
+`ProviderBinding` record.
+
+Execution backend selection is a routing fact outside the logical model
+profile. The router records requested, selected, and actual backend/runtime
+identity, configured and actual model identity, authentication source,
+billing source, usage source, fallback decision, and evidence limitations.
+Model profiles cannot silently select a runtime or authorize a paid fallback.
+
+### 90.2 Actual and normalized economics
+
+Model observations and usage records may expose separate:
+
+- `actual_cost_state`, `actual_cost_usd`, and `billing_source`;
+- `equivalent_cost_state`, `equivalent_cost_usd`, and the immutable
+  `pricing_snapshot_id`.
+
+The normalized equivalent fields also reference pricing catalog/version,
+effective time, pricing basis, token usage source, calculation method,
+confidence, completeness, and assumptions. Pricing basis must distinguish
+`exact_model_api_price`, `proxy_model_api_price`,
+`configured_reference_rate`, and `unavailable`; a runtime model is never
+silently mapped to another SKU.
+
+Subscription-backed usage may report
+`actual_cost_state=subscription_included` with a null actual amount. It is
+not an actual cost of zero. Partial or unknown token evidence remains
+partial/unknown and does not justify an invented input/output/cache split.
+
+### 90.3 Compatibility and boundary
+
+The D2 OpenAI Responses API proof remains governed by `ADR-006`, `ADR-009`,
+and Issue #10. Multi-execution routing and normalized economics are
+post-D2 direction governed by `ADR-010`; this contract extension does not
+claim D3 implementation.
+
+## 91. Revision and approval history
 
 ### Approval state
 

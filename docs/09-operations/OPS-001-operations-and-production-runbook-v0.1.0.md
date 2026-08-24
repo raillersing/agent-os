@@ -71,7 +71,7 @@ related_adrs:
 
 # OPS-001 — Agent OS Operations and Production Runbook
 
-> **Status: Approved baseline — 2026-08-13.** This document defines the operational model and runbooks for Agent OS: startup, shutdown, readiness, daily checks, deployments, migrations, maintenance, emergency stop, run recovery, job and event backlogs, adapter and provider failures, approvals, artifacts, memory, costs, backups, restores, security events, support, escalation, evidence, and post-incident review. It relies on the deployment architecture proposed in `DEP-001`, whose autonomous registration is still pending confirmation. It does not select final operations tooling, on-call software, ticketing systems, monitoring products, hosting providers, or contractual response targets.
+> **Status: Approved baseline — 2026-08-13.** This document defines the operational model and runbooks for Agent OS: startup, shutdown, readiness, daily checks, deployments, migrations, maintenance, emergency stop, run recovery, job and event backlogs, adapter and provider failures, approvals, artifacts, memory, costs, backups, restores, security events, support, escalation, evidence, and post-incident review. It relies on the registered `DEP-001` deployment baseline. Its local procedures are implementation-backed; its pilot and production procedures remain target controls until separately evidenced. It does not select final operations tooling, on-call software, ticketing systems, monitoring products, hosting providers, or contractual response targets.
 
 ## 1. Purpose
 
@@ -105,13 +105,17 @@ This runbook defines how authorized operators:
 9. avoid duplicate effects;
 10. close and learn from operational events.
 
-## 2. Current local verification
+## Current local verification
 
 For the current development stack, operators must first validate `.env`, run `docker compose config --quiet`, start the Compose services, verify `/health`, inspect `docker compose ps`, and review backend/frontend logs. The local bootstrap account is configured by `ADMIN_EMAIL` and `ADMIN_PASSWORD`; there is no separate admin-creation command in the current implementation.
 
 These procedures cover local development only and must not be treated as production runbooks until deployment, observability, backup/restore, incident response, and external secret-management evidence exists.
 
-## 3. Operational objectives
+### Current readiness boundary
+
+The current runbook is executable for local startup, health verification, logs, and controlled shutdown. Pilot and production sections remain procedural targets until each step has an owner, an environment, an exact command or tool, an expected result, and retained evidence. In particular, no backup/restore, emergency-stop, adapter/provider recovery, or incident drill is currently claimed as executed.
+
+## 2. Operational objectives
 
 Operations must ensure:
 
@@ -3210,7 +3214,7 @@ Define support coverage, maintenance cadence, access model, and operating respon
 
 ## 221. Open decisions
 
-1. Confirm `DEP-001` autonomous registration.
+1. Confirm the `DEP-001` deployment baseline and the target environment evidence.
 2. Which operational record/ticketing tool?
 3. Which on-call or escalation mechanism?
 4. Which exact A0-A4 response targets?
@@ -3286,7 +3290,7 @@ Define support coverage, maintenance cadence, access model, and operating respon
 - no pilot without critical runbook exercises;
 - no final operational tools or response targets selected in this draft;
 - no Git commit, push, PR, merge, or release during the current documentation phase;
-- Git versioning remains deferred until all drafts and global consistency review are complete.
+- Git versioning is active; operational changes require a traceable commit and review before deployment.
 
 ## 225. Acceptance criteria
 
@@ -3325,7 +3329,7 @@ OPS-001 may advance to `1.0.0` when:
 ### Approval state
 
 - Current status: `approved`
-- Current version: `0.1.0`
+- Current version: `0.2.0`
 - Approved by: Product Owner under explicit user authorization to finalize the declared scope
 - Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
@@ -3334,6 +3338,7 @@ OPS-001 may advance to `1.0.0` when:
 | Version | Date | Status | Summary |
 |---|---|---|---|
 | 0.1.0 | 2026-07-20 | Draft | Initial operations and production runbook covering operating states, roles, startup, shutdown, health, run recovery, unknown effects, jobs, events, adapters, models, approvals, artifacts, memory, audit, costs, backup, restore, deployments, migrations, secrets, incidents, support, maintenance, emergency stop, drills, and governance |
+| 0.2.0 | 2026-08-13 | Approved | Confirmed the DEP-001 dependency and separated executable local procedures from target pilot and production runbooks |
 
 ## References
 
