@@ -83,6 +83,7 @@ class OpenAIResponsesAdapter:
             self.client = AsyncOpenAI(
                 api_key=settings.OPENAI_API_KEY,
                 timeout=settings.OPENAI_TIMEOUT_SECONDS,
+                max_retries=0,
             )
         else:
             self.client = None

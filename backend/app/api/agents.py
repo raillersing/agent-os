@@ -2,7 +2,6 @@
 Agent API Routes
 """
 
-from datetime import datetime
 from typing import List, Optional
 from uuid import UUID
 
@@ -11,6 +10,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..core.database import get_db
+from ..core.time import utcnow
 from ..models.agent import Agent as AgentModel
 from ..schemas.agent import Agent as AgentSchema
 from ..schemas.agent import AgentCreate, AgentUpdate
@@ -79,7 +79,7 @@ async def update_agent(
     for field, value in update_data.items():
         setattr(agent, field, value)
 
-    agent.updated_at = datetime.utcnow()
+    agent.updated_at = utcnow()
     await db.commit()
     await db.refresh(agent)
     return agent
@@ -88,10 +88,22 @@ async def update_agent(
 @router.delete("/{agent_id}", status_code=204)
 async def delete_agent(agent_id: UUID, db: AsyncSession = Depends(get_db)):
     """Delete agent."""
+    from ..models.run import Run
+
     query = select(AgentModel).where(AgentModel.id == agent_id)
     result = await db.execute(query)
     agent = result.scalar_one_or_none()
     if not agent:
         raise HTTPException(status_code=404, detail="Agent not found")
+
+    runs = (
+        await db.execute(select(Run).where(Run.agent_id == agent_id).limit(1))
+    ).scalar_one_or_none()
+    if runs is not None:
+        raise HTTPException(
+            status_code=409,
+            detail="Agent has existing runs; archive or remove them first",
+        )
+
     await db.delete(agent)
     await db.commit()

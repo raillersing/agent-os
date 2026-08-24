@@ -57,6 +57,14 @@ async def execute_tool(tool_id: str, execution: ToolExecution):
 
         raise HTTPException(status_code=404, detail="Tool not found")
 
+    tool = tools_db[tool_id]
+    if tool.requires_approval:
+        return ToolResult(
+            success=False,
+            output=None,
+            error=f"Tool {tool_id} requires explicit approval and is not yet enabled",
+        )
+
     # MVP: Return mock result
     return ToolResult(
         success=True,
