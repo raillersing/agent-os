@@ -1,5 +1,9 @@
 /**
  * Agent OS API Client
+ *
+ * Authentication is handled through an httpOnly cookie returned by the server.
+ * All requests include credentials so the cookie is sent cross-origin in local
+ * development (same host, different port).
  */
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
@@ -12,54 +16,23 @@ interface RequestOptions {
 
 class ApiClient {
   private baseUrl: string;
-  private token: string | null = null;
 
   constructor(baseUrl: string = API_BASE_URL) {
     this.baseUrl = baseUrl;
-    if (typeof window !== 'undefined') {
-      this.token = window.localStorage.getItem('agentos-access-token');
-    }
-  }
-
-  setToken(token: string) {
-    this.token = token;
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem('agentos-access-token', token);
-    }
-  }
-
-  clearToken() {
-    this.token = null;
-    if (typeof window !== 'undefined') {
-      window.localStorage.removeItem('agentos-access-token');
-    }
-  }
-
-  hasToken() {
-    return Boolean(this.token || (typeof window !== 'undefined' && window.localStorage.getItem('agentos-access-token')));
   }
 
   private async request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
     const { method = 'GET', headers = {}, body } = options;
 
-    const requestHeaders: Record<string, string> = {
-      'Content-Type': 'application/json',
-      ...headers,
-    };
-
-    if (this.token) {
-      requestHeaders['Authorization'] = `Bearer ${this.token}`;
-    }
-
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
       method,
-      headers: requestHeaders,
+      headers: {
+        'Content-Type': 'application/json',
+        ...headers,
+      },
+      credentials: 'include',
       body: body ? JSON.stringify(body) : undefined,
     });
-
-    if (response.status === 401) {
-      this.clearToken();
-    }
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({ detail: 'Request failed' }));
@@ -75,16 +48,14 @@ class ApiClient {
 
   // Auth
   async login(email: string, password: string) {
-    const response = await this.request<{ access_token: string }>('/api/v1/auth/token', {
+    return this.request<{ access_token: string }>('/api/v1/auth/token', {
       method: 'POST',
       body: { email, password },
     });
-    this.setToken(response.access_token);
-    return response;
   }
 
-  logout() {
-    this.clearToken();
+  async logout() {
+    return this.request<null>('/api/v1/auth/logout', { method: 'POST' });
   }
 
   // Agents
@@ -188,6 +159,10 @@ class ApiClient {
     return this.request<any>('/health');
   }
 
+  async listArtifacts(workspaceId: string) {
+    return this.request<any[]>(`/api/v1/artifacts?workspace_id=${encodeURIComponent(workspaceId)}`);
+  }
+
   async listWorkspaces() {
     return this.request<any[]>('/api/v1/workspaces');
   }
@@ -206,39 +181,38 @@ class ApiClient {
     return this.request<{ project_id: string; workspace_id: string; name: string; purpose: string; state: 'active' | 'paused' | 'archived'; created_by: string; version: number }>('/api/v1/projects', { method: 'POST', body: data });
   }
 
-  async listMissions(workspaceId?: string) {
-    const query = workspaceId ? `?workspace_id=${encodeURIComponent(workspaceId)}` : '';
-    return this.request<any[]>(`/api/v1/missions${query}`);
+  async listMissions(workspaceId: string) {
+    return this.request<any[]>(`/api/v1/missions?workspace_id=${encodeURIComponent(workspaceId)}`);
   }
 
   async createMission(data: { workspace_id: string; project_id: string; title: string; objective: string; plan?: Array<Record<string, unknown>> }) {
     return this.request<{ id: string; workspace_id: string; project_id: string; title: string; objective: string }>('/api/v1/missions', { method: 'POST', body: data });
   }
 
-  async listAutomations(workspaceId?: string) {
-    const query = workspaceId ? `?workspace_id=${encodeURIComponent(workspaceId)}` : '';
-    return this.request<any[]>(`/api/v1/automations${query}`);
+  async listAutomations(workspaceId: string) {
+    return this.request<any[]>(`/api/v1/automations?workspace_id=${encodeURIComponent(workspaceId)}`);
   }
 
   async createAutomation(data: { workspace_id: string; name: string; description?: string; trigger_type: string; trigger_config?: Record<string, unknown>; steps?: Array<Record<string, unknown>> }) {
     return this.request<any>('/api/v1/automations', { method: 'POST', body: data });
   }
 
-  async listApprovals(status?: string) {
-    const query = status ? `?status=${encodeURIComponent(status)}` : '';
-    return this.request<any[]>(`/api/v1/approvals${query}`);
+  async listApprovals(workspaceId: string, status?: string) {
+    const params = new URLSearchParams({ workspace_id: workspaceId });
+    if (status) params.set('status', status);
+    return this.request<any[]>(`/api/v1/approvals?${params.toString()}`);
   }
 
-  async createApproval(data: { mission_id: string; action: string; scope?: Record<string, unknown> }) {
-    return this.request<any>('/api/v1/approvals', { method: 'POST', body: data });
+  async createApproval(workspaceId: string, data: { mission_id: string; action: string; scope?: Record<string, unknown> }) {
+    return this.request<any>(`/api/v1/approvals?workspace_id=${encodeURIComponent(workspaceId)}`, { method: 'POST', body: data });
   }
 
   async listAuditEvents(workspaceId: string, limit = 8) {
     return this.request<any[]>(`/api/v1/audit-events?workspace_id=${encodeURIComponent(workspaceId)}&limit=${limit}`);
   }
 
-  async decideApproval(id: string, status: 'approved' | 'rejected', decisionNote?: string) {
-    return this.request<any>(`/api/v1/approvals/${id}/decision`, {
+  async decideApproval(workspaceId: string, id: string, status: 'approved' | 'rejected', decisionNote?: string) {
+    return this.request<any>(`/api/v1/approvals/${id}/decision?workspace_id=${encodeURIComponent(workspaceId)}`, {
       method: 'POST',
       body: { status, decision_note: decisionNote },
     });
