@@ -14,7 +14,7 @@ redis==5.0.1
 temporalio[grpc]==1.31.0
 PyJWT[crypto]==2.10.1
 passlib[bcrypt]==1.7.4
-bcrypt==4.1.2
+bcrypt==5.0.0
 pydantic==2.6.1
 pydantic-settings==2.1.0
 httpx==0.26.0
