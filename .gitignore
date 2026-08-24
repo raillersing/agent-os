@@ -48,5 +48,8 @@ build/
 *.log
 npm-debug.log*
 
+# Local D1 qualification evidence
+artifacts/
+
 # ChromaDB
 chroma_db/

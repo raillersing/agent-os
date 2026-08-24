@@ -2,11 +2,10 @@
 Memory Model
 """
 
-from datetime import datetime
-
 from sqlalchemy import JSON, Column, DateTime, Integer, String, Text, Uuid
 
 from ..core.database import Base
+from ..core.time import utcnow
 
 
 class Memory(Base):
@@ -29,8 +28,8 @@ class Memory(Base):
     last_accessed_at = Column(DateTime, nullable=True)
 
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=utcnow)
+    updated_at = Column(DateTime, default=utcnow, onupdate=utcnow)
     expires_at = Column(DateTime, nullable=True)
 
     def __repr__(self):

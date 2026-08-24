@@ -98,7 +98,7 @@ It provides:
 - forbidden shortcuts and common failure patterns;
 - traceability to controlled documents.
 
-## 2. Current repository controls
+## Current repository controls
 
 The current repository provides executable checks for the first development baseline:
 
@@ -112,7 +112,11 @@ docker compose config --quiet
 
 The same control categories are represented in `.github/workflows/ci.yml`. These checks prove contract, syntax, quality, and build consistency; they do not prove provider execution, adapter readiness, production deployment, or visual-regression coverage.
 
-## 3. Development objectives
+## Current repository versus target architecture
+
+The repository-backed implementation currently contains `backend/app`, `backend/migrations`, `backend/tests`, `frontend/src`, the root Compose stack, and the checked-in contract and documentation tooling. The target layout described later in this guide also includes workers, adapter processes, provider gateways, artifact services, and sandbox boundaries; those are implementation targets, not present-runtime components. A task may use the target layout only when its acceptance evidence identifies the code, tests, and runtime that implement it.
+
+## 2. Development objectives
 
 The implementation must:
 
@@ -3906,7 +3910,7 @@ Select monorepo tooling, command facade, CI jobs, code generation, and release p
 - no accepted mock operational state;
 - no destructive migration without backup and approval;
 - no commit, push, PR, or merge without separate authorization during current documentation phase;
-- Git versioning remains deferred until all documents and consistency review are complete.
+- Git versioning is active; implementation changes require reviewable commits, passing checks, and explicit authorization for push, merge, release, or deployment actions.
 
 ## 229. Acceptance criteria
 
@@ -3945,7 +3949,7 @@ DEV-001 may advance to `1.0.0` when:
 ### Approval state
 
 - Current status: `approved`
-- Current version: `0.1.0`
+- Current version: `0.2.0`
 - Approved by: Product Owner under explicit user authorization to finalize the declared scope
 - Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
@@ -3954,6 +3958,7 @@ DEV-001 may advance to `1.0.0` when:
 | Version | Date | Status | Summary |
 |---|---|---|---|
 | 0.1.0 | 2026-07-20 | Draft | Initial development and implementation guide covering repository structure, modular architecture, database transactions, outbox/inbox, workers, adapters, frontend, artifacts, memory, security, configuration, Docker/WSL, migrations, testing, Git workflow, quality gates, vertical slices, and phased implementation |
+| 0.2.0 | 2026-08-13 | Approved | Added the current repository controls, target-versus-present implementation boundary, and active Git evidence rules |
 
 ## References
 

@@ -2,7 +2,6 @@
 Run API Routes
 """
 
-from datetime import datetime
 from typing import List, Optional
 from uuid import UUID
 
@@ -11,6 +10,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..core.database import get_db
+from ..core.time import utcnow
 from ..models.agent import Agent
 from ..models.run import Run as RunModel
 from ..schemas.run import Run as RunSchema
@@ -57,7 +57,7 @@ async def create_run(
         prompt=run.prompt,
         context=run.context or {},
         options=run.options or {},
-        started_at=datetime.utcnow(),
+        started_at=utcnow(),
     )
     db.add(db_run)
     await db.commit()
@@ -89,7 +89,7 @@ async def cancel_run(run_id: UUID, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Run cannot be cancelled")
 
     run.status = "cancelled"
-    run.completed_at = datetime.utcnow()
+    run.completed_at = utcnow()
     await db.commit()
     await db.refresh(run)
     return run
