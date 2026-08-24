@@ -2,7 +2,6 @@
 
 import asyncio
 import hashlib
-from datetime import datetime
 from uuid import UUID, uuid4
 
 from sqlalchemy import func, select
@@ -12,6 +11,7 @@ from temporalio.exceptions import ApplicationError
 from ..config import settings
 from ..context.manifest import assemble_context
 from ..core.database import AsyncSessionLocal
+from ..core.time import utcnow
 from ..models.control_plane import (
     Artifact,
     AuditEvent,
@@ -22,6 +22,7 @@ from ..models.control_plane import (
     RunAttempt,
     TaskSnapshot,
     UsageRecord,
+    Workspace,
 )
 from ..providers.contracts import ModelInvocationRequest, ModelProviderError
 from ..providers.openai_responses import OpenAIResponsesAdapter
@@ -40,6 +41,18 @@ OUTPUT_SCHEMA = {
     "required": ["answer", "uncertainty"],
     "additionalProperties": False,
 }
+
+
+def _safe_heartbeat(details: dict) -> None:
+    """Emit a Temporal heartbeat when running inside an activity context.
+
+    Unit tests invoke the activity directly outside of a workflow, so a
+    missing activity context must be tolerated rather than failing the call.
+    """
+    try:
+        activity.heartbeat(details)
+    except RuntimeError:
+        pass
 
 
 async def _terminal_result(
@@ -76,7 +89,7 @@ async def finalize_d1_failed_run(run_id: str) -> dict[str, str]:
             return {"run_id": run_id, "state": terminal["state"]}
         run.state, run.ended_at, run.receipt_state, run.version = (
             "failed",
-            datetime.utcnow(),
+            utcnow(),
             "available",
             run.version + 1,
         )
@@ -141,7 +154,7 @@ async def execute_d1_simulator_run(request: D1SimulatorRunInput) -> dict[str, st
             return terminal
         run.state, run.started_at, run.version = (
             "running",
-            datetime.utcnow(),
+            utcnow(),
             run.version + 1,
         )
         db.add(
@@ -170,7 +183,7 @@ async def execute_d1_simulator_run(request: D1SimulatorRunInput) -> dict[str, st
                 previous.failure_kind,
                 previous.side_effect_certainty,
                 previous.ended_at,
-            ) = ("unknown", "worker_interrupted", "unknown", datetime.utcnow())
+            ) = ("unknown", "worker_interrupted", "unknown", utcnow())
             db.add(
                 AuditEvent(
                     workspace_id=run.workspace_id,
@@ -321,6 +334,14 @@ async def execute_d1_simulator_run(request: D1SimulatorRunInput) -> dict[str, st
         )
         await db.commit()
         try:
+            workspace = await db.get(Workspace, run.workspace_id)
+            if workspace is not None and workspace.budget > 0:
+                if workspace.spent >= workspace.budget:
+                    raise ModelProviderError(
+                        "MODEL_BUDGET_EXHAUSTED",
+                        "Workspace budget is exhausted",
+                        retryable=False,
+                    )
             if request.execution_mode == "openai":
                 if len(snapshot.input_text) > settings.D2_MAX_INPUT_CHARS:
                     raise ModelProviderError(
@@ -345,6 +366,12 @@ async def execute_d1_simulator_run(request: D1SimulatorRunInput) -> dict[str, st
                     "budget_decision": "approved_bounded",
                 }
                 await db.commit()
+                _safe_heartbeat(
+                    {
+                        "phase": "openai_request",
+                        "request_id": str(run.workflow_id),
+                    }
+                )
                 model_result = await OpenAIResponsesAdapter().invoke(
                     ModelInvocationRequest(
                         input_text=context.input_text,
@@ -391,7 +418,7 @@ async def execute_d1_simulator_run(request: D1SimulatorRunInput) -> dict[str, st
             else:
                 if request.simulator_profile == "slow_success":
                     for _ in range(40):
-                        activity.heartbeat(
+                        _safe_heartbeat(
                             {"phase": "slow_simulator", "remaining": 40 - _}
                         )
                         await asyncio.sleep(0.5)
@@ -469,13 +496,13 @@ async def execute_d1_simulator_run(request: D1SimulatorRunInput) -> dict[str, st
             ) = (
                 "failed",
                 error.code,
-                datetime.utcnow(),
+                utcnow(),
                 error.code,
             )
             run.state, run.state_reason, run.ended_at, run.version = (
                 "retrying" if error.retryable else "failed",
                 error.code,
-                None if error.retryable else datetime.utcnow(),
+                None if error.retryable else utcnow(),
                 run.version + 1,
             )
             if not error.retryable:
@@ -519,7 +546,7 @@ async def execute_d1_simulator_run(request: D1SimulatorRunInput) -> dict[str, st
             attempt.state, attempt.failure_kind, attempt.ended_at = (
                 "failed",
                 error.kind.value,
-                datetime.utcnow(),
+                utcnow(),
             )
             if error.kind.value == "retryable_failure":
                 run.state, run.state_reason, run.version = (
@@ -544,7 +571,7 @@ async def execute_d1_simulator_run(request: D1SimulatorRunInput) -> dict[str, st
             run.state, run.state_reason, run.ended_at, run.version = (
                 "failed",
                 error.kind.value,
-                datetime.utcnow(),
+                utcnow(),
                 run.version + 1,
             )
             receipt = ExecutionReceipt(
@@ -642,7 +669,7 @@ async def execute_d1_simulator_run(request: D1SimulatorRunInput) -> dict[str, st
             else None
         )
         attempt.terminal_reason = "completed"
-        attempt.state, attempt.ended_at = "succeeded", datetime.utcnow()
+        attempt.state, attempt.ended_at = "succeeded", utcnow()
         artifact = Artifact(
             workspace_id=run.workspace_id,
             run_id=run.id,
@@ -663,8 +690,8 @@ async def execute_d1_simulator_run(request: D1SimulatorRunInput) -> dict[str, st
         ) = (
             "completed",
             None,
-            datetime.utcnow(),
-            datetime.utcnow(),
+            utcnow(),
+            utcnow(),
             "available",
             run.version + 1,
         )
@@ -685,6 +712,21 @@ async def execute_d1_simulator_run(request: D1SimulatorRunInput) -> dict[str, st
         )
         db.add(receipt)
         await db.flush()
+
+        # Update workspace spend with a bounded cost estimate.
+        workspace = await db.get(Workspace, run.workspace_id)
+        if workspace is not None:
+            measured_cost = (
+                usage_record.measured_cost
+                if request.execution_mode != "openai"
+                else None
+            )
+            estimated_cost = measured_cost or 0.0
+            workspace.spent = (workspace.spent or 0.0) + estimated_cost
+            workspace.updated_at = utcnow()
+            db.add(workspace)
+            await db.flush()
+
         db.add(
             AuditEvent(
                 workspace_id=run.workspace_id,
