@@ -3,10 +3,10 @@ Agent Schemas
 """
 
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Literal, Optional
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class AgentBase(BaseModel):
@@ -31,7 +31,7 @@ class AgentUpdate(BaseModel):
 
     name: Optional[str] = None
     model: Optional[str] = None
-    status: Optional[str] = None
+    status: Optional[Literal["active", "inactive"]] = None
     description: Optional[str] = None
     capabilities: Optional[List[str]] = None
     config: Optional[Dict[str, Any]] = None
@@ -42,7 +42,7 @@ class Agent(AgentBase):
     """Full agent schema."""
 
     id: UUID
-    status: str
+    status: Literal["active", "inactive", "error"]
     total_runs: int = 0
     successful_runs: int = 0
     failed_runs: int = 0
@@ -52,5 +52,4 @@ class Agent(AgentBase):
     updated_at: datetime
     last_run_at: Optional[datetime] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

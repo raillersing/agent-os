@@ -3,7 +3,6 @@ Run Model
 """
 
 import uuid
-from datetime import datetime
 
 from sqlalchemy import (
     JSON,
@@ -19,6 +18,7 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 
 from ..core.database import Base
+from ..core.time import utcnow
 
 
 class Run(Base):
@@ -46,9 +46,9 @@ class Run(Base):
     duration_ms = Column(Integer, nullable=True)
 
     # Timestamps
-    started_at = Column(DateTime, default=datetime.utcnow)
+    started_at = Column(DateTime, default=utcnow)
     completed_at = Column(DateTime, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=utcnow)
 
     # Relationships
     agent = relationship("Agent", backref="runs")
