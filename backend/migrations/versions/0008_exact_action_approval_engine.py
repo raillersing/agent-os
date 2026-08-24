@@ -6,8 +6,8 @@ Revises: 6dd2f13a9a81
 
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 
 revision: str = "0008"
 down_revision: Union[str, None] = "6dd2f13a9a81"
@@ -149,15 +149,9 @@ def upgrade() -> None:
         sa.UniqueConstraint(
             "approval_request_id", name="uq_approval_consumptions_request"
         ),
-        sa.ForeignKeyConstraint(
-            ["approval_request_id"], ["approvals.id"]
-        ),
-        sa.ForeignKeyConstraint(
-            ["run_id"], ["execution_runs.id"]
-        ),
-        sa.ForeignKeyConstraint(
-            ["attempt_id"], ["run_attempts.id"]
-        ),
+        sa.ForeignKeyConstraint(["approval_request_id"], ["approvals.id"]),
+        sa.ForeignKeyConstraint(["run_id"], ["execution_runs.id"]),
+        sa.ForeignKeyConstraint(["attempt_id"], ["run_attempts.id"]),
     )
     op.create_index(
         "ix_approval_consumptions_approval_request_id",
@@ -178,7 +172,9 @@ def upgrade() -> None:
 def downgrade() -> None:
     dialect = op.get_context().dialect.name
 
-    op.drop_index("ix_approval_consumptions_attempt_id", table_name="approval_consumptions")
+    op.drop_index(
+        "ix_approval_consumptions_attempt_id", table_name="approval_consumptions"
+    )
     op.drop_index("ix_approval_consumptions_run_id", table_name="approval_consumptions")
     op.drop_index(
         "ix_approval_consumptions_approval_request_id",
@@ -233,7 +229,9 @@ def downgrade() -> None:
         op.drop_constraint(
             "fk_approvals_attempt_id_run_attempts", "approvals", type_="foreignkey"
         )
-        op.drop_constraint("fk_approvals_task_id_tasks", "approvals", type_="foreignkey")
+        op.drop_constraint(
+            "fk_approvals_task_id_tasks", "approvals", type_="foreignkey"
+        )
         op.drop_constraint(
             "fk_approvals_run_id_execution_runs", "approvals", type_="foreignkey"
         )
