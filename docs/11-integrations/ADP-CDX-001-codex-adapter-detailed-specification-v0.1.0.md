@@ -1,8 +1,8 @@
 ---
 document_id: ADP-CDX-001
 title: Agent OS Codex Adapter Detailed Specification
-version: 1.0.0
-status: approved
+version: 1.1.0
+status: in-review
 owner: architecture-owner
 approvers:
   - product-owner
@@ -12,7 +12,7 @@ approvers:
   - operations-owner
   - quality-owner
 created: 2026-07-20
-last_reviewed: 2026-08-13
+last_reviewed: 2026-08-18
 approval_date: 2026-08-13
 approval_records:
   - role: product-owner
@@ -43,6 +43,17 @@ approval_records:
     status: approved
     approval_date: 2026-08-13
     evidence: explicit user confirmation that the full team approved this document
+extension_approval_records:
+  - role: product-owner
+    status: approved
+    approval_date: 2026-08-18
+    evidence: explicit Product Owner approval of the subscription-backed Codex compatibility and economics extension only
+pending_approvals:
+  - architecture-owner
+  - security-owner
+  - data-owner
+  - operations-owner
+  - quality-owner
 classification: internal
 source_of_truth: false
 related_documents: []
@@ -1777,19 +1788,75 @@ ADP-CDX-001 may advance to `1.0.0` when:
 | Global documentation audit | Reconcile IDs, dependencies, vocabularies, owners, and priorities |
 | Document register | Add proposed document |
 
+## Subscription-backed Codex extension
+
+### Authentication and runtime boundary
+
+The initial supported direction is `codex_cli_local` through a governed
+host/runtime bridge using a ChatGPT/Codex subscription session. Agent OS
+records authentication source/type, runtime/client identity and version,
+safe session/runtime reference, capabilities, and evidence metadata. It does
+not require copying reusable human ChatGPT/Codex credential material into
+backend or worker containers and does not mount broad human credential
+directories.
+
+The Codex CLI compatibility spike is non-normative evidence dated
+2026-08-18:
+
+```text
+Codex CLI 0.147.0; codex exec; reported model gpt-5.6-luna;
+reported provider openai; OPENAI_API_KEY absent;
+authentication ChatGPT/Codex subscription session;
+result CODEX_RUNTIME_OK; total tokens 6082
+```
+
+This does not freeze the CLI/model, prove token-category detail, authorize
+filesystem/network/Git effects, or make a human credential reusable by
+containers.
+
+### Provider/runtime and economics observations
+
+Codex runtime identity, provider identity, configured/actual model, and
+runtime-reported usage are separately observed. The adapter records billing
+source and two independent economics dimensions:
+
+```text
+actual_cost_state / actual_cost_usd
+equivalent_cost_state / equivalent_cost_usd
+pricing_catalog_id / pricing_snapshot_id
+pricing_basis / pricing_version / effective_at
+token_usage_source / calculation_method / confidence / assumptions
+```
+
+Subscription-backed execution may use `actual_cost_state=subscription_included`
+with a null amount; it is not zero actual cost. Equivalent cost is simulated
+reference economics and is not provider billing or accounting truth. Partial
+or unknown runtime token evidence remains partial/unknown. Exact, proxy, and
+configured-reference pricing bases are distinct; no runtime model is silently
+mapped to another SKU.
+
+Future SDK or App Server structured integration is a compatibility direction,
+not a mandatory implementation choice in this revision.
+
+The previous version's full-team approval records are retained as historical
+evidence and are not approvals of this 1.1.0 extension. Specialist approval
+of the new revision remains pending.
+
 ## Revision and approval history
 
 ### Approval state
 
-- Current status: `approved`
-- Current version: `0.1.0`
-- Approved by: the full approval team on 2026-08-13
+- Current status: `in-review`
+- Current version: `1.1.0`
+- Prior version approved by: the full approval team on 2026-08-13; retained as historical evidence only
+- Extension approved by: Product Owner on 2026-08-18
 
 ### Revision history
 
 | Version | Date | Status | Summary |
 |---|---|---|---|
 | 0.1.0 | 2026-07-20 | Draft | Initial detailed Codex adapter specification covering runtime modes, identity, capabilities, repositories, worktrees, commands, patches, builds, tests, packages, models, approvals, sandbox, Git, artifacts, cost, events, evidence, cancellation, recovery, security, compatibility, and rollout |
+| 1.1.0 | 2026-08-18 | In review | Added subscription-backed ChatGPT/Codex authentication mode, host bridge preference, compatibility evidence, runtime economics, and explicit D2/D3 boundary |
 
 ## References
 
