@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import api from '@/lib/api'
 
-type Workspace = { id: string; name: string; description: string; status: string; budget: number }
+type Workspace = { id: string; name: string; description: string; status: string; budget: number; spent: number }
 
 export default function Workspaces() {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([])
@@ -28,7 +28,7 @@ export default function Workspaces() {
       <section className="section collection-grid">
         {workspaces.map((workspace) => <article className="card collection-card" key={workspace.id}>
           <span className="collection-icon">{workspace.name.charAt(0).toUpperCase()}</span><h2>{workspace.name}</h2><p>{workspace.description || 'No description yet.'}</p>
-          <div className="collection-footer"><span>{workspace.status}</span><span>Budget ${workspace.budget.toFixed(0)}</span></div>
+          <div className="collection-footer"><span>{workspace.status}</span><span className={workspace.budget > 0 && workspace.spent >= workspace.budget ? 'budget-exhausted' : ''}>Budget ${workspace.budget.toFixed(2)} • Spent ${workspace.spent.toFixed(2)}</span></div>
         </article>)}
       </section>
     </div>

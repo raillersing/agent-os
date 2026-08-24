@@ -2,24 +2,22 @@
 Security utilities
 """
 
-from datetime import datetime, timedelta
-from typing import Any, Optional
+from datetime import datetime, timedelta, timezone
+from typing import Optional
 
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError, jwt
+import jwt
+from fastapi import HTTPException, Request, status
 from passlib.context import CryptContext
 
 from ..config import settings
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/token")
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     """Create JWT access token."""
     to_encode = data.copy()
-    expire = datetime.utcnow() + (
+    expire = datetime.now(timezone.utc) + (
         expires_delta or timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     )
     to_encode.update({"exp": expire})
@@ -36,12 +34,32 @@ def verify_token(token: str) -> Optional[dict]:
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
         return payload
-    except JWTError:
+    except jwt.ExpiredSignatureError:
+        return None
+    except jwt.InvalidTokenError:
         return None
 
 
-async def require_authenticated_user(token: str = Depends(oauth2_scheme)) -> dict:
-    """Require a valid bearer token for every protected API route."""
+def _extract_token(request: Request) -> Optional[str]:
+    """Read the JWT from the httpOnly cookie or the Authorization header."""
+    token = request.cookies.get("access_token")
+    if token:
+        return token
+    authorization = request.headers.get("Authorization")
+    if authorization and authorization.startswith("Bearer "):
+        return authorization[7:]
+    return None
+
+
+async def require_authenticated_user(request: Request) -> dict:
+    """Require a valid access token from cookie or Authorization header."""
+    token = _extract_token(request)
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication required",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     payload = verify_token(token)
     if not payload or not payload.get("sub"):
         raise HTTPException(

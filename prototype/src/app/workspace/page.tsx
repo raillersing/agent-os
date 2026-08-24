@@ -1,13 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArtifactCard } from '@/components/ArtifactCard';
 import { Modal } from '@/components/Modal';
 import { Button } from '@/components/Button';
 import { AgentIcon } from '@/components/AgentIcon';
 import { artifacts, agents } from '@/lib/mock-data';
 import type { Artifact } from '@/lib/mock-data';
-import { Search, Image, Video, Music, FileText, Download } from 'lucide-react';
+import { getHealth, listWorkspaces, type Workspace, type ApiError } from '@/lib/api';
+import { Search, Image, Video, Music, FileText, Download, Server } from 'lucide-react';
 
 const tabs = [
   { key: 'all', label: 'All', icon: Search },
@@ -21,6 +22,53 @@ export default function WorkspacePage() {
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedArtifact, setSelectedArtifact] = useState<Artifact | null>(null);
+
+  const [apiStatus, setApiStatus] = useState<'idle' | 'loading' | 'ok' | 'error'>('idle');
+  const [apiMessage, setApiMessage] = useState<string | null>(null);
+  const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    setApiStatus('loading');
+
+    async function load() {
+      try {
+        const health = await getHealth();
+        if (cancelled) return;
+
+        let workspaceCount = 0;
+        try {
+          const workspacesData = await listWorkspaces();
+          if (!cancelled) {
+            setWorkspaces(workspacesData);
+            workspaceCount = workspacesData.length;
+          }
+        } catch (e) {
+          const err = e as ApiError;
+          if (err.status === 401) {
+            setApiMessage(`${health.status} backend reachable — sign in to load ${workspaces.length} workspaces`);
+          } else {
+            throw e;
+          }
+        }
+
+        if (!cancelled) {
+          setApiMessage(`${health.status} backend reachable · ${workspaceCount} workspace${workspaceCount === 1 ? '' : 's'}`);
+          setApiStatus('ok');
+        }
+      } catch (e) {
+        if (cancelled) return;
+        const err = e as Error;
+        setApiMessage(`Backend unreachable: ${err.message}`);
+        setApiStatus('error');
+      }
+    }
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const filtered = artifacts.filter((a) => {
     if (activeTab !== 'all' && a.type !== activeTab) return false;
@@ -42,6 +90,25 @@ export default function WorkspacePage() {
           <Download size={14} className="mr-1" />
           Export Selected
         </Button>
+      </div>
+
+      <div
+        className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs ${
+          apiStatus === 'ok'
+            ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+            : apiStatus === 'error'
+            ? 'border-red-200 bg-red-50 text-red-700'
+            : 'border-border bg-surface text-text-secondary'
+        }`}
+      >
+        <Server size={14} />
+        <span className="font-medium">
+          {apiStatus === 'idle' && 'Check backend connection…'}
+          {apiStatus === 'loading' && 'Connecting to backend…'}
+          {apiStatus === 'ok' && 'Connected'}
+          {apiStatus === 'error' && 'Connection issue'}
+        </span>
+        {apiMessage && <span className="text-text-muted">— {apiMessage}</span>}
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">

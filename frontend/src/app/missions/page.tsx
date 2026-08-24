@@ -17,14 +17,27 @@ export default function Missions() {
   const [error, setError] = useState('')
   const [deciding, setDeciding] = useState(false)
 
-  const refresh = async () => {
+  const [workspaceId, setWorkspaceId] = useState<string | null>(null)
+
+  const refresh = async (activeWorkspaceId?: string) => {
     setLoading(true)
     try {
-      const [missionData, approvalData] = await Promise.all([api.listMissions(), api.listApprovals('pending')])
+      const currentWorkspaceId = activeWorkspaceId || (await api.listWorkspaces())[0]?.id || null
+      setWorkspaceId(currentWorkspaceId)
+      if (!currentWorkspaceId) {
+        setMissions([])
+        setApprovals([])
+        setAuditEvents([])
+        setError('')
+        return
+      }
+      const [missionData, approvalData] = await Promise.all([
+        api.listMissions(currentWorkspaceId),
+        api.listApprovals(currentWorkspaceId, 'pending'),
+      ])
       setMissions(missionData)
       setApprovals(approvalData)
-      if (missionData[0]?.workspace_id) setAuditEvents(await api.listAuditEvents(missionData[0].workspace_id))
-      else setAuditEvents([])
+      setAuditEvents(await api.listAuditEvents(currentWorkspaceId))
       setError('')
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Mission Control could not be loaded.')
@@ -36,9 +49,12 @@ export default function Missions() {
   const relevantApproval = approvals.find((approval) => approval.mission_id === active?.id)
 
   const decide = async (status: 'approved' | 'rejected') => {
-    if (!relevantApproval) return
+    if (!relevantApproval || !workspaceId) return
     setDeciding(true)
-    try { await api.decideApproval(relevantApproval.id, status, `Decision recorded in Mission Control: ${status}.`); await refresh() }
+    try {
+      await api.decideApproval(workspaceId, relevantApproval.id, status, `Decision recorded in Mission Control: ${status}.`)
+      await refresh(workspaceId || undefined)
+    }
     catch (cause) { setError(cause instanceof Error ? cause.message : 'Decision could not be saved.') }
     finally { setDeciding(false) }
   }

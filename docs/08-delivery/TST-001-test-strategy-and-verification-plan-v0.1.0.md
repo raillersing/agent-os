@@ -74,11 +74,13 @@ related_adrs:
 
 > **Status: Approved baseline — 2026-08-13.** This document defines the verification strategy, test levels, environments, fixtures, coverage model, evidence requirements, automation, release-stage testing, defect handling, and acceptance criteria for Agent OS. It does not select the final CI platform, test runner, browser automation framework, security scanner, performance harness, or hosted test infrastructure.
 
-## 1. Current executable baseline
+## Current executable baseline
 
-The repository currently verifies the following baseline: 11 backend tests pass locally, Python quality checks pass, the frontend lint is non-interactive, the OpenAPI contract is checked against mounted FastAPI paths and application-schema properties, controlled documentation validates, and Docker Compose resolves with CI-safe variables. These results are implementation evidence for the current baseline only; they do not replace integration, provider, adapter, visual, security, or production tests.
+The repository currently verifies a backend test suite, Python quality checks, non-interactive frontend lint, frontend build, OpenAPI parity against mounted FastAPI paths and application-schema properties, controlled documentation, and Docker Compose resolution with CI-safe variables. The exact test count and result must be recorded by the validation run for the commit under review; these checks do not replace integration, provider, adapter, visual, security, or production tests.
 
-## 2. Purpose
+Every verification report must record at least: commit or immutable build identity, command, environment, fixture/configuration identity, start and end time, result, warnings, skipped tests, and known limitations. A count copied into this document is not a substitute for commit-specific evidence.
+
+## 1. Purpose
 
 Agent OS coordinates autonomous and semi-autonomous software components that can:
 
@@ -3316,7 +3318,7 @@ Select automated accessibility, browser/screen-reader workflow, screenshot basel
 - no mock state as release evidence for critical workflows;
 - no final test tooling selected in this draft;
 - no commit, push, PR, or merge during the current documentation phase;
-- Git versioning remains deferred until all drafts and global consistency review are complete.
+- Git versioning is active; test evidence must identify the commit, environment, command, result, and known limitations.
 
 ## 211. Acceptance criteria
 
@@ -3354,7 +3356,7 @@ TST-001 may advance to `1.0.0` when:
 ### Approval state
 
 - Current status: `approved`
-- Current version: `0.1.0`
+- Current version: `0.2.0`
 - Approved by: Product Owner under explicit user authorization to finalize the declared scope
 - Finalization note: approval records the documentation baseline only; implementation and verification remain separate evidence gates
 
@@ -3363,6 +3365,7 @@ TST-001 may advance to `1.0.0` when:
 | Version | Date | Status | Summary |
 |---|---|---|---|
 | 0.1.0 | 2026-07-20 | Draft | Initial test strategy and verification plan covering levels, environments, fixtures, state machines, APIs, events, adapters, models, tools, approvals, artifacts, memory, security, accessibility, E2E, concurrency, faults, performance, migrations, backup/restore, CI evidence, defects, and release-stage criteria |
+| 0.2.0 | 2026-08-13 | Approved | Added commit-specific evidence requirements and clarified the boundary of the current automated baseline |
 
 ## References
 
