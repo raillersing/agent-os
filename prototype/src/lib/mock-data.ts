@@ -17,7 +17,7 @@ export interface Task {
   title: string;
   agent: string;
   agentId: string;
-  status: 'backlog' | 'ready' | 'in-progress' | 'blocked' | 'done';
+  status: 'backlog' | 'ready' | 'in-progress' | 'running' | 'blocked' | 'done';
   priority: 'urgent' | 'high' | 'medium' | 'low';
   dueDate: string;
   tags: string[];
