@@ -7,6 +7,7 @@ from temporalio.exceptions import WorkflowAlreadyStartedError
 from ..config import settings
 from ..core.database import AsyncSessionLocal
 from ..models.control_plane import AuditEvent, ExecutionRun, TaskSnapshot
+from .outbox_relay import relay_pending_outbox_events
 from .workflows import D1SimulatorRunInput, D1SimulatorRunWorkflow
 
 DISPATCH_CANCELLATION_STATES = {"requested", "confirmed", "unconfirmed"}
@@ -37,7 +38,8 @@ def dispatch_recoverable_filter(model):
 
 
 async def reconcile_pending_runs(client: Client) -> int:
-    """Dispatch committed, non-terminal runs without requiring client retry."""
+    """Dispatch committed, non-terminal runs and relay outbox events."""
+    await relay_pending_outbox_events(batch_size=100)
     dispatched = 0
     async with AsyncSessionLocal() as db:
         runs = (

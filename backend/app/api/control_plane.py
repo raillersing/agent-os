@@ -17,7 +17,9 @@ from temporalio.exceptions import WorkflowAlreadyStartedError
 from ..config import settings
 from ..core.database import get_db
 from ..core.security import require_authenticated_user
+from ..core.time import utcnow
 from ..models.control_plane import Approval as ApprovalModel
+from ..models.control_plane import Artifact as ArtifactModel
 from ..models.control_plane import AuditEvent as AuditEventModel
 from ..models.control_plane import Automation as AutomationModel
 from ..models.control_plane import ContextManifest as ContextManifestModel
@@ -33,8 +35,11 @@ from ..models.control_plane import UsageRecord as UsageRecordModel
 from ..models.control_plane import Workspace as WorkspaceModel
 from ..schemas.control_plane import (
     Approval,
+    ApprovalConsumeRequest,
     ApprovalCreate,
     ApprovalDecision,
+    ApprovalInvalidateRequest,
+    Artifact,
     AuditEvent,
     Automation,
     AutomationCreate,
@@ -49,6 +54,14 @@ from ..schemas.control_plane import (
     TaskCreate,
     Workspace,
     WorkspaceCreate,
+    WorkspaceUpdate,
+)
+from ..services.approval_engine import (
+    ApprovalError,
+    consume_approval,
+    create_approval_request,
+    invalidate_approval,
+    record_decision,
 )
 from ..temporal.reconciliation import (
     dispatch_recoverable_filter,
@@ -203,6 +216,50 @@ async def create_workspace(
         "workspace",
         workspace.id,
         {"name": workspace.name},
+    )
+    await db.commit()
+    await db.refresh(workspace)
+    return workspace
+
+
+@router.get("/workspaces/{workspace_id}", response_model=Workspace)
+async def get_workspace(workspace_id: UUID, db: AsyncSession = Depends(get_db)):
+    workspace = await db.get(WorkspaceModel, workspace_id)
+    if workspace is None:
+        raise HTTPException(status_code=404, detail="Workspace not found")
+    return workspace
+
+
+@router.patch("/workspaces/{workspace_id}", response_model=Workspace)
+async def update_workspace(
+    workspace_id: UUID,
+    payload: WorkspaceUpdate,
+    db: AsyncSession = Depends(get_db),
+):
+    workspace = await db.get(WorkspaceModel, workspace_id)
+    if workspace is None:
+        raise HTTPException(status_code=404, detail="Workspace not found")
+    if (
+        payload.expected_version is not None
+        and workspace.version != payload.expected_version
+    ):
+        raise HTTPException(status_code=409, detail="Workspace version is stale")
+    data = payload.model_dump(exclude={"expected_version"}, exclude_none=True)
+    for field, value in data.items():
+        setattr(workspace, field, value)
+    workspace.version += 1
+    workspace.updated_at = utcnow()
+    record_event(
+        db,
+        workspace.id,
+        "workspace.updated",
+        "workspace",
+        workspace.id,
+        {
+            "version": workspace.version,
+            "budget": workspace.budget,
+            "spent": workspace.spent,
+        },
     )
     await db.commit()
     await db.refresh(workspace)
@@ -530,6 +587,26 @@ async def execution_run_response(db: AsyncSession, run: ExecutionRunModel) -> di
         "artifacts": artifacts,
         "receipt": receipt,
     }
+
+
+@router.get("/artifacts", response_model=list[Artifact])
+async def list_artifacts(
+    workspace_id: UUID = Query(...),
+    db: AsyncSession = Depends(get_db),
+):
+    """List artifacts produced inside a workspace."""
+    artifacts = (
+        (
+            await db.execute(
+                select(ArtifactModel)
+                .where(ArtifactModel.workspace_id == workspace_id)
+                .order_by(ArtifactModel.created_at.desc())
+            )
+        )
+        .scalars()
+        .all()
+    )
+    return artifacts
 
 
 @router.get("/execution-runs/{run_id}", response_model=ExecutionRun)
@@ -894,10 +971,16 @@ async def create_automation(
 
 @router.get("/approvals", response_model=list[Approval])
 async def list_approvals(
+    workspace_id: UUID = Query(...),
     status: str | None = Query(default=None),
     db: AsyncSession = Depends(get_db),
 ):
-    query = select(ApprovalModel).order_by(ApprovalModel.created_at.desc())
+    await require_workspace(db, workspace_id)
+    query = (
+        select(ApprovalModel)
+        .where(ApprovalModel.workspace_id == workspace_id)
+        .order_by(ApprovalModel.created_at.desc())
+    )
     if status:
         query = query.where(ApprovalModel.status == status)
     result = await db.execute(query)
@@ -921,21 +1004,53 @@ async def list_audit_events(
 
 
 @router.post("/approvals", response_model=Approval, status_code=201)
-async def create_approval(payload: ApprovalCreate, db: AsyncSession = Depends(get_db)):
+async def create_approval(
+    payload: ApprovalCreate,
+    workspace_id: UUID = Query(...),
+    db: AsyncSession = Depends(get_db),
+    current_user: dict = Depends(require_authenticated_user),
+):
+    await require_workspace(db, workspace_id)
     mission = await db.get(MissionModel, payload.mission_id)
-    if mission is None:
-        raise HTTPException(status_code=404, detail="Mission not found")
-    approval = ApprovalModel(**payload.model_dump())
+    if mission is None or mission.workspace_id != workspace_id:
+        raise HTTPException(status_code=404, detail="Mission not found in workspace")
+
+    requester_identity_id = uuid5(NAMESPACE_URL, f"agent-os:{current_user['sub']}")
+    approval = await create_approval_request(
+        db,
+        workspace_id=workspace_id,
+        mission_id=mission.id,
+        action=payload.action,
+        scope=payload.scope,
+        requester_identity_id=requester_identity_id,
+        run_id=payload.run_id,
+        task_id=payload.task_id,
+        action_class=payload.action_class,
+        capability_code=payload.capability_code,
+        risk_class=payload.risk_class,
+        normalized_target=payload.normalized_target,
+        expected_effects=payload.expected_effects,
+        reversibility_state=payload.reversibility_state,
+        data_classification=payload.data_classification,
+        policy_version=payload.policy_version,
+        required_authority=payload.required_authority,
+        independence_level=payload.independence_level,
+        expires_at=payload.expires_at,
+    )
     mission.status = "waiting_approval"
-    db.add(approval)
-    await db.flush()
+    mission.updated_at = utcnow()
     record_event(
         db,
         mission.workspace_id,
         "approval.requested",
         "approval",
         approval.id,
-        {"mission_id": str(mission.id), "action": approval.action},
+        {
+            "mission_id": str(mission.id),
+            "action": approval.action,
+            "request_hash": approval.request_hash,
+            "action_fingerprint": approval.action_fingerprint,
+        },
     )
     await db.commit()
     await db.refresh(approval)
@@ -946,26 +1061,137 @@ async def create_approval(payload: ApprovalCreate, db: AsyncSession = Depends(ge
 async def decide_approval(
     approval_id: UUID,
     payload: ApprovalDecision,
+    workspace_id: UUID = Query(...),
     db: AsyncSession = Depends(get_db),
+    current_user: dict = Depends(require_authenticated_user),
 ):
+    await require_workspace(db, workspace_id)
     approval = await db.get(ApprovalModel, approval_id)
-    if approval is None:
+    if approval is None or approval.workspace_id != workspace_id:
         raise HTTPException(status_code=404, detail="Approval not found")
-    if approval.status != "pending":
-        raise HTTPException(status_code=409, detail="Approval already decided")
-    approval.status = payload.status
-    approval.decision_note = payload.decision_note
-    approval.decided_at = datetime.utcnow()
     mission = await db.get(MissionModel, approval.mission_id)
-    if mission is None:
-        raise HTTPException(status_code=409, detail="Approval has no mission record")
+    if mission is None or mission.workspace_id != workspace_id:
+        raise HTTPException(status_code=404, detail="Approval not found in workspace")
+
+    decider_identity_id = uuid5(NAMESPACE_URL, f"agent-os:{current_user['sub']}")
+    try:
+        await record_decision(
+            db,
+            approval,
+            status=payload.status,
+            decided_by=decider_identity_id,
+            decision_note=payload.decision_note,
+        )
+    except ApprovalError as exc:
+        raise HTTPException(status_code=409, detail=str(exc))
+
+    if payload.status == "approved":
+        mission.status = "running"
+    elif payload.status == "rejected":
+        mission.status = "cancelled"
+    elif payload.status == "revision_requested":
+        mission.status = "waiting_approval"
+    else:  # cancelled
+        mission.status = "cancelled"
+    mission.updated_at = utcnow()
     record_event(
         db,
         mission.workspace_id,
         f"approval.{payload.status}",
         "approval",
         approval.id,
-        {"mission_id": str(mission.id), "decision_note": payload.decision_note},
+        {
+            "mission_id": str(mission.id),
+            "decision_note": payload.decision_note,
+            "decided_by": str(decider_identity_id),
+        },
+    )
+    await db.commit()
+    await db.refresh(approval)
+    return approval
+
+
+@router.post(
+    "/approvals/{approval_id}/consume", response_model=Approval, status_code=200
+)
+async def consume_approval_endpoint(
+    approval_id: UUID,
+    payload: ApprovalConsumeRequest,
+    workspace_id: UUID = Query(...),
+    db: AsyncSession = Depends(get_db),
+    current_user: dict = Depends(require_authenticated_user),
+):
+    await require_workspace(db, workspace_id)
+    approval = await db.get(ApprovalModel, approval_id)
+    if approval is None or approval.workspace_id != workspace_id:
+        raise HTTPException(status_code=404, detail="Approval not found")
+
+    consumer_identity_id = uuid5(NAMESPACE_URL, f"agent-os:{current_user['sub']}")
+    try:
+        await consume_approval(
+            db,
+            approval_id,
+            run_id=payload.run_id,
+            attempt_id=payload.attempt_id,
+            action_fingerprint=payload.action_fingerprint,
+            consumed_by=consumer_identity_id,
+            consumed_by_component=payload.consumed_by_component,
+            execution_dispatch_reference=payload.execution_dispatch_reference,
+        )
+    except ApprovalError as exc:
+        raise HTTPException(status_code=409, detail=str(exc))
+
+    record_event(
+        db,
+        approval.workspace_id,
+        "approval.consumed",
+        "approval",
+        approval.id,
+        {
+            "run_id": str(payload.run_id),
+            "attempt_id": str(payload.attempt_id),
+            "consumed_by": str(consumer_identity_id),
+        },
+    )
+    await db.commit()
+    await db.refresh(approval)
+    return approval
+
+
+@router.post(
+    "/approvals/{approval_id}/invalidate", response_model=Approval, status_code=200
+)
+async def invalidate_approval_endpoint(
+    approval_id: UUID,
+    payload: ApprovalInvalidateRequest,
+    workspace_id: UUID = Query(...),
+    db: AsyncSession = Depends(get_db),
+    current_user: dict = Depends(require_authenticated_user),
+):
+    await require_workspace(db, workspace_id)
+    approval = await db.get(ApprovalModel, approval_id)
+    if approval is None or approval.workspace_id != workspace_id:
+        raise HTTPException(status_code=404, detail="Approval not found")
+
+    detector_identity_id = uuid5(NAMESPACE_URL, f"agent-os:{current_user['sub']}")
+    try:
+        await invalidate_approval(
+            db,
+            approval,
+            reason_code=payload.reason_code,
+            detected_by=detector_identity_id,
+            evidence_reference=payload.evidence_reference,
+        )
+    except ApprovalError as exc:
+        raise HTTPException(status_code=409, detail=str(exc))
+
+    record_event(
+        db,
+        approval.workspace_id,
+        "approval.invalidated",
+        "approval",
+        approval.id,
+        {"reason_code": payload.reason_code},
     )
     await db.commit()
     await db.refresh(approval)

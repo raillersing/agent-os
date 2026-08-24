@@ -4,7 +4,7 @@ Agent OS Configuration
 
 from typing import List
 
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -44,6 +44,11 @@ class Settings(BaseSettings):
     # CORS
     CORS_ORIGINS: List[str] = []
 
+    @property
+    def cors_allow_credentials(self) -> bool:
+        """Disable credentials when any origin is a wildcard."""
+        return "*" not in self.CORS_ORIGINS
+
     # LLM Providers
     OPENAI_API_KEY: str = ""
     OPENAI_EXECUTION_ENABLED: bool = False
@@ -57,10 +62,9 @@ class Settings(BaseSettings):
     # Memory
     CHROMA_PERSIST_DIRECTORY: str = "./chroma_db"
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = True
+    model_config = SettingsConfigDict(
+        env_file=".env", env_file_encoding="utf-8", case_sensitive=True
+    )
 
 
 settings = Settings()

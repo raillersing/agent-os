@@ -1,137 +1,103 @@
-# Agent OS - Instructions pour Claude Code
+# Agent OS — Instructions pour Claude Code
 
-## Vue d'ensemble du projet
+## Vue d'ensemble
 
-Agent OS est un système d'exploitation pour agents IA - un Control Plane vendor-neutral qui orchestre des agents, gère la mémoire, les outils, et les politiques de sécurité.
+Agent OS est un control plane vendor-neutral qui orchestre des agents IA de manière durable, observable et gouvernable. Il sépare la planification (workspaces, projets, missions, tâches, approbations) de l'exécution (workflows Temporal, simulateur/OpenAI) et conserve une preuve immuable pour chaque run.
 
 ## Structure du projet
 
 ```
 agent-os/
-├── docs/                    # Documentation contrôlée
-│   ├── 00-governance/       # Gestion documentaire, glossaire
-│   ├── 01-product/          # Vision, scope, PRD, personas
-│   ├── 02-requirements/     # Spécifications fonctionnelles
-│   ├── 03-architecture/     # Architecture système, données
-│   ├── 04-contracts/        # API, schémas, contrats
-│   ├── 05-ai-governance/    # Autonomie, politiques IA
-│   ├── 06-security/         # IAM, sandbox, menace
-│   ├── 07-ux-design/        # Accessibilité, design system
-│   ├── 08-delivery/         # Dev, tests, qualité
-│   ├── 09-operations/       # Observabilité, déploiement
-│   ├── 10-modules/          # Spécifications modules
-│   ├── 11-integrations/     # Adaptateurs (Hermes, Codex)
-│   ├── 12-user-documentation/ # Guides utilisateurs
-│   ├── 13-assurance/        # Audit, validation
-│   └── research/            # Recherche, analyse vidéo
-├── schemas/                 # Schémas JSON (vide - à compléter)
-├── scripts/                 # Scripts utilitaires
-│   └── validate_docs.py     # Validation documentaire
-└── references/              # Références externes
+├── backend/               # FastAPI + Temporal
+│   ├── app/
+│   │   ├── api/           # Routers HTTP (agents, auth, control_plane, memory, runs, tools)
+│   │   ├── core/          # Config, sécurité, base de données
+│   │   ├── models/        # Modèles SQLAlchemy
+│   │   ├── schemas/       # Contrats Pydantic
+│   │   ├── services/      # Logique métier
+│   │   ├── simulator/     # Simulateur déterministe
+│   │   ├── temporal/      # Workflows, activities, worker
+│   │   └── providers/     # Adaptateurs LLM (OpenAI…)
+│   ├── migrations/        # Révisions Alembic
+│   ├── tests/             # Tests pytest (DB SQLite temporaire)
+│   ├── requirements.txt   # Dépendances complètes (dev + runtime)
+│   ├── requirements.runtime.txt
+│   ├── pyproject.toml     # Outils Python (pytest, black, isort)
+│   └── Dockerfile
+├── frontend/              # Next.js 14/15, React, TypeScript
+│   ├── src/
+│   │   ├── app/           # App Router
+│   │   ├── components/    # Composants React
+│   │   └── lib/           # API client, hooks
+│   └── Dockerfile
+├── prototype/             # Prototype Next.js léger avec connexion API minimale
+├── docker-compose.yml     # Stack dev (Postgres, Redis, Temporal, backend, worker, frontend)
+├── .env.example           # Variables d'environnement de développement
+├── schemas/               # OpenAPI / AsyncAPI
+├── docs/                  # Documentation contrôlée
+└── scripts/               # Scripts utilitaires et évaluations
 ```
 
-## Conventions de nommage
+## Commandes courantes
 
-### Fichiers de documentation
-Format: `{CATALOGUE}-{NUMéro}-{titre-kebab-case}-v{version}.md`
-Exemples:
-- `SCP-001-scope-and-boundaries-v0.1.0.md`
-- `SEC-001-security-architecture-v0.1.0.md`
+### Backend
 
-### Catalogues utilisés
-- `SCP` = Scope
-- `VSN` = Vision
-- `PRD` = Product Requirements Document
-- `PER` = Personas
-- `UCD` = Use Cases
-- `SRS` = Software Requirements Specification
-- `NFR` = Non-Functional Requirements
-- `RTM` = Requirements Traceability Matrix
-- `SAD` = System Architecture Description
-- `C4` = Diagrammes C4
-- `DAT` = Data Architecture
-- `DCT` = Data Dictionary
-- `DDD` = Domain-Driven Design
-- `INT` = Integration
-- `MEM` = Memory
-- `SEC` = Security
-- `AUT` = Autonomy
-- `POL` = Policy
-- `CST` = Cost
-- `AGC` = Agent Contract
-- `API` = API Specification
-- `EVT` = Event Catalog
-- `MOD` = Model Profile
-- `RUN` = Run Contract
-- `ART` = Artifact
-- `APR` = Approval
-- `IAM` = Identity & Access Management
-- `SAN` = Sandbox
-- `THR` = Threat Model
-- `A11Y` = Accessibility
-- `DSN` = Design System
-- `UXA` = UX Architecture
-- `DEV` = Development
-- `TST` = Test Strategy
-- `BCP` = Business Continuity
-- `DEP` = Deployment
-- `OBS` = Observability
-- `OPS` = Operations
-- `CAP` = Capability
-- `ORC` = Orchestration
-- `PLG` = Plugin
-- `ADP` = Adapter
-- `AUD` = Audit
-- `QAG` = Quality Assurance
-- `VVR` = Visual Validation
+```bash
+cd backend
+.venv/bin/pytest -q                              # tests
+.venv/bin/black --check . && .venv/bin/isort --check-only . && .venv/bin/flake8 .  # lint
+uvicorn app.main:app --reload                    # serveur local
+```
 
-## Statut des documents
+### Frontend
 
-Les documents doivent avoir un statut dans leur en-tête:
-- `draft` → En rédaction
-- `review` → En revue
-- `approved` → Approuvé
-- `deprecated` → Obsolète
+```bash
+cd frontend
+npm install
+npm run dev
+npm run lint
+npm run build
+```
 
-## Commandes utiles
+### Docker Compose
 
-### Validation documentaire
+```bash
+cp .env.example .env
+# éditer .env (secrets, ports)
+docker compose up -d
+make migrate                                     # alembic upgrade head
+docker compose config --quiet                    # valider la config
+```
+
+### Documentation
+
 ```bash
 python3 scripts/validate_docs.py
+python3 scripts/check_openapi_parity.py
 ```
 
-### Vérifier la structure
-```bash
-find docs -name "*.md" -type f | sort
-```
+## Conventions
 
-## Règles de travail
+- Python 3.12, typage explicite, Pydantic v2.
+- Formatage avec `black` (88 caractères), imports triés avec `isort`.
+- `flake8` : F401 actif sauf dans `__init__.py`.
+- Datetimes : utiliser `app.core.time.utcnow()` (timezone-aware UTC) ; plus de `datetime.utcnow()`.
+- Migrations Alembic : maintenir la compatibilité SQLite (`batch_alter_table`) et PostgreSQL.
+- Tests : base SQLite temporaire par session, migrations appliquées via `alembic upgrade head`.
+- Tests d'intégration : `tests/test_api_integration.py` (HTTP) et `tests/test_temporal_integration.py` (Temporal local).
 
-1. **Ne pas modifier** les documents marqués `approved` sans validation
-2. **Utiliser les templates** dans `docs/00-governance/templates/`
-3. **Respecter le format** `{CATALOGUE}-{NUMéro}-{titre}.md`
-4. **Mettre à jour** `document-register.yaml` après ajout/modification
-5. **Versionner** les changements importants avec ADR
+## Points de vigilance
 
-## Patterns d'implémentation
+- Ne jamais exposer `SECRET_KEY` ou les credentials LLM.
+- Les runs sont idempotents par `(workspace_id, task_id, idempotency_key)`.
+- Les endpoints `/approvals`, `/automations`, `/execution-runs`, `/artifacts`, etc. exigent `workspace_id`.
+- `allow_credentials=True` est interdit si `*` figure dans `CORS_ORIGINS`.
+- Le heartbeat Temporal est encapsulé dans `_safe_heartbeat` pour tolérer les appels hors contexte d'activité (tests unitaires).
+- L'authentification se fait par cookie httpOnly `access_token` ; le header `Authorization: Bearer` reste accepté pour les appels scripts/API.
 
-### Architecture
-- Style hexagonal / ports & adapters
-- Event-driven pour la communication
-- Plugin-based pour l'extensibilité
+## Statuts des documents contrôlés
 
-### Sécurité
-- Zero-trust par défaut
-- Sandboxing pour l'exécution d'agents
-- Audit trail complet
-
-### IA
-- Routing intelligent des requêtes
-- Politiques d'autonomie configurables
-- Gestion des coûts par budget
-
-## Contacts
-
-- Product Owner: À définir
-- Tech Lead: À définir
-- Security: À définir
+- `draft` → En rédaction
+- `in-review` → En revue
+- `approved` → Approuvé
+- `deprecated` → Obsolète

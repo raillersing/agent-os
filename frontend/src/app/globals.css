@@ -450,3 +450,4 @@ html, body, .sidebar, .topbar, .card, .panel, .mission-launch,
 .settings-row label { display: block; margin-bottom: 6px; color: var(--muted); font-size: 12px; }
 .settings-row input { width: 100%; max-width: 420px; height: 40px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); font-size: 13px; }
 .settings-row input::placeholder { color: var(--faint); }
+.budget-exhausted { color: var(--danger); font-weight: 700; }
