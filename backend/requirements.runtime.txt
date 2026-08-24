@@ -12,7 +12,7 @@ psycopg2-binary==2.9.12
 aiosqlite==0.20.0
 redis==5.0.1
 temporalio[grpc]==1.31.0
-python-jose[cryptography]==3.3.0
+PyJWT[crypto]==2.10.1
 passlib[bcrypt]==1.7.4
 bcrypt==4.1.2
 pydantic==2.6.1

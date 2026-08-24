@@ -614,3 +614,44 @@ def test_cancellation_completion_race_preserves_completed_evidence(monkeypatch):
         assert response.status_code == 200
         assert response.json()["state"] == "completed"
         assert response.json()["receipt"]["terminal_state"] == "completed"
+
+
+def test_artifacts_endpoint_lists_workspace_artifacts(monkeypatch):
+    monkeypatch.setattr(control_plane.Client, "connect", _connect)
+    with TestClient(app) as client:
+        client.headers.update(auth_headers(client))
+        workspace, task = _hierarchy(client)
+        payload = {
+            "workspace_id": workspace["id"],
+            "input_text": "artifact producing run",
+            "simulator_profile": "success",
+            "idempotency_key": "artifact-producing",
+        }
+        run = client.post(f"/api/v1/tasks/{task['id']}/runs", json=payload).json()
+
+    asyncio.run(
+        execute_d1_simulator_run(
+            D1SimulatorRunInput(
+                run["id"],
+                workspace["id"],
+                "artifact producing run",
+                "success",
+                "simulator",
+                "model.general.balanced",
+            )
+        )
+    )
+
+    with TestClient(app) as client:
+        client.headers.update(auth_headers(client))
+        response = client.get(
+            "/api/v1/artifacts", params={"workspace_id": workspace["id"]}
+        )
+        assert response.status_code == 200
+        artifacts = response.json()
+        assert len(artifacts) >= 1
+        assert artifacts[0]["workspace_id"] == workspace["id"]
+        assert artifacts[0]["run_id"] == run["id"]
+        assert artifacts[0]["media_type"] == "text/plain"
+        assert artifacts[0]["content"]
+        assert artifacts[0]["content_hash"]

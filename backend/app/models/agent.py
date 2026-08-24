@@ -3,7 +3,6 @@ Agent Model
 """
 
 import uuid
-from datetime import datetime
 
 from sqlalchemy import (
     JSON,
@@ -18,6 +17,7 @@ from sqlalchemy import (
 )
 
 from ..core.database import Base
+from ..core.time import utcnow
 
 
 class Agent(Base):
@@ -42,8 +42,8 @@ class Agent(Base):
     total_cost = Column(Float, default=0.0)
 
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=utcnow)
+    updated_at = Column(DateTime, default=utcnow, onupdate=utcnow)
     last_run_at = Column(DateTime, nullable=True)
 
     def __repr__(self):
